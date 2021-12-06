@@ -1,0 +1,38 @@
+[
+  {
+    "id": 1,
+    "initiator": 10,
+    "recipient": 10,
+    "text": null,
+    "remarks": null,
+    "checkState": 2,
+    "showState": 0,
+    "requestType": 0,
+    "headPortrait": "https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fc-ssl.duitang.com%2Fuploads%2Fitem%2F202007%2F23%2F20200723090549_wdhgx.thumb.400_0.jpeg&refer=http%3A%2F%2Fc-ssl.duitang.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1640932047&t=c36483ab600b6eff9d48c8ffc2a3dcb2",
+    "nickname": "路人甲"
+  },
+  {
+    "id": 1,
+    "initiator": 10,
+    "recipient": 10,
+    "text": null,
+    "remarks": null,
+    "checkState": 2,
+    "showState": 0,
+    "requestType": 0,
+    "headPortrait": "https://img2.baidu.com/it/u=1086620760,2126808605&fm=26&fmt=auto",
+    "nickname": "提莫"
+  },
+  {
+    "id": 1,
+    "initiator": 10,
+    "recipient": 10,
+    "text": null,
+    "remarks": null,
+    "checkState": 2,
+    "showState": 0,
+    "requestType": 0,
+    "headPortrait": "https://img0.baidu.com/it/u=2723082473,3503209293&fm=26&fmt=auto",
+    "nickname": "蛮子"
+  }
+]

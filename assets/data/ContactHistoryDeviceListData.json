@@ -1,0 +1,32 @@
+[
+  {
+    "id": 789257033396224,
+    "deviceCode": "CDBE-978D-F236-EB6E",
+    "name": "机器人 007",
+    "deviceNickname": "机器人 007",
+    "deviceState": 1,
+    "startState": 1,
+    "lastHeartBeat": "2021-11-12 15:57:45",
+    "bindingState": null,
+    "batteryState": "100%",
+    "networking": 0,
+    "versionNumber": "1.0",
+    "simPhone": "12345678911",
+    "isDfDevice": 1
+  },
+  {
+    "id": 789257033396224,
+    "deviceCode": "CDBE-978D-F236-EB6E",
+    "name": "机器人 0 ",
+    "deviceNickname": "机器人 0",
+    "deviceState": 0,
+    "startState": 1,
+    "lastHeartBeat": "2021-11-12 15:57:45",
+    "bindingState": null,
+    "batteryState": "100%",
+    "networking": 0,
+    "versionNumber": "1.0",
+    "simPhone": "12345678911",
+    "isDfDevice": 0
+  }
+]
