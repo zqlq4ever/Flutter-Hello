@@ -14,15 +14,15 @@ import 'package:hello_flutter/widgets/my_scroll_view.dart';
 import '../login_router.dart';
 
 /// 登录 - 忘记密码
-class forgetPasswordPage extends StatefulWidget {
-  const forgetPasswordPage({Key? key}) : super(key: key);
+class ForgetPasswordPage extends StatefulWidget {
+  const ForgetPasswordPage({Key? key}) : super(key: key);
 
   @override
-  _forgetPasswordPageState createState() => _forgetPasswordPageState();
+  _ForgetPasswordPageState createState() => _ForgetPasswordPageState();
 }
 
-class _forgetPasswordPageState extends State<forgetPasswordPage>
-    with ChangeNotifierMixin<forgetPasswordPage> {
+class _ForgetPasswordPageState extends State<ForgetPasswordPage>
+    with ChangeNotifierMixin<ForgetPasswordPage> {
   //  定义一个 controller
   final TextEditingController _phoneController = TextEditingController(text: "");
   final TextEditingController _passwordController = TextEditingController(text: "");
@@ -58,7 +58,7 @@ class _forgetPasswordPageState extends State<forgetPasswordPage>
         overlays: [SystemUiOverlay.top],
       );
       SystemChrome.setSystemUIOverlayStyle(
-          SystemUiOverlayStyle(statusBarColor: Colors.transparent));
+          const SystemUiOverlayStyle(statusBarColor: Colors.transparent));
     });
   }
 
@@ -109,7 +109,7 @@ class _forgetPasswordPageState extends State<forgetPasswordPage>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: MyAppBar(
+      appBar: const MyAppBar(
         isBack: true,
         centerTitle: '忘记密码',
       ),
@@ -135,7 +135,7 @@ class _forgetPasswordPageState extends State<forgetPasswordPage>
         _inputPasswordAgain(),
         Gaps.vGap40,
         Container(
-          padding: EdgeInsets.symmetric(horizontal: 40.0),
+          padding: const EdgeInsets.symmetric(horizontal: 40.0),
           child: MyButton(
             key: const Key('comfirm'),
             onPressed: _clickable ? _confirm : null,
@@ -150,13 +150,13 @@ class _forgetPasswordPageState extends State<forgetPasswordPage>
     return Container(
       color: Colors.white,
       height: 50,
-      padding: EdgeInsets.symmetric(horizontal: 40.0),
+      padding: const EdgeInsets.symmetric(horizontal: 40.0),
       child: Center(
         child: TextField(
           focusNode: _nodePasswordComfirm,
           controller: _passwordConfirmController,
           maxLength: 16,
-          decoration: InputDecoration(
+          decoration: const InputDecoration(
             hintText: "请再次输入密码",
             counterText: '',
             border: InputBorder.none,
@@ -171,13 +171,13 @@ class _forgetPasswordPageState extends State<forgetPasswordPage>
     return Container(
       color: Colors.white,
       height: 50,
-      padding: EdgeInsets.symmetric(horizontal: 40.0),
+      padding: const EdgeInsets.symmetric(horizontal: 40.0),
       child: Center(
         child: TextField(
           focusNode: _nodePassword,
           controller: _passwordController,
           maxLength: 16,
-          decoration: InputDecoration(
+          decoration: const InputDecoration(
             hintText: "请输入密码",
             counterText: '',
             border: InputBorder.none,
@@ -189,7 +189,7 @@ class _forgetPasswordPageState extends State<forgetPasswordPage>
   }
 
   _inputSmsCode() => Container(
-        padding: EdgeInsets.symmetric(horizontal: 40),
+        padding: const EdgeInsets.symmetric(horizontal: 40),
         color: Colors.white,
         child: Row(
           children: [
@@ -198,7 +198,7 @@ class _forgetPasswordPageState extends State<forgetPasswordPage>
                 focusNode: _nodeSmsCode,
                 controller: _smsCodeController,
                 maxLength: 6,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   hintText: "请输入验证码",
                   counterText: '',
                   border: InputBorder.none,
@@ -207,7 +207,7 @@ class _forgetPasswordPageState extends State<forgetPasswordPage>
                 inputFormatters: [FilteringTextInputFormatter.allow(RegExp('[0-9]'))],
               ),
             ),
-            Text(
+            const Text(
               "获取验证码",
               style: TextStyle(color: ColorConst.app_main),
             ),
@@ -219,13 +219,13 @@ class _forgetPasswordPageState extends State<forgetPasswordPage>
     return Container(
       color: Colors.white,
       height: 50,
-      padding: EdgeInsets.symmetric(horizontal: 40.0),
+      padding: const EdgeInsets.symmetric(horizontal: 40.0),
       child: Center(
         child: TextField(
           focusNode: _nodePhone,
           controller: _phoneController,
           maxLength: 11,
-          decoration: InputDecoration(
+          decoration: const InputDecoration(
             hintText: "请输入手机号",
             counterText: '',
             border: InputBorder.none,

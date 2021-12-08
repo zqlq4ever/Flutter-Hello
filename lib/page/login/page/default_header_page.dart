@@ -6,7 +6,7 @@ import 'package:hello_flutter/res/gaps.dart';
 import 'package:hello_flutter/router/fluro_navigate_util.dart';
 import 'package:hello_flutter/widgets/load_image.dart';
 import 'package:hello_flutter/widgets/my_app_bar.dart';
-import 'package:hello_flutter/widgets/my_button.dart';
+import 'package:hello_flutter/widgets/no_scroll_behavior.dart';
 
 /// 登录 - 注册 - 完善个人信息 - 默认头像
 class DefautHeaderPage extends StatefulWidget {
@@ -37,7 +37,7 @@ class _DefautHeaderPageState extends State<DefautHeaderPage> {
         overlays: [SystemUiOverlay.top, SystemUiOverlay.bottom],
       );
       SystemChrome.setSystemUIOverlayStyle(
-          SystemUiOverlayStyle(statusBarColor: Colors.transparent));
+          const SystemUiOverlayStyle(statusBarColor: Colors.transparent));
     });
   }
 
@@ -45,7 +45,7 @@ class _DefautHeaderPageState extends State<DefautHeaderPage> {
   Widget build(BuildContext context) {
     screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
-      appBar: MyAppBar(
+      appBar: const MyAppBar(
         isBack: true,
         centerTitle: '选择头像',
         backgroundColor: Colors.white,
@@ -58,19 +58,33 @@ class _DefautHeaderPageState extends State<DefautHeaderPage> {
           children: [
             Gaps.vGap24,
             Padding(
-              padding: EdgeInsets.symmetric(horizontal: 32),
-              child: _buildBody,
+              padding: const EdgeInsets.symmetric(horizontal: 32),
+              child: _headerList,
             ),
             Gaps.vGap50,
             Padding(
-              padding: EdgeInsets.symmetric(horizontal: 32),
-              child: MyButton(
+              padding: const EdgeInsets.symmetric(horizontal: 32),
+              child: MaterialButton(
+                minWidth: double.infinity,
+                height: 44,
+                color: ColorConst.app_main,
+                splashColor: Colors.transparent,
+                elevation: 0,
+                shape: const RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(
+                    Radius.circular(24),
+                  ),
+                ),
+                child: const Text(
+                  "确定",
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 16,
+                  ),
+                ),
                 onPressed: () {
-                  // Toast.show(selectedIndex.toString());
                   NavigateUtil.goBackWithParams(context, data[selectedIndex]);
                 },
-                text: '确定',
-                radius: 24,
               ),
             )
           ],
@@ -79,56 +93,58 @@ class _DefautHeaderPageState extends State<DefautHeaderPage> {
     );
   }
 
-  get _buildBody => GridView.builder(
-      shrinkWrap: true,
-      itemCount: data.length,
-      // SliverGridDelegateWithFixedCrossAxisCount 构建一个横轴固定数量 Widget
-      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-          //  横轴元素个数
-          crossAxisCount: 3,
-          //  纵轴间距
-          mainAxisSpacing: 25.0,
-          //  横轴间距
-          crossAxisSpacing: 32.0,
-          //  子组件宽高长度比例
-          childAspectRatio: 1.0),
-      itemBuilder: (BuildContext context, int index) {
-        double width = 0;
-        if (selectedIndex == index) {
-          width = 3;
-        } else {
-          width = 0;
-        }
-        return Stack(
-          children: [
-            Container(
-              decoration: BoxDecoration(
-                border: new Border.all(
-                  color: ColorConst.app_main,
-                  width: width,
-                ),
-                borderRadius: BorderRadius.circular(200),
-              ),
-              child: GestureDetector(
-                onTap: () {
-                  selectedIndex = index;
-                  setState(() {});
-                },
-                child: LoadAssetImage(data[index]),
-              ),
-            ),
-            Visibility(
-              visible: selectedIndex == index,
-              child: Positioned(
-                right: 10,
-                child: LoadAssetImage(
-                  'ic_selected',
-                  width: 20,
-                  height: 20,
-                ),
-              ),
-            ),
-          ],
-        );
-      });
+  get _headerList => ScrollConfiguration(
+        behavior: NoScrollBehavior(),
+        child: GridView.builder(
+            shrinkWrap: true,
+            itemCount: data.length,
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                //  横轴元素个数
+                crossAxisCount: 3,
+                //  纵轴间距
+                mainAxisSpacing: 25.0,
+                //  横轴间距
+                crossAxisSpacing: 32.0,
+                //  子组件宽高长度比例
+                childAspectRatio: 1.0),
+            itemBuilder: (BuildContext context, int index) {
+              double width = 0;
+              if (selectedIndex == index) {
+                width = 3;
+              } else {
+                width = 0;
+              }
+              return Stack(
+                children: [
+                  Container(
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                        color: ColorConst.app_main,
+                        width: width,
+                      ),
+                      borderRadius: BorderRadius.circular(200),
+                    ),
+                    child: GestureDetector(
+                      onTap: () {
+                        selectedIndex = index;
+                        setState(() {});
+                      },
+                      child: LoadAssetImage(data[index]),
+                    ),
+                  ),
+                  Visibility(
+                    visible: selectedIndex == index,
+                    child: const Positioned(
+                      right: 10,
+                      child: LoadAssetImage(
+                        'ic_selected',
+                        width: 20,
+                        height: 20,
+                      ),
+                    ),
+                  ),
+                ],
+              );
+            }),
+      );
 }

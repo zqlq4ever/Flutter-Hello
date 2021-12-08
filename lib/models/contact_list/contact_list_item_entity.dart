@@ -24,8 +24,6 @@ class ContactListItemEntity {
   int? type;
   int? standbyState1;
 
-  ContactListItemEntity(this.id, this.userId, this.appstate);
-
   // 命名构造函数
   ContactListItemEntity.fromJson(Map<String, dynamic> json)
       : id = json['id'],

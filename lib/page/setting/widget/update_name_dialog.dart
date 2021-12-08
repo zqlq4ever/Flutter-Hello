@@ -4,23 +4,30 @@ import 'package:hello_flutter/res/colors.dart';
 import 'package:hello_flutter/res/gaps.dart';
 import 'package:hello_flutter/util/toast_util.dart';
 
-//  有参数的   先定义一个函数类型
-typedef NameCallBack = Function(String);
+typedef UpdateName = Function(String);
 
-YYDialog UpdateNameDialog(BuildContext context, NameCallBack callBack) {
+YYDialog showUpdateNameDialog(BuildContext context, UpdateName update) {
+  YYDialog.init(context);
   TextEditingController controller = TextEditingController();
   return YYDialog().build()
     ..gravity = Gravity.center
     ..gravityAnimationEnable = true
     ..backgroundColor = Colors.transparent
+    ..duration = const Duration(milliseconds: 250)
+    ..animatedFunc = (child, animation) {
+      return ScaleTransition(
+        child: child,
+        scale: Tween(begin: 0.2, end: 1.0).animate(animation),
+      );
+    }
     ..widget(
       Card(
-        margin: EdgeInsets.symmetric(horizontal: 16),
+        margin: const EdgeInsets.symmetric(horizontal: 16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Gaps.vGap16,
-            Text(
+            const Text(
               '称呼',
               style: TextStyle(
                 color: ColorConst.text,
@@ -29,12 +36,12 @@ YYDialog UpdateNameDialog(BuildContext context, NameCallBack callBack) {
             ),
             Gaps.vGap16,
             Padding(
-              padding: EdgeInsets.symmetric(horizontal: 16),
+              padding: const EdgeInsets.symmetric(horizontal: 16),
               child: Expanded(
                 child: TextField(
                   controller: controller,
                   maxLines: 1,
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                     //  背景颜色，必须结合 filled: true,才有效
                     fillColor: ColorConst.bg_color,
                     //  重点，必须设置为 true，fillColor才有效
@@ -50,7 +57,7 @@ YYDialog UpdateNameDialog(BuildContext context, NameCallBack callBack) {
               ),
             ),
             Gaps.vGap24,
-            _button(context, callBack, controller),
+            _button(context, update, controller),
             Gaps.vGap24,
           ],
         ),
@@ -59,7 +66,7 @@ YYDialog UpdateNameDialog(BuildContext context, NameCallBack callBack) {
     ..show();
 }
 
-Row _button(BuildContext context, NameCallBack callBack, TextEditingController controller) {
+Row _button(BuildContext context, UpdateName callBack, TextEditingController controller) {
   return Row(
     mainAxisAlignment: MainAxisAlignment.spaceBetween,
     children: [
@@ -69,9 +76,9 @@ Row _button(BuildContext context, NameCallBack callBack, TextEditingController c
           color: ColorConst.bg_color,
           height: 44,
           elevation: 0,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(5))),
+          shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(5))),
           onPressed: () => Navigator.of(context, rootNavigator: true).pop(),
-          child: Text("取消"),
+          child: const Text("取消"),
         ),
       ),
       Gaps.hGap16,
@@ -80,7 +87,7 @@ Row _button(BuildContext context, NameCallBack callBack, TextEditingController c
           height: 44,
           color: ColorConst.app_main,
           elevation: 0,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(5))),
+          shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(5))),
           onPressed: () {
             if (controller.text.isEmpty) {
               ToastUtil.show('名字不能为空');
@@ -89,7 +96,7 @@ Row _button(BuildContext context, NameCallBack callBack, TextEditingController c
             Navigator.of(context, rootNavigator: true).pop();
             callBack(controller.text);
           },
-          child: Text(
+          child: const Text(
             "确定",
             style: TextStyle(color: Colors.white),
           ),

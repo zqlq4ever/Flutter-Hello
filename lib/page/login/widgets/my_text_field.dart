@@ -12,18 +12,18 @@ import 'package:hello_flutter/widgets/my_button.dart';
 
 /// 登录模块的输入框封装
 class MyTextField extends StatefulWidget {
-  const MyTextField(
-      {Key? key,
-      required this.controller,
-      this.maxLength = 16,
-      this.autoFocus = false,
-      this.keyboardType = TextInputType.text,
-      this.hintText = '',
-      this.focusNode,
-      this.isInputPwd = false,
-      this.getVCode,
-      this.keyName})
-      : super(key: key);
+  const MyTextField({
+    Key? key,
+    required this.controller,
+    this.maxLength = 16,
+    this.autoFocus = false,
+    this.keyboardType = TextInputType.text,
+    this.hintText = '',
+    this.focusNode,
+    this.isInputPwd = false,
+    this.getVCode,
+    this.keyName,
+  }) : super(key: key);
 
   final TextEditingController controller;
   final int maxLength;
@@ -34,7 +34,7 @@ class MyTextField extends StatefulWidget {
   final bool isInputPwd;
   final Future<bool> Function()? getVCode;
 
-  /// 用于集成测试寻找widget
+  /// 用于集成测试寻找 widget
   final String? keyName;
 
   @override
@@ -47,7 +47,7 @@ class _MyTextFieldState extends State<MyTextField> {
   bool _clickable = true;
 
   /// 倒计时秒数
-  final int _second = 30;
+  final int _second = 60;
 
   /// 当前秒数
   late int _currentSecond;
@@ -66,7 +66,7 @@ class _MyTextFieldState extends State<MyTextField> {
   void isEmpty() {
     final bool isNotEmpty = widget.controller.text.isNotEmpty;
 
-    /// 状态不一样在刷新，避免重复不必要的setState
+    /// 状态不一样在刷新，避免重复不必要的 setState
     if (isNotEmpty != _isShowDelete) {
       setState(() {
         _isShowDelete = isNotEmpty;
@@ -88,8 +88,10 @@ class _MyTextFieldState extends State<MyTextField> {
         _currentSecond = _second;
         _clickable = false;
       });
-      _subscription =
-          Stream.periodic(const Duration(seconds: 1), (int i) => i).take(_second).listen((int i) {
+      _subscription = Stream.periodic(
+        const Duration(seconds: 1),
+        (int i) => i,
+      ).take(_second).listen((int i) {
         setState(() {
           _currentSecond = _second - i - 1;
           _clickable = _currentSecond < 1;

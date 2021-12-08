@@ -76,7 +76,7 @@ class _CompletePersonInfoPageState extends State<CompletePersonInfoPage>
         overlays: [SystemUiOverlay.top, SystemUiOverlay.bottom],
       );
       SystemChrome.setSystemUIOverlayStyle(
-          SystemUiOverlayStyle(statusBarColor: Colors.transparent));
+          const SystemUiOverlayStyle(statusBarColor: Colors.transparent));
     });
   }
 
@@ -125,7 +125,7 @@ class _CompletePersonInfoPageState extends State<CompletePersonInfoPage>
   Widget build(BuildContext context) {
     YYDialog.init(context);
     return Scaffold(
-      appBar: MyAppBar(
+      appBar: const MyAppBar(
         backgroundColor: Colors.white,
         isBack: true,
         centerTitle: '完善个人资料',
@@ -183,7 +183,7 @@ class _CompletePersonInfoPageState extends State<CompletePersonInfoPage>
 
   Container registerAndLogin() {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 40.0),
+      padding: const EdgeInsets.symmetric(horizontal: 40.0),
       child: MyButton(
         key: const Key('completePersonInfo'),
         onPressed: _clickable ? _completePersonInfo : null,
@@ -196,23 +196,18 @@ class _CompletePersonInfoPageState extends State<CompletePersonInfoPage>
   Center header() {
     return Center(
       heightFactor: 2,
-      child: GestureDetector(
-        child: ClipOval(
-          child: Container(
+      child: InkWell(
+        child: CircleAvatar(
+          backgroundImage: _imageProvider ?? ImageUtils.getAssetImage('ic_camera'),
+          backgroundColor: Colors.white,
+          radius: 40,
+          child: const SizedBox(
             width: 80,
             height: 80,
-            decoration: BoxDecoration(
-              image: DecorationImage(
-                image: _imageProvider ??
-                    ImageUtils.getImageProvider(
-                        'https://img0.baidu.com/it/u=1276302017,1487256346&fm=26&fmt=auto'),
-                fit: BoxFit.cover,
-              ),
-            ),
           ),
         ),
         onTap: () {
-          HeaderMenuDialog(
+          showHeaderMenuDialog(
             context,
             (isCamera) {
               _getImage(isCamera);
@@ -228,22 +223,17 @@ class _CompletePersonInfoPageState extends State<CompletePersonInfoPage>
     );
   }
 
-  //隐藏键盘而不丢失文本字段焦点：
-  void hideKeyBoard() {
-    SystemChannels.textInput.invokeMethod('TextInput.hide');
-  }
-
   Container password() {
     return Container(
       color: Colors.white,
-      padding: EdgeInsets.symmetric(horizontal: 40.0),
+      padding: const EdgeInsets.symmetric(horizontal: 40.0),
       child: Center(
         child: TextField(
           maxLines: 1,
           maxLength: 20,
           focusNode: _nodePassword,
           controller: _passwordController,
-          decoration: InputDecoration(
+          decoration: const InputDecoration(
             hintStyle: TextStyle(color: ColorConst.text_gray),
             hintText: "请输入密码",
             counterText: '',
@@ -258,14 +248,14 @@ class _CompletePersonInfoPageState extends State<CompletePersonInfoPage>
   Container name() {
     return Container(
       color: Colors.white,
-      padding: EdgeInsets.symmetric(horizontal: 40.0),
+      padding: const EdgeInsets.symmetric(horizontal: 40.0),
       child: Center(
         child: TextField(
           maxLines: 1,
           maxLength: 20,
           focusNode: _nodeName,
           controller: _nameController,
-          decoration: InputDecoration(
+          decoration: const InputDecoration(
             hintStyle: TextStyle(color: ColorConst.text_gray),
             hintText: "请输入昵称",
             counterText: '',
@@ -279,7 +269,7 @@ class _CompletePersonInfoPageState extends State<CompletePersonInfoPage>
   Container sex() {
     return Container(
       color: Colors.white,
-      padding: EdgeInsets.symmetric(horizontal: 40.0),
+      padding: const EdgeInsets.symmetric(horizontal: 40.0),
       child: Row(
         children: [
           Expanded(
@@ -287,7 +277,7 @@ class _CompletePersonInfoPageState extends State<CompletePersonInfoPage>
               enabled: false,
               focusNode: _nodeSex,
               controller: _sexController,
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 hintText: "请选择性别",
                 hintStyle: TextStyle(color: ColorConst.text_gray),
                 counterText: '',
@@ -299,11 +289,11 @@ class _CompletePersonInfoPageState extends State<CompletePersonInfoPage>
             onPressed: () {
               _nodeName.unfocus();
               _nodePassword.unfocus();
-              SexSelectDialog(context, (sex) {
+              showSexSelectDialog(context, (sex) {
                 _sexController.text = sex;
               });
             },
-            icon: Icon(
+            icon: const Icon(
               Icons.arrow_drop_down_rounded,
               color: ColorConst.text,
             ),
@@ -316,7 +306,7 @@ class _CompletePersonInfoPageState extends State<CompletePersonInfoPage>
   Container date() {
     return Container(
       color: Colors.white,
-      padding: EdgeInsets.symmetric(horizontal: 40.0),
+      padding: const EdgeInsets.symmetric(horizontal: 40.0),
       child: Row(
         children: [
           Expanded(
@@ -324,7 +314,7 @@ class _CompletePersonInfoPageState extends State<CompletePersonInfoPage>
               enabled: false,
               focusNode: _nodeDate,
               controller: _dateController,
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 hintText: "请选择出生年月",
                 hintStyle: TextStyle(color: ColorConst.text_gray),
                 counterText: '',
@@ -338,7 +328,7 @@ class _CompletePersonInfoPageState extends State<CompletePersonInfoPage>
               _nodePassword.unfocus();
               _datePicker();
             },
-            icon: Icon(
+            icon: const Icon(
               Icons.arrow_drop_down_rounded,
               color: ColorConst.text,
             ),

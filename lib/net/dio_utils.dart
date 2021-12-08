@@ -4,6 +4,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:hello_flutter/res/constant.dart';
 import 'package:hello_flutter/util/log_utils.dart';
+
 import 'base_entity.dart';
 import 'error_handle.dart';
 
@@ -43,18 +44,18 @@ class DioUtils {
       receiveTimeout: _receiveTimeout,
       sendTimeout: _sendTimeout,
 
-      /// dio默认json解析，这里指定返回UTF8字符串，自己处理解析。（可也以自定义Transformer实现）
+      /// dio 默认 json 解析，这里指定返回 UTF8 字符串，自己处理解析。（可也以自定义 Transformer 实现）
       responseType: ResponseType.plain,
       validateStatus: (_) {
-        // 不使用http状态码判断状态，使用AdapterInterceptor来处理（适用于标准REST风格）
+        // 不使用 http 状态码判断状态，使用 AdapterInterceptor 来处理（适用于标准 REST 风格）
         return true;
       },
       baseUrl: _baseUrl,
-//      contentType: Headers.formUrlEncodedContentType, // 适用于post form表单提交
+//      contentType: Headers.formUrlEncodedContentType, // 适用于post form 表单提交
     );
     _dio = Dio(_options);
 
-    /// Fiddler抓包代理配置 https://www.jianshu.com/p/d831b1f7c45b
+    /// Fiddler 抓包代理配置 https://www.jianshu.com/p/d831b1f7c45b
 //    (_dio.httpClientAdapter as DefaultHttpClientAdapter).onHttpClientCreate =
 //        (HttpClient client) {
 //      client.findProxy = (uri) {
@@ -101,7 +102,7 @@ class DioUtils {
       final String data = response.data.toString();
 
       /// 集成测试无法使用 isolate https://github.com/flutter/flutter/issues/24703
-      /// 使用compute条件：数据大于10KB（粗略使用10 * 1024）且当前不是集成测试（后面可能会根据Web环境进行调整）
+      /// 使用 compute 条件：数据大于 10KB（粗略使用10 * 1024）且当前不是集成测试（后面可能会根据 Web 环境进行调整）
       /// 主要目的减少不必要的性能开销
       final bool isCompute = !AppConstant.isDriverTest && data.length > 10 * 1024;
       debugPrint('isCompute:$isCompute');
@@ -150,7 +151,7 @@ class DioUtils {
     });
   }
 
-  /// 统一处理(onSuccess返回T对象，onSuccessList返回 List<T>)
+  /// 统一处理(onSuccess 返回 T 对象，onSuccessList 返回 List<T>)
   void asyncRequestNetwork<T>(
     Method method,
     String url, {
@@ -185,7 +186,7 @@ class DioUtils {
 
   void _cancelLogPrint(dynamic e, String url) {
     if (e is DioError && CancelToken.isCancel(e)) {
-      Log.e('取消请求接口： $url');
+      Logger.e('取消请求接口： $url');
     }
   }
 
@@ -194,7 +195,7 @@ class DioUtils {
       code = ExceptionHandle.unknown_error;
       msg = '未知异常';
     }
-    Log.e('接口请求异常： code: $code, mag: $msg');
+    Logger.e('接口请求异常： code: $code, msg: $msg');
     onError?.call(code, msg);
   }
 }
@@ -205,7 +206,7 @@ Map<String, dynamic> parseData(String data) {
 
 enum Method { get, post, put, patch, delete, head }
 
-/// 使用拓展枚举替代 switch判断取值
+/// 使用拓展枚举替代 switch 判断取值
 /// https://zhuanlan.zhihu.com/p/98545689
 extension MethodExtension on Method {
   String get value => ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'HEAD'][index];

@@ -6,7 +6,7 @@ import 'package:hello_flutter/res/colors.dart';
 import 'package:hello_flutter/res/constant.dart';
 import 'package:hello_flutter/router/fluro_navigate_util.dart';
 
-Widget LogoutDialog(BuildContext context) {
+Widget showLogoutDialog(BuildContext context) {
   return Material(
     color: Colors.transparent,
     child: CupertinoAlertDialog(
@@ -14,7 +14,7 @@ Widget LogoutDialog(BuildContext context) {
         content: _buildContent(),
         actions: <Widget>[
           CupertinoButton(
-            child: Text(
+            child: const Text(
               "取消",
               style: TextStyle(
                 color: ColorConst.text,
@@ -24,7 +24,7 @@ Widget LogoutDialog(BuildContext context) {
             onPressed: () => Navigator.pop(context),
           ),
           CupertinoButton(
-            child: Text(
+            child: const Text(
               "退出",
               style: TextStyle(
                 color: ColorConst.app_main,
@@ -44,7 +44,7 @@ Widget LogoutDialog(BuildContext context) {
 Widget _buildTitle(context) {
   return Container(
     alignment: Alignment.center,
-    child: Text(
+    child: const Text(
       '退出登录',
       style: TextStyle(
         color: ColorConst.text,
@@ -59,7 +59,7 @@ Widget _buildContent() {
     padding: const EdgeInsets.only(top: 18.0),
     child: Container(
       alignment: Alignment.center,
-      child: Text(
+      child: const Text(
         '确定退出登录吗?',
         style: TextStyle(
           color: ColorConst.text,

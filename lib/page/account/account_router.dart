@@ -1,5 +1,5 @@
 import 'package:fluro/fluro.dart';
-import 'package:hello_flutter/page/account/page/AccountHomePage.dart';
+import 'package:hello_flutter/page/account/page/account_home_page.dart';
 import 'package:hello_flutter/page/account/page/update_password_page.dart';
 import 'package:hello_flutter/router/core/router_provider.dart';
 

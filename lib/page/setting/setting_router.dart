@@ -1,7 +1,7 @@
 import 'package:fluro/fluro.dart';
-import 'package:hello_flutter/page/setting/page/AboutPage.dart';
-import 'package:hello_flutter/page/setting/page/FeedbackPage.dart';
-import 'package:hello_flutter/page/setting/page/SettingPage.dart';
+import 'package:hello_flutter/page/setting/page/about_page.dart';
+import 'package:hello_flutter/page/setting/page/feedback_page.dart';
+import 'package:hello_flutter/page/setting/page/setting_page.dart';
 import 'package:hello_flutter/router/core/router_provider.dart';
 
 class SettingRouter implements IRouterProvider {

@@ -3,7 +3,7 @@ import 'package:flutter/widgets.dart';
 
 /// @weilu https://github.com/simplezhli/flutter_deer
 ///
-/// 便于管理ChangeNotifier，不用重复写模板代码。
+/// 便于管理 ChangeNotifier，不用重复写模板代码。
 /// 之前：
 /// ```dart
 /// class TestPageState extends State<TestPage> {

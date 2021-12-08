@@ -4,17 +4,18 @@ import 'package:hello_flutter/page/login/login_router.dart';
 import 'package:hello_flutter/res/colors.dart';
 import 'package:hello_flutter/res/resources.dart';
 import 'package:hello_flutter/router/fluro_navigate_util.dart';
-import 'package:hello_flutter/widgets/NoScrollBehavior.dart';
+import 'package:hello_flutter/widgets/no_scroll_behavior.dart';
 
 typedef DefaultHeader = Function(String);
 typedef ImageClick = Function(bool);
 
 /// 选择头像菜单
-YYDialog HeaderMenuDialog(
+YYDialog showHeaderMenuDialog(
   BuildContext context,
   ImageClick imagePicker,
   DefaultHeader header,
 ) {
+  YYDialog.init(context);
   final List<String> _data = ['更改头像', '默认头像', '相册', '拍照'];
   return YYDialog().build()
     ..gravity = Gravity.bottom
@@ -25,10 +26,10 @@ YYDialog HeaderMenuDialog(
         behavior: NoScrollBehavior(),
         child: Container(
           width: double.infinity,
-          margin: EdgeInsets.symmetric(horizontal: 12),
+          margin: const EdgeInsets.symmetric(horizontal: 12),
           child: Card(
             elevation: 0,
-            shape: RoundedRectangleBorder(
+            shape: const RoundedRectangleBorder(
               borderRadius: BorderRadius.all(
                 Radius.circular(12),
               ),
@@ -50,12 +51,12 @@ YYDialog HeaderMenuDialog(
         child: Container(
           width: MediaQuery.of(context).size.width,
           height: 50,
-          margin: EdgeInsets.only(left: 16, right: 16, top: 8, bottom: 16),
+          margin: const EdgeInsets.only(left: 16, right: 16, top: 8, bottom: 16),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(12.0),
             color: Colors.white,
           ),
-          child: Center(
+          child: const Center(
             child: Text(
               "取消",
               style: TextStyle(
@@ -118,7 +119,7 @@ _menuList(
           ),
         );
       },
-      separatorBuilder: (BuildContext context, int index) => Divider(
+      separatorBuilder: (BuildContext context, int index) => const Divider(
         height: 0.5,
         color: ColorConst.dark_text,
       ),

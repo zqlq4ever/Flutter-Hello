@@ -2,14 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_custom_dialog/flutter_custom_dialog.dart';
 import 'package:hello_flutter/res/colors.dart';
 import 'package:hello_flutter/res/resources.dart';
-import 'package:hello_flutter/widgets/NoScrollBehavior.dart';
+import 'package:hello_flutter/widgets/no_scroll_behavior.dart';
 
 typedef FeedbackSelect = Function(String);
 
-YYDialog FeedbackTypeDialog(
+YYDialog showFeedbackTypeDialog(
   BuildContext context,
   FeedbackSelect feedbackSelect,
 ) {
+  YYDialog.init(context);
   final List<String> _data = ['反馈类型', '硬件设备相关', 'App相关', '功能建议'];
   return YYDialog().build()
     ..gravity = Gravity.bottom
@@ -25,17 +26,17 @@ YYDialog FeedbackTypeDialog(
             //  圆角
             BorderRadiusGeometry radiu;
             if (index == 0) {
-              radiu = BorderRadius.only(
+              radiu = const BorderRadius.only(
                 topLeft: Radius.circular(12.0),
                 topRight: Radius.circular(12.0),
               );
             } else if (index == _data.length - 1) {
-              radiu = BorderRadius.only(
+              radiu = const BorderRadius.only(
                 bottomLeft: Radius.circular(12.0),
                 bottomRight: Radius.circular(12.0),
               );
             } else {
-              radiu = BorderRadius.all(Radius.circular(0));
+              radiu = const BorderRadius.all(Radius.circular(0));
             }
 
             return GestureDetector(
@@ -52,8 +53,8 @@ YYDialog FeedbackTypeDialog(
                 }
               },
               child: Container(
-                margin: EdgeInsets.symmetric(horizontal: 12),
-                decoration: new BoxDecoration(
+                margin: const EdgeInsets.symmetric(horizontal: 12),
+                decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: radiu,
                 ),
@@ -71,7 +72,7 @@ YYDialog FeedbackTypeDialog(
               ),
             );
           },
-          separatorBuilder: (BuildContext context, int index) => Padding(
+          separatorBuilder: (BuildContext context, int index) => const Padding(
             padding: EdgeInsets.symmetric(horizontal: 12),
             child: Divider(
               height: 0.5,
@@ -87,12 +88,12 @@ YYDialog FeedbackTypeDialog(
         child: Container(
           width: MediaQuery.of(context).size.width,
           height: 50,
-          margin: EdgeInsets.only(bottom: 16, left: 12, right: 12, top: 8),
+          margin: const EdgeInsets.only(bottom: 16, left: 12, right: 12, top: 8),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(12.0),
             color: Colors.white,
           ),
-          child: Center(
+          child: const Center(
             child: Text(
               "取消",
               style: TextStyle(

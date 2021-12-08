@@ -1,11 +1,11 @@
 import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
 import 'package:hello_flutter/page/account/account_router.dart';
-import 'package:hello_flutter/page/contactitem/contact_router.dart';
-import 'package:hello_flutter/page/dataitem/data_router.dart';
+import 'package:hello_flutter/page/contact/contact_router.dart';
+import 'package:hello_flutter/page/data/data_router.dart';
 import 'package:hello_flutter/page/home/home_router.dart';
-import 'package:hello_flutter/page/homeitem/home_item_page_router.dart';
 import 'package:hello_flutter/page/login/login_router.dart';
+import 'package:hello_flutter/page/myhome/my_home_page_router.dart';
 import 'package:hello_flutter/page/photo_view/photoview_router.dart';
 import 'package:hello_flutter/page/setting/setting_router.dart';
 import 'package:hello_flutter/page/webview/webview_router.dart';
@@ -27,7 +27,7 @@ class RoutesManager {
         BuildContext? context,
         Map<String, List<String>> params,
       ) {
-        return NotFoundPage();
+        return const NotFoundPage();
       },
     );
 
@@ -37,7 +37,7 @@ class RoutesManager {
     //  添加各模块路由
     _listRouter.add(LoginRouter());
     _listRouter.add(HomeRouter());
-    _listRouter.add(HomeItemPageRouter());
+    _listRouter.add(MyHomePageRouter());
     _listRouter.add(SettingRouter());
     _listRouter.add(ContactRouter());
     _listRouter.add(AccountRouter());

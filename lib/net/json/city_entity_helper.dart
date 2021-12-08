@@ -1,4 +1,3 @@
-
 import 'package:hello_flutter/models/city_entity.dart';
 
 cityEntityFromJson(CityEntity data, Map<String, dynamic> json) {
@@ -15,7 +14,7 @@ cityEntityFromJson(CityEntity data, Map<String, dynamic> json) {
 }
 
 Map<String, dynamic> cityEntityToJson(CityEntity entity) {
-  final Map<String, dynamic> data = new Map<String, dynamic>();
+  final Map<String, dynamic> data = <String, dynamic>{};
   data['name'] = entity.name;
   data['cityCode'] = entity.cityCode;
   data['firstCharacter'] = entity.firstCharacter;

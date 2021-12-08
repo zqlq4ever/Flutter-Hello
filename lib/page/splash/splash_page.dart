@@ -27,7 +27,7 @@ class _SplashPageState extends State<SplashPage> {
         overlays: [SystemUiOverlay.top],
       );
       SystemChrome.setSystemUIOverlayStyle(
-          SystemUiOverlayStyle(statusBarColor: Colors.transparent));
+          const SystemUiOverlayStyle(statusBarColor: Colors.transparent));
       _initSplash();
     });
 
@@ -52,7 +52,7 @@ class _SplashPageState extends State<SplashPage> {
   Widget build(BuildContext context) {
     return Material(
       color: context.backgroundColor,
-      child: Container(
+      child: SizedBox(
         width: MediaQuery.of(context).size.width, // 屏幕宽度
         height: MediaQuery.of(context).size.height, // 屏幕高度
         child: Image.asset(

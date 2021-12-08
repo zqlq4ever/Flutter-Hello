@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_custom_dialog/flutter_custom_dialog.dart';
 import 'package:hello_flutter/res/colors.dart';
 import 'package:hello_flutter/res/resources.dart';
-import 'package:hello_flutter/widgets/NoScrollBehavior.dart';
+import 'package:hello_flutter/widgets/no_scroll_behavior.dart';
 
 typedef SexCallBack = Function(String);
 
-YYDialog SexSelectDialog(BuildContext context, SexCallBack callBack) {
+YYDialog showSexSelectDialog(BuildContext context, SexCallBack callBack) {
   final List<String> _data = ['性别', '男', '女'];
   return YYDialog().build()
     ..gravity = Gravity.bottom
@@ -18,8 +18,8 @@ YYDialog SexSelectDialog(BuildContext context, SexCallBack callBack) {
         removeTop: true,
         child: Card(
           elevation: 0,
-          margin: EdgeInsets.symmetric(horizontal: 16),
-          shape: RoundedRectangleBorder(
+          margin: const EdgeInsets.symmetric(horizontal: 16),
+          shape: const RoundedRectangleBorder(
             borderRadius: BorderRadius.all(
               Radius.circular(10.0),
             ),
@@ -40,7 +40,7 @@ YYDialog SexSelectDialog(BuildContext context, SexCallBack callBack) {
                         break;
                     }
                   },
-                  child: Container(
+                  child: SizedBox(
                     width: MediaQuery.of(context).size.width,
                     height: 50,
                     child: Center(
@@ -55,11 +55,9 @@ YYDialog SexSelectDialog(BuildContext context, SexCallBack callBack) {
                   ),
                 );
               },
-              separatorBuilder: (BuildContext context, int index) => Container(
-                child: Divider(
-                  height: 0.5,
-                  color: ColorConst.line,
-                ),
+              separatorBuilder: (BuildContext context, int index) => const Divider(
+                height: 0.5,
+                color: ColorConst.line,
               ),
             ),
           ),
@@ -72,12 +70,12 @@ YYDialog SexSelectDialog(BuildContext context, SexCallBack callBack) {
         child: Container(
           width: MediaQuery.of(context).size.width,
           height: 50,
-          margin: EdgeInsets.only(bottom: 16, left: 16, right: 16, top: 8),
+          margin: const EdgeInsets.only(bottom: 16, left: 16, right: 16, top: 8),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(10),
             color: Colors.white,
           ),
-          child: Center(
+          child: const Center(
             child: Text(
               "取消",
               style: TextStyle(

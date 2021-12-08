@@ -18,10 +18,10 @@ dependencies:
   url_strategy: 0.2.0
   # Localization https://github.com/dart-lang/intl
   intl: ^0.17.0
-  # Toast 插件 https://github.com/OpenFlutter/flutter_oktoast
+  # oktoast 插件 https://github.com/OpenFlutter/flutter_oktoast
   oktoast: ^3.1.5
-  # 网络库 https://github.com/flutterchina/dio
-  dio: ^4.0.1
+  # Dio 网络库 https://github.com/flutterchina/dio
+  dio: ^4.0.4
   # https://github.com/ReactiveX/rxdart
   rxdart: ^0.27.2
   # Flutter 常用工具类库 https://github.com/Sky24n/flustars
@@ -30,10 +30,10 @@ dependencies:
   flutter_swiper_null_safety: ^1.0.2  # flutter_swiper很久不维护，可以使用空安全版本：flutter_swiper_null_safety
   # 启动 URL 的插件（支持 Web） https://github.com/flutter/plugins/tree/master/packages/url_launcher
   url_launcher: 6.0.12
-  # 图片选择插件（支持 Web） https://github.com/flutter/plugins/tree/master/packages/image_picker
+  # 图片选择器,系统相机拍照（支持 Web） https://github.com/flutter/plugins/tree/master/packages/image_picker
   image_picker: 0.8.4+2
   # 侧滑删除 https://github.com/letsar/flutter_slidable
-  flutter_slidable: ^0.6.0
+  flutter_slidable: ^1.1.0
   # WebView 插件 https://github.com/flutter/plugins/tree/master/packages/webview_flutter
   webview_flutter: 2.3.0
   # 处理键盘事件 https://github.com/diegoveloper/flutter_keyboard_actions
@@ -45,7 +45,7 @@ dependencies:
   # 路由框架 https://github.com/theyakka/fluro
   fluro: ^2.0.3
   # 图片缓存 https://github.com/renefloor/flutter_cached_network_image
-  cached_network_image: ^3.1.0+1
+  cached_network_image: ^3.2.0
   # 格式化 String https://github.com/Naddiseo/dart-sprintf
   sprintf: ^6.0.0
   # 状态管理 https://github.com/rrousselGit/provider
@@ -68,12 +68,22 @@ dependencies:
   flutter_custom_dialog: ^1.2.0
   # ios 风格图标
   cupertino_icons: ^1.0.2
-  # 汉字转拼音
+  # 汉字转拼音 https://github.com/flutterchina/lpinyin
   lpinyin: ^2.0.2
-  # 图片浏览
+  # 图片浏览  https://github.com/bluefireteam/photo_view
   photo_view: ^0.13.0
-  # 图标库 https://github.com/imaNNeoFighT/fl_chart
+  # 图表,柱状图 https://github.com/imaNNeoFighT/fl_chart
   fl_chart: ^0.40.5
+  # 代码扫描
+  flutter_lints: ^1.0.0
+  # GetX 是 Flutter 上的一个轻量且强大的解决方案：高性能的状态管理、智能的依赖注入和便捷的路由管理。
+  # https://github.com/jonataslaw/getx/blob/master/README.zh-cn.md
+  get: ^4.5.1
+
+# 依赖覆盖
+dependency_overrides:
+  #  common_utils 使用的是 decimal : 2.0.0 会编译失败,暂时用 1.5.0 覆盖掉
+  decimal: ^1.5.0
 
 
 flutter:

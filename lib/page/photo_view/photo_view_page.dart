@@ -21,7 +21,7 @@ class _PhotoViewPageState extends State<PhotoViewPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.black,
-      appBar: MyAppBar(
+      appBar: const MyAppBar(
         backImgColor: Colors.white,
         isBack: true,
         centerTitle: '',

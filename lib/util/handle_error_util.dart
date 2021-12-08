@@ -8,10 +8,10 @@ void handleError(void Function() body) {
   /// 重写 Flutter 异常回调 FlutterError.onError
   FlutterError.onError = (FlutterErrorDetails details) {
     if (!AppConstant.inProduction) {
-      // debug时，直接将异常信息打印。
+      // debug 时，直接将异常信息打印。
       FlutterError.dumpErrorToConsole(details);
     } else {
-      // release时，将异常交由zone统一处理。
+      // release 时，将异常交由 zone 统一处理。
       Zone.current.handleUncaughtError(details.exception, details.stack!);
     }
   };

@@ -41,20 +41,21 @@ class TokenInterceptor extends Interceptor {
             as String;
       }
     } catch (e) {
-      Log.e('刷新Token失败！');
+      Logger.e('刷新 Token 失败！');
     }
     return null;
   }
 
   @override
   Future<void> onResponse(Response response, ResponseInterceptorHandler handler) async {
-    //401代表token过期
+    // 401 代表 token 过期
     if (response.statusCode == ExceptionHandle.unauthorized) {
-      Log.d('-----------自动刷新Token------------');
+      Logger.d('-----------自动刷新 Token------------');
       final Dio dio = DioUtils.instance.dio;
       dio.lock();
-      final String? accessToken = await getToken(); // 获取新的accessToken
-      Log.e('-----------NewToken: $accessToken ------------');
+      // 获取新的 accessToken
+      final String? accessToken = await getToken();
+      Logger.e('-----------NewToken: $accessToken ------------');
       SpUtil.putString(AppConstant.accessToken, accessToken.nullSafe);
       dio.unlock();
 
@@ -69,9 +70,9 @@ class TokenInterceptor extends Interceptor {
         );
 
         try {
-          Log.e('----------- 重新请求接口 ------------');
+          Logger.e('----------- 重新请求接口 ------------');
 
-          /// 避免重复执行拦截器，使用tokenDio
+          /// 避免重复执行拦截器，使用 tokenDio
           final Response response = await _tokenDio!.request<dynamic>(
             request.path,
             data: request.data,
@@ -97,17 +98,17 @@ class LoggingInterceptor extends Interceptor {
   @override
   void onRequest(RequestOptions options, RequestInterceptorHandler handler) {
     _startTime = DateTime.now();
-    Log.d('----------Start----------');
+    Logger.d('----------Start----------');
     if (options.queryParameters.isEmpty) {
-      Log.d('RequestUrl: ${options.baseUrl}${options.path}');
+      Logger.d('RequestUrl: ${options.baseUrl}${options.path}');
     } else {
-      Log.d(
+      Logger.d(
           'RequestUrl: ${options.baseUrl}${options.path}?${Transformer.urlEncodeMap(options.queryParameters)}');
     }
-    Log.d('RequestMethod: ${options.method}');
-    Log.d('RequestHeaders:${options.headers}');
-    Log.d('RequestContentType: ${options.contentType}');
-    Log.d('RequestData: ${options.data.toString()}');
+    Logger.d('RequestMethod: ${options.method}');
+    Logger.d('RequestHeaders:${options.headers}');
+    Logger.d('RequestContentType: ${options.contentType}');
+    Logger.d('RequestData: ${options.data.toString()}');
     super.onRequest(options, handler);
   }
 
@@ -116,19 +117,19 @@ class LoggingInterceptor extends Interceptor {
     _endTime = DateTime.now();
     final int duration = _endTime.difference(_startTime).inMilliseconds;
     if (response.statusCode == ExceptionHandle.success) {
-      Log.d('ResponseCode: ${response.statusCode}');
+      Logger.d('ResponseCode: ${response.statusCode}');
     } else {
-      Log.e('ResponseCode: ${response.statusCode}');
+      Logger.e('ResponseCode: ${response.statusCode}');
     }
     // 输出结果
-    Log.json(response.data.toString());
-    Log.d('----------End: $duration 毫秒----------');
+    Logger.json(response.data.toString());
+    Logger.d('----------End: $duration 毫秒----------');
     super.onResponse(response, handler);
   }
 
   @override
   void onError(DioError err, ErrorInterceptorHandler handler) {
-    Log.d('----------Error-----------');
+    Logger.d('----------Error-----------');
     super.onError(err, handler);
   }
 }
@@ -136,13 +137,13 @@ class LoggingInterceptor extends Interceptor {
 class AdapterInterceptor extends Interceptor {
   static const String _kMsg = 'msg';
   static const String _kSlash = "'";
-  static const String _kMessage = 'message';
+  static const String _kMessage = 'msg';
 
   static const String _kDefaultText = '无返回信息';
   static const String _kNotFound = '未找到查询信息';
 
-  static const String _kFailureFormat = '{"code":%d,"message":"%s"}';
-  static const String _kSuccessFormat = '{"code":0,"data":%s,"message":""}';
+  static const String _kFailureFormat = '{"code":%d,"msg":"%s"}';
+  static const String _kSuccessFormat = '{"code":0,"data":%s,"msg":""}';
 
   @override
   void onResponse(Response response, ResponseInterceptorHandler handler) {
@@ -177,7 +178,7 @@ class AdapterInterceptor extends Interceptor {
         response.statusCode = ExceptionHandle.success;
       } else {
         if (content.isEmpty) {
-          // 一般为网络断开等异常
+          //  一般为网络断开等异常
           result = content;
         } else {
           String msg;
@@ -195,7 +196,7 @@ class AdapterInterceptor extends Interceptor {
               msg = '未知异常';
             }
             result = sprintf(_kFailureFormat, [response.statusCode, msg]);
-            // 401 token失效时，单独处理，其他一律为成功
+            // 401 token 失效时，单独处理，其他一律为成功
             if (response.statusCode == ExceptionHandle.unauthorized) {
               response.statusCode = ExceptionHandle.unauthorized;
             } else {
@@ -203,7 +204,7 @@ class AdapterInterceptor extends Interceptor {
             }
           } catch (e) {
 //            Log.d('异常信息：$e');
-            // 解析异常直接按照返回原数据处理（一般为返回500,503 HTML页面代码）
+            // 解析异常直接按照返回原数据处理（一般为返回 500,503 HTML 页面代码）
             result =
                 sprintf(_kFailureFormat, [response.statusCode, '服务器异常(${response.statusCode})']);
           }

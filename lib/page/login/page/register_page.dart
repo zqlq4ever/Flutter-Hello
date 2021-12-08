@@ -51,7 +51,7 @@ class _RegisterPageState extends State<RegisterPage> with ChangeNotifierMixin<Re
         overlays: [SystemUiOverlay.top],
       );
       SystemChrome.setSystemUIOverlayStyle(
-          SystemUiOverlayStyle(statusBarColor: Colors.transparent));
+          const SystemUiOverlayStyle(statusBarColor: Colors.transparent));
     });
   }
 
@@ -88,7 +88,7 @@ class _RegisterPageState extends State<RegisterPage> with ChangeNotifierMixin<Re
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: MyAppBar(
+      appBar: const MyAppBar(
         isBack: true,
         centerTitle: '新用户注册',
         backgroundColor: Colors.white,
@@ -112,12 +112,12 @@ class _RegisterPageState extends State<RegisterPage> with ChangeNotifierMixin<Re
         Gaps.vGap24,
         Container(
           color: Colors.white,
-          padding: EdgeInsets.symmetric(horizontal: 40.0),
+          padding: const EdgeInsets.symmetric(horizontal: 40.0),
           child: TextField(
             focusNode: _nodePhone,
             controller: _phoneController,
             maxLength: 11,
-            decoration: InputDecoration(
+            decoration: const InputDecoration(
               hintText: "请输入手机号",
               counterText: '',
               border: InputBorder.none,
@@ -128,7 +128,7 @@ class _RegisterPageState extends State<RegisterPage> with ChangeNotifierMixin<Re
         ),
         Container(
             color: Colors.white,
-            padding: EdgeInsets.symmetric(horizontal: 40.0),
+            padding: const EdgeInsets.symmetric(horizontal: 40.0),
             child: Row(
               children: [
                 Expanded(
@@ -136,7 +136,7 @@ class _RegisterPageState extends State<RegisterPage> with ChangeNotifierMixin<Re
                     focusNode: _nodePassword,
                     controller: _passwordController,
                     maxLength: 6,
-                    decoration: InputDecoration(
+                    decoration: const InputDecoration(
                       hintText: "请输入验证码",
                       counterText: '',
                       border: InputBorder.none,
@@ -145,7 +145,7 @@ class _RegisterPageState extends State<RegisterPage> with ChangeNotifierMixin<Re
                     inputFormatters: [FilteringTextInputFormatter.allow(RegExp('[0-9]'))],
                   ),
                 ),
-                Text(
+                const Text(
                   "获取验证码",
                   style: TextStyle(color: ColorConst.app_main),
                 ),
@@ -154,7 +154,7 @@ class _RegisterPageState extends State<RegisterPage> with ChangeNotifierMixin<Re
         _protocol(),
         Gaps.vGap32,
         Container(
-          padding: EdgeInsets.symmetric(horizontal: 40.0),
+          padding: const EdgeInsets.symmetric(horizontal: 40.0),
           child: MyButton(
             key: const Key('login'),
             onPressed: _clickable ? _completePersonInfo : null,
@@ -165,7 +165,7 @@ class _RegisterPageState extends State<RegisterPage> with ChangeNotifierMixin<Re
       ];
 
   _protocol() => Container(
-        padding: EdgeInsets.only(left: 26),
+        padding: const EdgeInsets.only(left: 26),
         alignment: Alignment.bottomCenter,
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -181,13 +181,13 @@ class _RegisterPageState extends State<RegisterPage> with ChangeNotifierMixin<Re
             Text.rich(
               TextSpan(
                 children: [
-                  TextSpan(
+                  const TextSpan(
                     text: "同意",
                     style: TextStyle(fontSize: 16, color: ColorConst.text_gray),
                   ),
                   TextSpan(
                     text: "《XXX用户协议》",
-                    style: TextStyle(fontSize: 16, color: ColorConst.app_main),
+                    style: const TextStyle(fontSize: 16, color: ColorConst.app_main),
                     recognizer: TapGestureRecognizer()
                       ..onTap = () {
                         _launchWebURL('用户协议', 'https://www.baidu.com');

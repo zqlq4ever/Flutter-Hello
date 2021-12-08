@@ -1,8 +1,8 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:hello_flutter/page/contactitem/page/ContactItemPage.dart';
-import 'package:hello_flutter/page/dataitem/page/DataItemPage.dart';
-import 'package:hello_flutter/page/homeitem/page/HomeItemPage.dart';
+import 'package:hello_flutter/page/contact/page/contact_history_page.dart';
+import 'package:hello_flutter/page/data/page/data_item_page.dart';
+import 'package:hello_flutter/page/myhome/page/my_home_page.dart';
 import 'package:hello_flutter/res/resources.dart';
 import 'package:hello_flutter/widgets/double_tap_back_exit_app.dart';
 import 'package:hello_flutter/widgets/load_image.dart';
@@ -92,9 +92,9 @@ class _HomePageState extends State<HomePage> {
 
   void initData() {
     _pageList = [
-      HomeItemPage(),
-      ContactItemPage(),
-      DataItemPage(),
+      const MyHomePage(),
+      const ContactHistoryPage(),
+      const DataItemPage(),
     ];
   }
 }

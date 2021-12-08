@@ -89,7 +89,7 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
                     return null;
                   }),
                   overlayColor: MaterialStateProperty.all(Colors.transparent),
-                  padding: MaterialStateProperty.all(EdgeInsets.symmetric(horizontal: 16)),
+                  padding: MaterialStateProperty.all(const EdgeInsets.symmetric(horizontal: 16)),
                 ),
               ),
             ),

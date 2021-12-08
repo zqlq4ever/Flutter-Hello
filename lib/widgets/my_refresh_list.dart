@@ -47,7 +47,7 @@ class _RefreshListViewState extends State<RefreshListView> {
     final Widget child = RefreshIndicator(
       onRefresh: widget.onRefresh,
       child: widget.itemCount == 0
-          ? Text('页面不存在')
+          ? const Text('页面不存在')
           : ListView.builder(
               itemCount: widget.loadMore == null ? widget.itemCount : widget.itemCount + 1,
               padding: widget.padding,

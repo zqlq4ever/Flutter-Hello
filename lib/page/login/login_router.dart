@@ -19,7 +19,7 @@ class LoginRouter implements IRouterProvider {
     router.define(loginPage, handler: Handler(handlerFunc: (_, __) => const LoginPage()));
     router.define(register, handler: Handler(handlerFunc: (_, __) => const RegisterPage()));
     router.define(forgetPassword,
-        handler: Handler(handlerFunc: (_, __) => const forgetPasswordPage()));
+        handler: Handler(handlerFunc: (_, __) => const ForgetPasswordPage()));
     router.define(completePersonInfo,
         handler: Handler(handlerFunc: (_, __) => const CompletePersonInfoPage()));
     router.define(defautHeader, handler: Handler(handlerFunc: (_, __) => const DefautHeaderPage()));

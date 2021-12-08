@@ -52,7 +52,7 @@ class _UpdatePasswordPageState extends State<UpdatePasswordPage>
         overlays: [SystemUiOverlay.top],
       );
       SystemChrome.setSystemUIOverlayStyle(
-          SystemUiOverlayStyle(statusBarColor: Colors.transparent));
+          const SystemUiOverlayStyle(statusBarColor: Colors.transparent));
     });
   }
 
@@ -82,7 +82,7 @@ class _UpdatePasswordPageState extends State<UpdatePasswordPage>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: MyAppBar(
+      appBar: const MyAppBar(
         isBack: true,
         centerTitle: '修改密码',
       ),
@@ -104,13 +104,13 @@ class _UpdatePasswordPageState extends State<UpdatePasswordPage>
         Container(
           color: Colors.white,
           height: 50,
-          padding: EdgeInsets.symmetric(horizontal: 40.0),
+          padding: const EdgeInsets.symmetric(horizontal: 40.0),
           child: Center(
             child: TextField(
               focusNode: _nodePhone,
               controller: _phoneController,
               maxLength: 11,
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 hintText: "请输入手机号",
                 counterText: '',
                 border: InputBorder.none,
@@ -122,13 +122,13 @@ class _UpdatePasswordPageState extends State<UpdatePasswordPage>
         Container(
           color: Colors.white,
           height: 50,
-          padding: EdgeInsets.symmetric(horizontal: 40.0),
+          padding: const EdgeInsets.symmetric(horizontal: 40.0),
           child: Center(
             child: TextField(
               focusNode: _nodePassword,
               controller: _passwordController,
               maxLength: 16,
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 hintText: "请输入密码",
                 counterText: '',
                 border: InputBorder.none,
@@ -140,13 +140,13 @@ class _UpdatePasswordPageState extends State<UpdatePasswordPage>
         Container(
           color: Colors.white,
           height: 50,
-          padding: EdgeInsets.symmetric(horizontal: 40.0),
+          padding: const EdgeInsets.symmetric(horizontal: 40.0),
           child: Center(
             child: TextField(
               focusNode: _nodePasswordComfirm,
               controller: _passwordConfimeController,
               maxLength: 16,
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 hintText: "请再次输入密码",
                 counterText: '',
                 border: InputBorder.none,
@@ -157,7 +157,7 @@ class _UpdatePasswordPageState extends State<UpdatePasswordPage>
         ),
         Gaps.vGap40,
         Container(
-          padding: EdgeInsets.symmetric(horizontal: 40.0),
+          padding: const EdgeInsets.symmetric(horizontal: 40.0),
           child: MyButton(
             key: const Key('comfirm'),
             onPressed: _clickable ? _confirm : null,
@@ -166,7 +166,7 @@ class _UpdatePasswordPageState extends State<UpdatePasswordPage>
           ),
         ),
         Gaps.vGap16,
-        Center(
+        const Center(
           child: Text(
             '忘记原密码?',
             style: TextStyle(

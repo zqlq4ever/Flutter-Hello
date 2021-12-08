@@ -62,7 +62,7 @@ class _LoginPageState extends State<LoginPage>
 
   @override
   void initState() {
-    tabController = new TabController(length: 2, vsync: this);
+    tabController = TabController(length: 2, vsync: this);
     super.initState();
     WidgetsBinding.instance!.addPostFrameCallback((_) {
       SystemChrome.setEnabledSystemUIMode(
@@ -70,7 +70,7 @@ class _LoginPageState extends State<LoginPage>
         overlays: [SystemUiOverlay.top, SystemUiOverlay.bottom],
       );
       SystemChrome.setSystemUIOverlayStyle(
-          SystemUiOverlayStyle(statusBarColor: Colors.transparent));
+          const SystemUiOverlayStyle(statusBarColor: Colors.transparent));
       SpUtil.putBool(AppConstant.hasLogin, false);
     });
   }
@@ -104,7 +104,7 @@ class _LoginPageState extends State<LoginPage>
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      appBar: MyAppBar(
+      appBar: const MyAppBar(
         isBack: false,
       ),
       body: Stack(
@@ -155,13 +155,13 @@ class _LoginPageState extends State<LoginPage>
             Text.rich(
               TextSpan(
                 children: [
-                  TextSpan(
+                  const TextSpan(
                     text: "登录代表你已同意",
                     style: TextStyle(fontSize: 16, color: ColorConst.text_gray),
                   ),
                   TextSpan(
                     text: "《XXX用户协议》",
-                    style: TextStyle(fontSize: 16, color: ColorConst.app_main),
+                    style: const TextStyle(fontSize: 16, color: ColorConst.app_main),
                     recognizer: TapGestureRecognizer()
                       ..onTap = () {
                         _launchWebURL('用户协议', 'https://www.baidu.com');
@@ -187,23 +187,23 @@ class _LoginPageState extends State<LoginPage>
           onTap: (tab) {
             print(tab);
           },
-          labelStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-          unselectedLabelStyle: TextStyle(fontSize: 16),
+          labelStyle: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+          unselectedLabelStyle: const TextStyle(fontSize: 16),
           isScrollable: true,
           controller: tabController,
           labelColor: ColorConst.app_main,
           indicatorWeight: 3,
-          indicatorPadding: EdgeInsets.symmetric(horizontal: 10),
+          indicatorPadding: const EdgeInsets.symmetric(horizontal: 10),
           unselectedLabelColor: ColorConst.text_gray,
           indicatorColor: ColorConst.app_main,
-          tabs: [
+          tabs: const [
             Tab(text: "密码登录"),
             Tab(text: "验证码登录"),
           ],
         ),
       );
 
-  _logo() => Center(
+  _logo() => const Center(
         child: LoadAssetImage(
           'ic_logo',
           width: 80,
@@ -214,7 +214,7 @@ class _LoginPageState extends State<LoginPage>
   _register() => Center(
         child: InkWell(
           child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
             child: Text(
               '注册',
               style: TextStyle(
@@ -229,7 +229,7 @@ class _LoginPageState extends State<LoginPage>
 
   _forgetPassword() => InkWell(
         child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
           child: Text(
             '忘记密码',
             style: Theme.of(context).textTheme.subtitle2,
@@ -239,7 +239,7 @@ class _LoginPageState extends State<LoginPage>
       );
 
   _loginButton() => Container(
-        padding: EdgeInsets.symmetric(horizontal: 40.0),
+        padding: const EdgeInsets.symmetric(horizontal: 40.0),
         child: MyButton(
           key: const Key('login'),
           onPressed: _clickable ? _login : null,
@@ -249,13 +249,13 @@ class _LoginPageState extends State<LoginPage>
       );
 
   _inputPassword() => Container(
-        padding: EdgeInsets.symmetric(horizontal: 40.0),
+        padding: const EdgeInsets.symmetric(horizontal: 40.0),
         child: TextField(
           focusNode: _nodePassword,
           controller: _passwordController,
           maxLength: 16,
-          decoration: InputDecoration(
-            contentPadding: const EdgeInsets.symmetric(vertical: 8.0),
+          decoration: const InputDecoration(
+            contentPadding:EdgeInsets.symmetric(vertical: 8.0),
             hintText: "请输入密码",
             counterText: '',
             border: InputBorder.none,
@@ -265,13 +265,13 @@ class _LoginPageState extends State<LoginPage>
       );
 
   _inputPhone() => Container(
-        padding: EdgeInsets.symmetric(horizontal: 40.0),
+        padding: const EdgeInsets.symmetric(horizontal: 40.0),
         child: TextField(
           focusNode: _nodePhone,
           controller: _phoneController,
           maxLength: 11,
-          decoration: InputDecoration(
-            contentPadding: const EdgeInsets.symmetric(vertical: 8.0),
+          decoration: const InputDecoration(
+            contentPadding: EdgeInsets.symmetric(vertical: 8.0),
             hintText: "请输入手机号",
             counterText: '',
             border: InputBorder.none,
