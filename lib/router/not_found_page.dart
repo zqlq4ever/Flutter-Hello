@@ -11,7 +11,7 @@ class NotFoundPage extends StatelessWidget {
         centerTitle: '页面不存在',
       ),
       body: Center(
-        child: Text('请先配置页面'),
+        child: Text('页面不存在'),
       ),
     );
   }

@@ -2,12 +2,13 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
+import 'package:get/get.dart';
 import 'package:hello_flutter/page/splash/splash_page.dart';
 import 'package:hello_flutter/res/constant.dart';
-import 'package:hello_flutter/router/core/not_found_page.dart';
-import 'package:hello_flutter/router/routers_manager.dart';
+import 'package:hello_flutter/router/not_found_page.dart';
+import 'package:hello_flutter/util/focus_util.dart';
 import 'package:hello_flutter/util/handle_error_util.dart';
-import 'package:hello_flutter/util/log_utils.dart';
+import 'package:hello_flutter/util/log_util.dart';
 import 'package:oktoast/oktoast.dart';
 import 'package:sp_util/sp_util.dart';
 import 'package:url_strategy/url_strategy.dart';
@@ -43,7 +44,6 @@ class HelloApp extends StatelessWidget {
   HelloApp({Key? key}) : super(key: key) {
     Logger.init();
     initDio();
-    RoutesManager.initRoutes();
   }
 
   static GlobalKey<NavigatorState> navigateKey = GlobalKey();
@@ -73,11 +73,9 @@ class HelloApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Text('sds');
-
     /// OKToast 配置
     return OKToast(
-      child: _buildMaterialApp(),
+      child: _buildGetMaterialApp(),
       backgroundColor: Colors.black45,
       textPadding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 10.0),
       radius: 10,
@@ -87,18 +85,22 @@ class HelloApp extends StatelessWidget {
     );
   }
 
-  _buildMaterialApp() => MaterialApp(
+  _buildGetMaterialApp() => GetMaterialApp(
         title: 'Hello Flutter',
         // 去除右上角 debug 的标签
         // debugShowCheckedModeBanner: false,
         home: const SplashPage(),
-        onGenerateRoute: RoutesManager.router.generator,
-        builder: (BuildContext context, Widget? child) {
-          /// 保证文字大小不受手机系统设置影响
-          /// https://www.kikt.top/posts/flutter/layout/dynamic-text/
-          return MediaQuery(
-            data: MediaQuery.of(context).copyWith(textScaleFactor: 1.0),
-            child: child!,
+        defaultTransition: Transition.fadeIn,
+        builder: (context, child) {
+          return GestureDetector(
+            onTap: () => FocusUtil.unfocus(),
+
+            /// 保证文字大小不受手机系统设置影响
+            /// https://www.kikt.top/posts/flutter/layout/dynamic-text/
+            child: MediaQuery(
+              data: MediaQuery.of(context).copyWith(textScaleFactor: 1.0),
+              child: child!,
+            ),
           );
         },
 
@@ -108,6 +110,5 @@ class HelloApp extends StatelessWidget {
             builder: (BuildContext context) => const NotFoundPage(),
           );
         },
-        restorationScopeId: 'app',
       );
 }

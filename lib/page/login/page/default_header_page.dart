@@ -1,49 +1,23 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
+import 'package:get/get_instance/src/extension_instance.dart';
+import 'package:get/get_state_manager/src/simple/get_view.dart';
+import 'package:hello_flutter/page/login/controller/default_header_controller.dart';
 import 'package:hello_flutter/res/colors.dart';
 import 'package:hello_flutter/res/gaps.dart';
-import 'package:hello_flutter/router/fluro_navigate_util.dart';
 import 'package:hello_flutter/widgets/load_image.dart';
 import 'package:hello_flutter/widgets/my_app_bar.dart';
 import 'package:hello_flutter/widgets/no_scroll_behavior.dart';
 
 /// 登录 - 注册 - 完善个人信息 - 默认头像
-class DefautHeaderPage extends StatefulWidget {
+class DefautHeaderPage extends GetView<DefaultHeaderController> {
   const DefautHeaderPage({Key? key}) : super(key: key);
 
   @override
-  _DefautHeaderPageState createState() => _DefautHeaderPageState();
-}
-
-class _DefautHeaderPageState extends State<DefautHeaderPage> {
-  final List<String> data = [
-    'ic_header_boy',
-    'ic_header_dad',
-    'ic_header_girl',
-    'ic_header_mom',
-    'ic_header_grandma',
-    'ic_header_grandpa',
-  ];
-  int selectedIndex = 0;
-  double screenWidth = 0;
-
-  @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance!.addPostFrameCallback((_) {
-      SystemChrome.setEnabledSystemUIMode(
-        SystemUiMode.manual,
-        overlays: [SystemUiOverlay.top, SystemUiOverlay.bottom],
-      );
-      SystemChrome.setSystemUIOverlayStyle(
-          const SystemUiOverlayStyle(statusBarColor: Colors.transparent));
-    });
-  }
-
-  @override
   Widget build(BuildContext context) {
-    screenWidth = MediaQuery.of(context).size.width;
+    Get.put(DefaultHeaderController());
     return Scaffold(
       appBar: const MyAppBar(
         isBack: true,
@@ -52,7 +26,7 @@ class _DefautHeaderPageState extends State<DefautHeaderPage> {
       ),
       body: Container(
         color: ColorConst.bg_color,
-        width: screenWidth,
+        width: double.infinity,
         height: MediaQuery.of(context).size.height,
         child: Column(
           children: [
@@ -83,7 +57,7 @@ class _DefautHeaderPageState extends State<DefautHeaderPage> {
                   ),
                 ),
                 onPressed: () {
-                  NavigateUtil.goBackWithParams(context, data[selectedIndex]);
+                  Get.back(result: controller.data[controller.selectedIndex.value]);
                 },
               ),
             )
@@ -97,7 +71,7 @@ class _DefautHeaderPageState extends State<DefautHeaderPage> {
         behavior: NoScrollBehavior(),
         child: GridView.builder(
             shrinkWrap: true,
-            itemCount: data.length,
+            itemCount: controller.data.length,
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                 //  横轴元素个数
                 crossAxisCount: 3,
@@ -108,38 +82,35 @@ class _DefautHeaderPageState extends State<DefautHeaderPage> {
                 //  子组件宽高长度比例
                 childAspectRatio: 1.0),
             itemBuilder: (BuildContext context, int index) {
-              double width = 0;
-              if (selectedIndex == index) {
-                width = 3;
-              } else {
-                width = 0;
-              }
               return Stack(
                 children: [
-                  Container(
-                    decoration: BoxDecoration(
-                      border: Border.all(
-                        color: ColorConst.app_main,
-                        width: width,
+                  Obx(() {
+                    return Container(
+                      decoration: BoxDecoration(
+                        border: Border.all(
+                          color: controller.selectedIndex.value == index
+                              ? ColorConst.app_main
+                              : Colors.transparent,
+                          width: 3,
+                        ),
+                        borderRadius: BorderRadius.circular(300),
                       ),
-                      borderRadius: BorderRadius.circular(200),
-                    ),
-                    child: GestureDetector(
-                      onTap: () {
-                        selectedIndex = index;
-                        setState(() {});
-                      },
-                      child: LoadAssetImage(data[index]),
-                    ),
-                  ),
-                  Visibility(
-                    visible: selectedIndex == index,
-                    child: const Positioned(
-                      right: 10,
-                      child: LoadAssetImage(
-                        'ic_selected',
-                        width: 20,
-                        height: 20,
+                      child: GestureDetector(
+                        onTap: () => controller.setSelectIndex(index),
+                        child: LoadAssetImage(controller.data[index]),
+                      ),
+                    );
+                  }),
+                  Obx(
+                    () => Visibility(
+                      visible: controller.selectedIndex.value == index,
+                      child: const Positioned(
+                        right: 10,
+                        child: LoadAssetImage(
+                          'ic_selected',
+                          width: 20,
+                          height: 20,
+                        ),
                       ),
                     ),
                   ),

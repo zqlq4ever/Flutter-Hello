@@ -1,8 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:hello_flutter/page/webview/webview_page.dart';
 import 'package:hello_flutter/res/colors.dart';
 import 'package:hello_flutter/res/gaps.dart';
-import 'package:hello_flutter/router/fluro_navigate_util.dart';
 import 'package:hello_flutter/util/device_util.dart';
 import 'package:hello_flutter/util/other_util.dart';
 import 'package:hello_flutter/widgets/load_image.dart';
@@ -113,7 +114,13 @@ class _AboutPageState extends State<AboutPage> {
 
   void _launchWebURL(String title, String url) {
     if (DeviceUtil.isMobile) {
-      NavigateUtil.goWebViewPage(context, title, url);
+      Get.to(
+        () => const WebViewPage(),
+        arguments: {
+          "title": title,
+          "url": url,
+        },
+      );
     } else {
       Util.launchWebURL(url);
     }

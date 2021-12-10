@@ -1,62 +1,29 @@
 import 'dart:convert';
 
-import 'package:common_utils/common_utils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
+import 'package:get/get_navigation/src/extension_navigation.dart';
 import 'package:hello_flutter/models/contact_history/contact_history_device_bean.dart';
 import 'package:hello_flutter/models/contact_list/contact_list_item_entity.dart';
 import 'package:hello_flutter/models/contact_list/contact_list_parent.dart';
+import 'package:hello_flutter/page/contact/controller/contact_list_controller.dart';
+import 'package:hello_flutter/page/contact/page/contact_detail_page.dart';
+import 'package:hello_flutter/page/contact/page/newcontact_page.dart';
 import 'package:hello_flutter/res/colors.dart';
 import 'package:hello_flutter/res/gaps.dart';
-import 'package:hello_flutter/router/fluro_navigate_util.dart';
-import 'package:hello_flutter/util/change_notifier_manage.dart';
-import 'package:hello_flutter/util/log_utils.dart';
 import 'package:hello_flutter/widgets/load_image.dart';
 import 'package:hello_flutter/widgets/my_app_bar.dart';
-import 'package:lpinyin/lpinyin.dart';
 import 'package:sticky_headers/sticky_headers/widget.dart';
 
-import '../contact_router.dart';
-
 /// 通讯录
-class ContactListPage extends StatefulWidget {
+class ContactListPage extends GetView<ContactListController> {
   const ContactListPage({Key? key}) : super(key: key);
 
   @override
-  _ContactListPageState createState() => _ContactListPageState();
-}
-
-class _ContactListPageState extends State<ContactListPage>
-    with ChangeNotifierMixin<ContactListPage> {
-  //  设备列表
-  List<ContactHistoryDeviceBean> _deviceData = [];
-
-  //  原始数据
-  List<ContactListItemEntity> _contactSourceData = [];
-
-  //  输入框内容监听
-  final ValueNotifier<String> _searchContent = ValueNotifier<String>('');
-
-  //  筛选数据
-  final ValueNotifier<List<ContactListParent>> _contactFilterData =
-      ValueNotifier<List<ContactListParent>>([]);
-
-  //  输入框文本
-  final TextEditingController _searchController = TextEditingController(text: "");
-
-  //  输入框焦点
-  final FocusNode _nodeSearch = FocusNode();
-
-  @override
-  Map<ChangeNotifier?, List<VoidCallback>?>? changeNotifier() {
-    return {
-      _searchController: [],
-      _nodeSearch: null,
-    };
-  }
-
-  @override
   Widget build(BuildContext context) {
+    Get.put(ContactListController());
     return Scaffold(
         backgroundColor: ColorConst.bg_color,
         appBar: const MyAppBar(
@@ -104,85 +71,6 @@ class _ContactListPageState extends State<ContactListPage>
         ),
       );
 
-  _sticky() => FutureBuilder(
-        future: DefaultAssetBundle.of(context).loadString('assets/data/ContactListData.json'),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState != ConnectionState.done) {
-            return Container();
-          }
-          //  json 解析为 List
-          List result = json.decode(snapshot.data.toString());
-          //  List 元素转为具体对象
-          _contactSourceData =
-              result.map((element) => ContactListItemEntity.fromJson(element)).toList();
-          //  对原始数据进行分类
-          _groupSourceData(_contactSourceData);
-
-          return ValueListenableBuilder<List<ContactListParent>>(
-            valueListenable: _contactFilterData,
-            builder: (context, value, child) {
-              return ListView.builder(
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                itemCount: value.length,
-                itemBuilder: (context, index) => StickyHeader(
-                  header: Container(
-                    color: ColorConst.bg_color,
-                    padding: const EdgeInsets.only(left: 16, bottom: 8, top: 8),
-                    alignment: Alignment.centerLeft,
-                    child: Text(
-                      '${value[index].title}',
-                      style: const TextStyle(color: ColorConst.text),
-                    ),
-                  ),
-                  content: InkWell(
-                    onTap: () {
-                      print("content");
-                    },
-                    child: _stickyChildList(value[index].child!),
-                  ),
-                ),
-              );
-            },
-          );
-        },
-      );
-
-  void _groupSourceData(List<ContactListItemEntity> data) {
-    var map = <String, List<ContactListItemEntity>>{};
-    for (var contact in data) {
-      contact.contactPhoto =
-          'https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fup.enterdesk.com%2Fedpic_source%2F53%2F0a%2Fda%2F530adad966630fce548cd408237ff200.jpg&refer=http%3A%2F%2Fup.enterdesk.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1641349181&t=4b9a02287d7062cde79ef52d05e3025c';
-      if (contact.standbyState1 == 1) {
-        continue;
-      }
-      String pinyin = PinyinHelper.getFirstWordPinyin(contact.contactName ?? '').substring(0, 1);
-      if (map.keys.contains(pinyin)) {
-        List<ContactListItemEntity>? list = map[pinyin];
-        if (list == null || list.isEmpty) {
-          list = [];
-          list.add(contact);
-        } else if (!list.contains(contact)) {
-          list.add(contact);
-        }
-      } else {
-        map.putIfAbsent(pinyin, () => [contact]);
-      }
-    }
-
-    Logger.d('--------------------');
-
-    //  按名字分类后的数据
-    List<ContactListParent> temp = [];
-    for (var pinyin in map.keys) {
-      ContactListParent parent = ContactListParent();
-      parent.title = pinyin;
-      parent.child = map[pinyin];
-      temp.add(parent);
-    }
-    _contactFilterData.value = temp;
-  }
-
   _stickyChildList(List<ContactListItemEntity> data) => ListView.builder(
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
@@ -192,9 +80,7 @@ class _ContactListPageState extends State<ContactListPage>
       });
 
   _newContact() => InkWell(
-        onTap: () {
-          NavigateUtil.push(context, ContactRouter.newContactPage);
-        },
+        onTap: () => Get.to(() => const NewContactPage()),
         child: Container(
           height: 64,
           color: Colors.white,
@@ -243,7 +129,7 @@ class _ContactListPageState extends State<ContactListPage>
           children: [
             //  搜索提示文字、图标
             ValueListenableBuilder<String>(
-              valueListenable: _searchContent,
+              valueListenable: controller.searchContent,
               builder: (context, value, child) {
                 return Visibility(
                   visible: value.isEmpty,
@@ -275,8 +161,8 @@ class _ContactListPageState extends State<ContactListPage>
                 cursorWidth: 3,
                 maxLines: 1,
                 textAlign: TextAlign.center,
-                focusNode: _nodeSearch,
-                controller: _searchController,
+                focusNode: controller.nodeSearch,
+                controller: controller.searchController,
                 decoration: const InputDecoration(
                   fillColor: Colors.transparent,
                   contentPadding: EdgeInsets.symmetric(horizontal: 6),
@@ -284,13 +170,13 @@ class _ContactListPageState extends State<ContactListPage>
                   border: InputBorder.none,
                 ),
                 onChanged: (value) {
-                  _searchContent.value = value;
+                  controller.searchContent.value = value;
                   //  数据筛选
                   List<ContactListItemEntity> temp = [];
                   if (value.isEmpty) {
-                    temp = _contactSourceData;
+                    temp = controller.contactSourceData;
                   } else {
-                    for (var element in _contactSourceData) {
+                    for (var element in controller.contactSourceData) {
                       if (element.contactName != null &&
                           value.isNotEmpty &&
                           element.contactName!.contains(value)) {
@@ -299,7 +185,7 @@ class _ContactListPageState extends State<ContactListPage>
                       }
                     }
                   }
-                  _groupSourceData(temp);
+                  controller.groupSourceData(temp);
                 },
               ),
             ),
@@ -328,15 +214,77 @@ class _ContactListPageState extends State<ContactListPage>
     );
   }
 
+  _deviceList() => FutureBuilder(
+      future:
+          DefaultAssetBundle.of(Get.context!).loadString('assets/data/ContactDeviceListData.json'),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState != ConnectionState.done) {
+          return Container();
+        }
+        //  json 解析为 List
+        List result = json.decode(snapshot.data.toString());
+        //  List 元素转为具体对象
+        controller.deviceData =
+            result.map((element) => ContactHistoryDeviceBean.fromJson(element)).toList();
+        return ListView.builder(
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          itemCount: controller.deviceData.length,
+          itemBuilder: (context, index) => _deviceItem(controller.deviceData[index]),
+        );
+      });
+
+  _sticky() => FutureBuilder(
+        future: DefaultAssetBundle.of(Get.context!).loadString('assets/data/ContactListData.json'),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState != ConnectionState.done) {
+            return Container();
+          }
+          //  json 解析为 List
+          List result = json.decode(snapshot.data.toString());
+          //  List 元素转为具体对象
+          controller.contactSourceData =
+              result.map((element) => ContactListItemEntity.fromJson(element)).toList();
+          //  对原始数据进行分类
+          controller.groupSourceData(controller.contactSourceData);
+
+          return ValueListenableBuilder<List<ContactListParent>>(
+            valueListenable: controller.contactFilterData,
+            builder: (context, value, child) {
+              return ListView.builder(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                itemCount: value.length,
+                itemBuilder: (context, index) => StickyHeader(
+                  header: Container(
+                    color: ColorConst.bg_color,
+                    padding: const EdgeInsets.only(left: 16, bottom: 8, top: 8),
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      '${value[index].title}',
+                      style: const TextStyle(color: ColorConst.text),
+                    ),
+                  ),
+                  content: _stickyChildList(controller.contactFilterData.value[index].child!),
+                ),
+              );
+            },
+          );
+        },
+      );
+
   _contactItem(ContactListItemEntity data) => InkWell(
         onTap: () {
-          NavigateUtil.push(
-              context,
-              '${ContactRouter.contactDetailPage}?isDevice=false'
-              '&name=${Uri.encodeComponent(data.contactName ?? '')}'
-              '&icon=${EncryptUtil.encodeBase64(data.contactPhoto ?? '')}'
-              '&phone=${data.contactPhone}'
-              '&group=${Uri.encodeComponent(data.type == 0 ? '其它' : '家人')}');
+          Get.to(
+            () => const ContactDetailPage(),
+            arguments: {
+              "isDevice": false,
+              "name": data.contactName ?? "",
+              "icon": data.contactPhoto ?? "",
+              "phone": data.contactPhone ?? "",
+              "group": data.type == 0 ? '其它' : '家人',
+            },
+          );
         },
         child: Container(
           height: 64,
@@ -389,36 +337,21 @@ class _ContactListPageState extends State<ContactListPage>
               ),
             ),
           ),
-          _deviceList(),
+          _deviceList()
         ],
       );
 
-  _deviceList() => FutureBuilder(
-      future: DefaultAssetBundle.of(context).loadString('assets/data/ContactDeviceListData.json'),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState != ConnectionState.done) {
-          return Container();
-        }
-        //  json 解析为 List
-        List result = json.decode(snapshot.data.toString());
-        //  List 元素转为具体对象
-        _deviceData = result.map((element) => ContactHistoryDeviceBean.fromJson(element)).toList();
-        return ListView.builder(
-          shrinkWrap: true,
-          physics: const NeverScrollableScrollPhysics(),
-          itemCount: _deviceData.length,
-          itemBuilder: (context, index) => _deviceItem(_deviceData[index]),
-        );
-      });
-
   _deviceItem(ContactHistoryDeviceBean data) => InkWell(
         onTap: () {
-          NavigateUtil.push(
-              context,
-              '${ContactRouter.contactDetailPage}?isDevice=true'
-              '&name=${Uri.encodeComponent(data.name ?? '')}'
-              '&icon=${EncryptUtil.encodeBase64('https://img1.baidu.com/it/u=2437536079,2390928705&fm=26&fmt=auto')}'
-              '&phone=${data.simPhone}');
+          Get.to(
+            () => const ContactDetailPage(),
+            arguments: {
+              "isDevice": true,
+              "name": data.name ?? "",
+              "icon": "https://img1.baidu.com/it/u=2437536079,2390928705&fm=26&fmt=auto",
+              "phone": data.simPhone ?? "",
+            },
+          );
         },
         child: Container(
           height: 64,

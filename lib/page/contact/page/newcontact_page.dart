@@ -2,7 +2,9 @@ import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:hello_flutter/models/new_contact/new_contact_entity.dart';
+import 'package:hello_flutter/page/contact/controller/newcontact_controller.dart';
 import 'package:hello_flutter/res/colors.dart';
 import 'package:hello_flutter/res/gaps.dart';
 import 'package:hello_flutter/util/toast_util.dart';
@@ -10,16 +12,12 @@ import 'package:hello_flutter/widgets/load_image.dart';
 import 'package:hello_flutter/widgets/my_app_bar.dart';
 
 /// 通讯录 - 新的朋友
-class NewContactPage extends StatefulWidget {
+class NewContactPage extends GetView<NewContactlController> {
   const NewContactPage({Key? key}) : super(key: key);
 
   @override
-  _NewContactPageState createState() => _NewContactPageState();
-}
-
-class _NewContactPageState extends State<NewContactPage> {
-  @override
   Widget build(BuildContext context) {
+    Get.put(NewContactlController());
     return Scaffold(
       backgroundColor: ColorConst.bg_color,
       appBar: const MyAppBar(
@@ -42,7 +40,7 @@ class _NewContactPageState extends State<NewContactPage> {
   }
 
   _newContactList(bool isNewContact) => FutureBuilder(
-      future: DefaultAssetBundle.of(context).loadString('assets/data/NewContactListData.json'),
+      future: DefaultAssetBundle.of(Get.context!).loadString('assets/data/NewContactListData.json'),
       builder: (context, data) {
         //  json 解析为 List
         List result = json.decode(data.data.toString());

@@ -2,29 +2,25 @@ import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:hello_flutter/models/contact_history/contact_history_device_bean.dart';
 import 'package:hello_flutter/models/contact_history/contact_history_latest_bean.dart';
+import 'package:hello_flutter/page/contact/controller/contact_history_controller.dart';
+import 'package:hello_flutter/page/contact/page/contact_list_page.dart';
 import 'package:hello_flutter/page/contact/widget/call_menu_dialog.dart';
 import 'package:hello_flutter/res/colors.dart';
 import 'package:hello_flutter/res/gaps.dart';
-import 'package:hello_flutter/router/fluro_navigate_util.dart';
 import 'package:hello_flutter/util/other_util.dart';
 import 'package:hello_flutter/widgets/load_image.dart';
 import 'package:hello_flutter/widgets/my_app_bar.dart';
 
-import '../contact_router.dart';
-
 /// 首页 - 通讯
-class ContactHistoryPage extends StatefulWidget {
+class ContactHistoryPage extends GetView<ContactHistoryController> {
   const ContactHistoryPage({Key? key}) : super(key: key);
 
   @override
-  _ContactHistoryPageState createState() => _ContactHistoryPageState();
-}
-
-class _ContactHistoryPageState extends State<ContactHistoryPage> {
-  @override
   Widget build(BuildContext context) {
+    Get.put(ContactHistoryController());
     return Scaffold(
         backgroundColor: ColorConst.bg_color,
         appBar: MyAppBar(
@@ -32,7 +28,7 @@ class _ContactHistoryPageState extends State<ContactHistoryPage> {
           centerTitle: '通讯',
           rightText: '通讯录',
           isBack: false,
-          onRightPressed: () => NavigateUtil.push(context, ContactRouter.contactListPage),
+          onRightPressed: () => Get.to(() => const ContactListPage()),
         ),
         body: Padding(
           child: SingleChildScrollView(
@@ -78,8 +74,8 @@ class _ContactHistoryPageState extends State<ContactHistoryPage> {
       );
 
   _latestAsync() => FutureBuilder(
-      future:
-          DefaultAssetBundle.of(context).loadString('assets/data/ContactHistoryLatestData.json'),
+      future: DefaultAssetBundle.of(Get.context!)
+          .loadString('assets/data/ContactHistoryLatestData.json'),
       builder: (context, snapshot) {
         if (snapshot.connectionState != ConnectionState.done) {
           return Container();
@@ -197,7 +193,7 @@ class _ContactHistoryPageState extends State<ContactHistoryPage> {
       );
 
   _deviceAsync() => FutureBuilder(
-      future: DefaultAssetBundle.of(context)
+      future: DefaultAssetBundle.of(Get.context!)
           .loadString('assets/data/ContactHistoryDeviceListData.json'),
       builder: (context, snapshot) {
         if (snapshot.connectionState != ConnectionState.done) {

@@ -1,9 +1,11 @@
 import 'dart:convert';
 
+import 'package:flutter/cupertino.dart';
+
 class SettingMenuBean {
   String title;
   String? name;
-  String? photo;
+  ImageProvider? photo;
 
   SettingMenuBean(this.title);
 

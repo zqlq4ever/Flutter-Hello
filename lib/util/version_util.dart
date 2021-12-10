@@ -1,6 +1,6 @@
 import 'package:flutter/services.dart';
 
-class VersionUtils {
+class VersionUtil {
   static const MethodChannel _kChannel = MethodChannel('version');
 
   /// 应用安装

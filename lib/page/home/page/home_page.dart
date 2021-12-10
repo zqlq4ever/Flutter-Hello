@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:hello_flutter/page/contact/page/contact_history_page.dart';
-import 'package:hello_flutter/page/data/page/data_item_page.dart';
+import 'package:hello_flutter/page/data/page/data_home_page.dart';
 import 'package:hello_flutter/page/myhome/page/my_home_page.dart';
 import 'package:hello_flutter/res/resources.dart';
 import 'package:hello_flutter/widgets/double_tap_back_exit_app.dart';
@@ -94,7 +94,7 @@ class _HomePageState extends State<HomePage> {
     _pageList = [
       const MyHomePage(),
       const ContactHistoryPage(),
-      const DataItemPage(),
+      const DataHomePage(),
     ];
   }
 }

@@ -1,38 +1,20 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:hello_flutter/page/setting/controller/feedback_controller.dart';
 import 'package:hello_flutter/page/setting/widget/feedback_type_dialog.dart';
 import 'package:hello_flutter/res/colors.dart';
 import 'package:hello_flutter/res/gaps.dart';
-import 'package:hello_flutter/util/change_notifier_manage.dart';
 import 'package:hello_flutter/widgets/load_image.dart';
 import 'package:hello_flutter/widgets/my_app_bar.dart';
 
 /// 设置 - 问题反馈
-class FeedbackPage extends StatefulWidget {
+class FeedbackPage extends GetView<FeedbackController> {
   const FeedbackPage({Key? key}) : super(key: key);
 
   @override
-  _FeedbackPageState createState() => _FeedbackPageState();
-}
-
-class _FeedbackPageState extends State<FeedbackPage> with ChangeNotifierMixin<FeedbackPage> {
-  //  输入框文本
-  final TextEditingController _searchController = TextEditingController(text: "");
-
-  //  输入框焦点
-  final FocusNode _nodeSearch = FocusNode();
-  final ValueNotifier<String> feedbackType = ValueNotifier<String>('硬件设备相关');
-
-  @override
-  Map<ChangeNotifier?, List<VoidCallback>?>? changeNotifier() {
-    return {
-      _searchController: [],
-      _nodeSearch: null,
-    };
-  }
-
-  @override
   Widget build(BuildContext context) {
+    Get.put(FeedbackController());
     return Scaffold(
       backgroundColor: ColorConst.bg_color,
       appBar: const MyAppBar(
@@ -44,7 +26,7 @@ class _FeedbackPageState extends State<FeedbackPage> with ChangeNotifierMixin<Fe
           children: [
             Gaps.vGap8,
             ValueListenableBuilder<String>(
-              valueListenable: feedbackType,
+              valueListenable: controller.feedbackType,
               builder: (context, value, child) {
                 return _feedbackItem('反馈类型', value);
               },
@@ -86,8 +68,8 @@ class _FeedbackPageState extends State<FeedbackPage> with ChangeNotifierMixin<Fe
           minLines: 5,
           maxLines: 8,
           cursorWidth: 3,
-          focusNode: _nodeSearch,
-          controller: _searchController,
+          focusNode: controller.nodeSearch,
+          controller: controller.searchController,
           decoration: const InputDecoration(
               fillColor: Colors.transparent,
               contentPadding: EdgeInsets.all(0),
@@ -166,8 +148,8 @@ class _FeedbackPageState extends State<FeedbackPage> with ChangeNotifierMixin<Fe
 
   _feedbackItem(String title, String value) => InkWell(
         onTap: () {
-          showFeedbackTypeDialog(context, (feedback) {
-            feedbackType.value = feedback;
+          showFeedbackTypeDialog(Get.context!, (feedback) {
+            controller.feedbackType.value = feedback;
           });
         },
         child: Container(

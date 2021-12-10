@@ -23,7 +23,7 @@ class BaseEntity<T> {
     } else if (T.toString() == 'Map<dynamic, dynamic>') {
       return json as T;
     } else {
-      /// List类型数据由fromJsonAsT判断处理
+      /// List 类型数据由 fromJsonAsT 判断处理
       return JsonConvert.fromJsonAsT<T>(json);
     }
   }

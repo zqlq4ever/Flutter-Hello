@@ -1,7 +1,7 @@
-class WithdrawalAccountModel {
-  WithdrawalAccountModel(this.name, this.typeName, this.type, this.code);
+class TestAccountModel {
+  TestAccountModel(this.name, this.typeName, this.type, this.code);
 
-  WithdrawalAccountModel.fromJsonMap(Map<String, dynamic> map)
+  TestAccountModel.fromJsonMap(Map<String, dynamic> map)
       : name = map['name'] as String,
         typeName = map['typeName'] as String,
         type = map['type'] as int,

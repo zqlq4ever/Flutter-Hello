@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:hello_flutter/res/constant.dart';
 import 'package:hello_flutter/util/device_util.dart';
-import 'package:hello_flutter/util/log_utils.dart';
+import 'package:hello_flutter/util/log_util.dart';
 import 'package:hello_flutter/util/other_util.dart';
 import 'package:sp_util/sp_util.dart';
 import 'package:sprintf/sprintf.dart';

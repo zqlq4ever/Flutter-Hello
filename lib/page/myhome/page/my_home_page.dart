@@ -4,15 +4,16 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter/services.dart';
+import 'package:get/get_core/src/get_main.dart';
+import 'package:get/get_navigation/src/extension_navigation.dart';
 import 'package:hello_flutter/models/contact_history/contact_history_device_bean.dart';
-import 'package:hello_flutter/page/setting/setting_router.dart';
+import 'package:hello_flutter/page/myhome/page/qr_code_scanner_page.dart';
+import 'package:hello_flutter/page/setting/page/setting_page.dart';
 import 'package:hello_flutter/res/colors.dart';
 import 'package:hello_flutter/res/gaps.dart';
-import 'package:hello_flutter/router/fluro_navigate_util.dart';
+import 'package:hello_flutter/util/toast_util.dart';
 import 'package:hello_flutter/widgets/load_image.dart';
 import 'package:hello_flutter/widgets/my_app_bar.dart';
-
-import '../my_home_page_router.dart';
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({Key? key}) : super(key: key);
@@ -88,7 +89,10 @@ class _MyHomePageState extends State<MyHomePage> {
                           splashColor: Colors.transparent,
                           highlightColor: Colors.transparent,
                           alignment: Alignment.centerRight,
-                          onPressed: () => NavigateUtil.push(context, MyHomePageRouter.scan),
+                          onPressed: () async {
+                            String result = await Get.to(() => const QrCodeScannerPage());
+                            ToastUtil.show(result);
+                          },
                           icon: const ImageIcon(
                             AssetImage('assets/images/ic_scan.png'),
                           )),
@@ -97,7 +101,7 @@ class _MyHomePageState extends State<MyHomePage> {
                         splashColor: Colors.transparent,
                         highlightColor: Colors.transparent,
                         alignment: Alignment.centerRight,
-                        onPressed: () => NavigateUtil.push(context, SettingRouter.settingPage),
+                        onPressed: () => Get.to(() => const SettingPage()),
                         icon: const Icon(Icons.settings),
                       ),
                       Gaps.hGap24,

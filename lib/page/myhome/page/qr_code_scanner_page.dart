@@ -1,8 +1,9 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:hello_flutter/res/colors.dart';
-import 'package:hello_flutter/router/fluro_navigate_util.dart';
+import 'package:hello_flutter/util/log_util.dart';
 import 'package:hello_flutter/widgets/my_app_bar.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 
@@ -93,7 +94,8 @@ class _QrCodeScannerPageState extends State<QrCodeScannerPage> {
     controller.scannedDataStream.listen((scanData) {
       /// 避免扫描结果多次回调
       controller.dispose();
-      NavigateUtil.goBackWithParams(context, scanData.code ?? '');
+      Logger.d(scanData.code ?? '');
+      Get.back(result: scanData.code ?? '');
     });
   }
 

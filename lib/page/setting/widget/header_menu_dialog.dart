@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_custom_dialog/flutter_custom_dialog.dart';
-import 'package:hello_flutter/page/login/login_router.dart';
+import 'package:get/get.dart';
+import 'package:hello_flutter/page/login/page/default_header_page.dart';
 import 'package:hello_flutter/res/colors.dart';
 import 'package:hello_flutter/res/resources.dart';
-import 'package:hello_flutter/router/fluro_navigate_util.dart';
 import 'package:hello_flutter/widgets/no_scroll_behavior.dart';
 
 typedef DefaultHeader = Function(String);
@@ -85,16 +85,15 @@ _menuList(
           splashColor: index == 0 ? Colors.transparent : Theme.of(context).splashColor,
           focusColor: index == 0 ? Colors.transparent : Theme.of(context).focusColor,
           highlightColor: index == 0 ? Colors.transparent : Theme.of(context).highlightColor,
-          onTap: () {
+          onTap: () async {
             if (index != 0) {
               Navigator.of(context, rootNavigator: true).pop();
             }
             switch (index) {
               //  默认头像
               case 1:
-                NavigateUtil.pushResult(context, LoginRouter.defautHeader, (headerName) {
-                  header(headerName.toString());
-                });
+                var headerName = await Get.to(() => const DefautHeaderPage());
+                header(headerName ?? "return");
                 break;
               //  相册
               case 2:

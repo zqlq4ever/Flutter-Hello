@@ -42,14 +42,10 @@ dependencies:
   sticky_headers: ^0.2.0
   # 城市选择列表 https://github.com/flutterchina/azlistview
   azlistview: ^2.0.0-nullsafety.0
-  # 路由框架 https://github.com/theyakka/fluro
-  fluro: ^2.0.3
   # 图片缓存 https://github.com/renefloor/flutter_cached_network_image
   cached_network_image: ^3.2.0
   # 格式化 String https://github.com/Naddiseo/dart-sprintf
   sprintf: ^6.0.0
-  # 状态管理 https://github.com/rrousselGit/provider
-  provider: ^6.0.1
   # 扫码 https://github.com/juliuscanute/qr_code_scanner
   qr_code_scanner: 0.6.1
   # App Shortcuts https://github.com/flutter/plugins/tree/master/packages/quick_actions
@@ -73,7 +69,7 @@ dependencies:
   # 图片浏览  https://github.com/bluefireteam/photo_view
   photo_view: ^0.13.0
   # 图表,柱状图 https://github.com/imaNNeoFighT/fl_chart
-  fl_chart: ^0.40.5
+  fl_chart: ^0.40.6
   # 代码扫描
   flutter_lints: ^1.0.0
   # GetX 是 Flutter 上的一个轻量且强大的解决方案：高性能的状态管理、智能的依赖注入和便捷的路由管理。

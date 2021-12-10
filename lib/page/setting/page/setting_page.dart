@@ -1,47 +1,29 @@
-import 'dart:io';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:hello_flutter/models/setting/setting_menu.dart';
-import 'package:hello_flutter/page/account/account_router.dart';
-import 'package:hello_flutter/page/setting/setting_router.dart';
+import 'package:get/get.dart';
+import 'package:hello_flutter/page/account/page/account_home_page.dart';
+import 'package:hello_flutter/page/setting/controller/setting_controller.dart';
+import 'package:hello_flutter/page/setting/page/about_page.dart';
 import 'package:hello_flutter/page/setting/widget/header_menu_dialog.dart';
 import 'package:hello_flutter/page/setting/widget/logout_dialog.dart';
 import 'package:hello_flutter/page/setting/widget/update_name_dialog.dart';
 import 'package:hello_flutter/res/colors.dart';
 import 'package:hello_flutter/res/gaps.dart';
-import 'package:hello_flutter/router/fluro_navigate_util.dart';
-import 'package:hello_flutter/util/device_util.dart';
 import 'package:hello_flutter/util/image_util.dart';
-import 'package:hello_flutter/util/toast_util.dart';
+import 'package:hello_flutter/util/log_util.dart';
 import 'package:hello_flutter/widgets/load_image.dart';
 import 'package:hello_flutter/widgets/my_app_bar.dart';
 import 'package:hello_flutter/widgets/no_scroll_behavior.dart';
-import 'package:image_picker/image_picker.dart';
+
+import 'feedback_page.dart';
 
 /// 设置
-class SettingPage extends StatefulWidget {
+class SettingPage extends GetView<SettingController> {
   const SettingPage({Key? key}) : super(key: key);
 
   @override
-  _SettingPageState createState() => _SettingPageState();
-}
-
-class _SettingPageState extends State<SettingPage> {
-  final ImagePicker _picker = ImagePicker();
-  ImageProvider? _imageProvider;
-  XFile? pickedFile;
-  final List<SettingMenuBean> _menuData = [];
-
-  @override
-  void initState() {
-    super.initState();
-    initData();
-  }
-
-  @override
   Widget build(BuildContext context) {
+    Get.put(SettingController());
     return Scaffold(
       backgroundColor: ColorConst.bg_color,
       appBar: MyAppBar(
@@ -62,14 +44,16 @@ class _SettingPageState extends State<SettingPage> {
   ScrollConfiguration _settingBar() {
     return ScrollConfiguration(
         behavior: NoScrollBehavior(),
-        child: ListView.separated(
-          shrinkWrap: true,
-          itemCount: _menuData.length,
-          itemBuilder: (BuildContext context, int index) {
-            return _settingItem(index, context);
-          },
-          separatorBuilder: (BuildContext context, int index) => Gaps.line,
-        ));
+        child: Obx(() {
+          return ListView.separated(
+            shrinkWrap: true,
+            itemCount: controller.menuData.length,
+            itemBuilder: (BuildContext context, int index) {
+              return _settingItem(index, context);
+            },
+            separatorBuilder: (BuildContext context, int index) => Gaps.line,
+          );
+        }));
   }
 
   /// 设置条目点击事件
@@ -77,33 +61,41 @@ class _SettingPageState extends State<SettingPage> {
     switch (index) {
       //  头像
       case 0:
-        showHeaderMenuDialog(context, (isCamera) {
-          _getImage(isCamera);
-        }, (headerString) {
-          setState(() {
-            _imageProvider = ImageUtils.getAssetImage(headerString);
-          });
-        });
+        showHeaderMenuDialog(
+          Get.context!,
+          (isCamera) {
+            controller.getImage(isCamera);
+          },
+          (headerAssetsName) {
+            Logger.d('-------------' + headerAssetsName);
+            if ("return" == headerAssetsName) return;
+
+            controller.menuData[0] = controller.menuData[0]
+              ..photo = ImageUtils.getAssetImage(headerAssetsName);
+          },
+        );
         break;
       //  称呼
       case 1:
-        showUpdateNameDialog(context, (name) {
-          setState(() {
-            _menuData[1].name = name;
-          });
-        });
+        showUpdateNameDialog(
+          Get.context!,
+          controller.nameController,
+          (name) {
+            controller.menuData[1] = controller.menuData[1]..name = name;
+          },
+        );
         break;
       //  账号管理
       case 2:
-        NavigateUtil.push(context, AccountRouter.accounthomePage);
+        Get.to(() => const AccountHomePage());
         break;
       //  问题反馈
       case 3:
-        NavigateUtil.push(context, SettingRouter.feedbackPage);
+        Get.to(() => const FeedbackPage());
         break;
       //  关于我们
       case 4:
-        NavigateUtil.push(context, SettingRouter.aboutPage);
+        Get.to(() => const AboutPage());
         break;
     }
   }
@@ -121,7 +113,7 @@ class _SettingPageState extends State<SettingPage> {
                 const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(24))),
             onPressed: () {
               showDialog(
-                context: context,
+                context: Get.context!,
                 builder: (ctx) => showLogoutDialog(ctx),
               );
             },
@@ -129,6 +121,18 @@ class _SettingPageState extends State<SettingPage> {
               "退出登录",
               style: TextStyle(color: Colors.white),
             ),
+          ),
+        ),
+      );
+
+  _header(int index) => Visibility(
+        visible: index == 0 ? true : false,
+        child: CircleAvatar(
+          backgroundImage: controller.menuData[0].photo,
+          radius: 16,
+          child: const SizedBox(
+            width: 32,
+            height: 32,
           ),
         ),
       );
@@ -144,7 +148,7 @@ class _SettingPageState extends State<SettingPage> {
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 16),
                   child: Text(
-                    _menuData[index].title,
+                    controller.menuData[index].title,
                     style: const TextStyle(
                       fontSize: 16,
                       color: ColorConst.text,
@@ -156,7 +160,7 @@ class _SettingPageState extends State<SettingPage> {
               Visibility(
                 visible: index == 1 ? true : false,
                 child: Text(
-                  "${_menuData[index].name}",
+                  "${controller.menuData[index].name}",
                   style: const TextStyle(
                     fontSize: 16,
                     color: ColorConst.text,
@@ -175,56 +179,4 @@ class _SettingPageState extends State<SettingPage> {
           ),
         ),
       );
-
-  _header(int index) => Visibility(
-      visible: index == 0 ? true : false,
-      child: CircleAvatar(
-        backgroundImage: _imageProvider ??
-            ImageUtils.getImageProvider(
-                'https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg9.51tietu.net%2Fpic%2F2019-091400%2Feebk0plequ5eebk0plequ5.jpg&refer=http%3A%2F%2Fimg9.51tietu.net&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1641007092&t=4f9c71cd56f65cb2ee2d65131e438e8d'),
-        radius: 16,
-        child: const SizedBox(
-          width: 32,
-          height: 32,
-        ),
-      ));
-
-  void initData() {
-    var header = SettingMenuBean('头像');
-    header.photo = 'https://img0.baidu.com/it/u=3371242447,3161305562&fm=26&fmt=auto';
-    var name = SettingMenuBean('称呼');
-    name.name = 'Flutter';
-
-    _menuData
-      ..add(header)
-      ..add(name)
-      ..add(SettingMenuBean('账号管理'))
-      ..add(SettingMenuBean('问题反馈'))
-      ..add(SettingMenuBean('关于我们'));
-  }
-
-  Future<void> _getImage(bool isCamera) async {
-    try {
-      pickedFile = await _picker.pickImage(
-        source: isCamera ? ImageSource.camera : ImageSource.gallery,
-        maxWidth: 800,
-      );
-      if (pickedFile != null) {
-        if (DeviceUtil.isWeb) {
-          _imageProvider = NetworkImage(pickedFile!.path);
-        } else {
-          _imageProvider = FileImage(File(pickedFile!.path));
-        }
-      } else {
-        _imageProvider = null;
-      }
-      setState(() {});
-    } catch (e) {
-      if (e is MissingPluginException) {
-        ToastUtil.show('当前平台暂不支持！');
-      } else {
-        ToastUtil.show('没有权限，无法打开相册！');
-      }
-    }
-  }
 }

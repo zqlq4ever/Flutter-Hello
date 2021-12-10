@@ -3,13 +3,18 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:hello_flutter/page/home/home_router.dart';
+import 'package:get/get.dart';
+import 'package:get/get_state_manager/src/simple/get_view.dart';
+import 'package:hello_flutter/page/home/page/home_page.dart';
+import 'package:hello_flutter/page/login/controller/login_controller.dart';
+import 'package:hello_flutter/page/login/page/forget_password_page.dart';
+import 'package:hello_flutter/page/login/page/register_page.dart';
+import 'package:hello_flutter/page/webview/webview_page.dart';
 import 'package:hello_flutter/res/colors.dart';
 import 'package:hello_flutter/res/constant.dart';
 import 'package:hello_flutter/res/gaps.dart';
-import 'package:hello_flutter/router/fluro_navigate_util.dart';
-import 'package:hello_flutter/util/change_notifier_manage.dart';
 import 'package:hello_flutter/util/device_util.dart';
+import 'package:hello_flutter/util/focus_util.dart';
 import 'package:hello_flutter/util/other_util.dart';
 import 'package:hello_flutter/widgets/load_image.dart';
 import 'package:hello_flutter/widgets/my_app_bar.dart';
@@ -17,91 +22,13 @@ import 'package:hello_flutter/widgets/my_button.dart';
 import 'package:hello_flutter/widgets/my_scroll_view.dart';
 import 'package:sp_util/sp_util.dart';
 
-import '../login_router.dart';
-
 /// 登录
-class LoginPage extends StatefulWidget {
+class LoginPage extends GetView<LoginController> {
   const LoginPage({Key? key}) : super(key: key);
 
   @override
-  _LoginPageState createState() => _LoginPageState();
-}
-
-class _LoginPageState extends State<LoginPage>
-    with ChangeNotifierMixin<LoginPage>, TickerProviderStateMixin {
-  //  定义一个 controller
-  TabController? tabController;
-  final TextEditingController _phoneController = TextEditingController(text: "");
-  final TextEditingController _passwordController = TextEditingController(text: "");
-  final FocusNode _nodePhone = FocusNode();
-  final FocusNode _nodePassword = FocusNode();
-
-  //  登录按钮是否可点击
-  bool _clickable = false;
-
-  //  选中状态
-  bool checkboxSelected = false;
-
-  @override
-  Map<ChangeNotifier, List<VoidCallback>?>? changeNotifier() {
-    final List<VoidCallback> callbacks = <VoidCallback>[_verify];
-    return <ChangeNotifier, List<VoidCallback>?>{
-      _phoneController: callbacks,
-      _passwordController: callbacks,
-      _nodePhone: null,
-      _nodePassword: null,
-    };
-  }
-
-  @override
-  void dispose() {
-    _nodePhone.dispose();
-    _nodePassword.dispose();
-    super.dispose();
-  }
-
-  @override
-  void initState() {
-    tabController = TabController(length: 2, vsync: this);
-    super.initState();
-    WidgetsBinding.instance!.addPostFrameCallback((_) {
-      SystemChrome.setEnabledSystemUIMode(
-        SystemUiMode.manual,
-        overlays: [SystemUiOverlay.top, SystemUiOverlay.bottom],
-      );
-      SystemChrome.setSystemUIOverlayStyle(
-          const SystemUiOverlayStyle(statusBarColor: Colors.transparent));
-      SpUtil.putBool(AppConstant.hasLogin, false);
-    });
-  }
-
-  void _verify() {
-    final String name = _phoneController.text;
-    final String password = _passwordController.text;
-    bool clickable = true;
-    if (name.isEmpty || name.length < 11) {
-      clickable = false;
-    }
-    if (password.isEmpty || password.length < 6) {
-      clickable = false;
-    }
-
-    /// 状态不一样再刷新，避免不必要的setState
-    if (clickable != _clickable) {
-      setState(() {
-        _clickable = clickable;
-      });
-    }
-  }
-
-  void _login() {
-    NavigateUtil.push(context, HomeRouter.homePage, replace: true);
-    SpUtil.putString(AppConstant.phone, _phoneController.text);
-    SpUtil.putBool(AppConstant.hasLogin, true);
-  }
-
-  @override
   Widget build(BuildContext context) {
+    Get.put(LoginController());
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: const MyAppBar(
@@ -111,16 +38,19 @@ class _LoginPageState extends State<LoginPage>
         fit: StackFit.expand,
         children: [
           MyScrollView(
-            keyboardConfig: Util.getKeyboardActionsConfig(
-              context,
-              <FocusNode>[_nodePhone, _nodePassword],
-            ),
+            keyboardConfig: Util.getKeyboardActionsConfig(context, []),
             children: _buildBody,
           ),
           _protocol(),
         ],
       ),
     );
+  }
+
+  void _login() {
+    Get.offAll(() => const HomePage());
+    SpUtil.putString(AppConstant.phone, controller.phoneController.text);
+    SpUtil.putBool(AppConstant.hasLogin, true);
   }
 
   get _buildBody => <Widget>[
@@ -144,14 +74,12 @@ class _LoginPageState extends State<LoginPage>
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Checkbox(
-              value: checkboxSelected,
-              onChanged: (state) {
-                setState(() {
-                  checkboxSelected = !checkboxSelected;
-                });
-              },
-            ),
+            Obx(() => Checkbox(
+                  value: controller.checkboxSelected.value,
+                  onChanged: (state) {
+                    controller.setCheck();
+                  },
+                )),
             Text.rich(
               TextSpan(
                 children: [
@@ -184,13 +112,11 @@ class _LoginPageState extends State<LoginPage>
 
   tabBar() => Center(
         child: TabBar(
-          onTap: (tab) {
-            print(tab);
-          },
+          onTap: (tab) {},
           labelStyle: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
           unselectedLabelStyle: const TextStyle(fontSize: 16),
           isScrollable: true,
-          controller: tabController,
+          controller: controller.tabController,
           labelColor: ColorConst.app_main,
           indicatorWeight: 3,
           indicatorPadding: const EdgeInsets.symmetric(horizontal: 10),
@@ -213,62 +139,69 @@ class _LoginPageState extends State<LoginPage>
 
   _register() => Center(
         child: InkWell(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+          child: const Padding(
+            padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
             child: Text(
               '注册',
               style: TextStyle(
-                color: Theme.of(context).primaryColor,
+                color: ColorConst.app_main,
                 fontSize: 17,
               ),
             ),
           ),
-          onTap: () => NavigateUtil.push(context, LoginRouter.register),
+          onTap: () {
+            FocusUtil.unfocus();
+            Get.to(() => const RegisterPage());
+          },
         ),
       );
 
   _forgetPassword() => InkWell(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        child: const Padding(
+          padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
           child: Text(
             '忘记密码',
-            style: Theme.of(context).textTheme.subtitle2,
+            style: TextStyle(fontSize: 14, color: ColorConst.text_gray),
           ),
         ),
-        onTap: () => NavigateUtil.push(context, LoginRouter.forgetPassword),
+        onTap: () {
+          FocusUtil.unfocus();
+          Get.to(() => const ForgetPasswordPage());
+        },
       );
 
   _loginButton() => Container(
         padding: const EdgeInsets.symmetric(horizontal: 40.0),
-        child: MyButton(
-          key: const Key('login'),
-          onPressed: _clickable ? _login : null,
-          text: '登录',
-          radius: 24,
-        ),
+        child: Obx(() => MyButton(
+              key: const Key('login'),
+              onPressed: controller.loginEnable.value ? _login : null,
+              text: '登录',
+              radius: 24,
+            )),
       );
 
   _inputPassword() => Container(
         padding: const EdgeInsets.symmetric(horizontal: 40.0),
         child: TextField(
-          focusNode: _nodePassword,
-          controller: _passwordController,
+          controller: controller.passwordController,
           maxLength: 16,
           decoration: const InputDecoration(
-            contentPadding:EdgeInsets.symmetric(vertical: 8.0),
+            contentPadding: EdgeInsets.symmetric(vertical: 8.0),
             hintText: "请输入密码",
             counterText: '',
             border: InputBorder.none,
           ),
           inputFormatters: [FilteringTextInputFormatter.deny(RegExp('[\u4e00-\u9fa5]'))],
+          onChanged: (value) {
+            controller.checkButtonEnable();
+          },
         ),
       );
 
   _inputPhone() => Container(
         padding: const EdgeInsets.symmetric(horizontal: 40.0),
         child: TextField(
-          focusNode: _nodePhone,
-          controller: _phoneController,
+          controller: controller.phoneController,
           maxLength: 11,
           decoration: const InputDecoration(
             contentPadding: EdgeInsets.symmetric(vertical: 8.0),
@@ -276,14 +209,23 @@ class _LoginPageState extends State<LoginPage>
             counterText: '',
             border: InputBorder.none,
           ),
-          // 数字、手机号限制格式为0到9
+          // 数字、手机号限制格式为 0 到 9
           inputFormatters: [FilteringTextInputFormatter.allow(RegExp('[0-9]'))],
+          onChanged: (value) {
+            controller.checkButtonEnable();
+          },
         ),
       );
 
   void _launchWebURL(String title, String url) {
     if (DeviceUtil.isMobile) {
-      NavigateUtil.goWebViewPage(context, title, url);
+      Get.to(
+        () => const WebViewPage(),
+        arguments: {
+          "title": title,
+          "url": url,
+        },
+      );
     } else {
       Util.launchWebURL(url);
     }

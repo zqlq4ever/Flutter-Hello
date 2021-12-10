@@ -1,10 +1,10 @@
 import 'package:flustars/flustars.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:hello_flutter/page/login/login_router.dart';
+import 'package:get/get.dart';
+import 'package:hello_flutter/page/login/page/login_page.dart';
 import 'package:hello_flutter/res/colors.dart';
 import 'package:hello_flutter/res/constant.dart';
-import 'package:hello_flutter/router/fluro_navigate_util.dart';
 
 Widget showLogoutDialog(BuildContext context) {
   return Material(
@@ -34,7 +34,7 @@ Widget showLogoutDialog(BuildContext context) {
             onPressed: () {
               SpUtil.putBool(AppConstant.hasLogin, false);
               Navigator.pop(context);
-              NavigateUtil.push(context, LoginRouter.loginPage, clearStack: true);
+              Get.offAll(() => const LoginPage());
             },
           ),
         ]),

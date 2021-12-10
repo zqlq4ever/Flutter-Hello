@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:hello_flutter/res/constant.dart';
-import 'package:hello_flutter/util/log_utils.dart';
+import 'package:hello_flutter/util/log_util.dart';
 
 import 'base_entity.dart';
 import 'error_handle.dart';
