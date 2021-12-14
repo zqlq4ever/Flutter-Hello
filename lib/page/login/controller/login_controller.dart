@@ -5,8 +5,8 @@ import 'package:get/get_rx/src/rx_types/rx_types.dart';
 import 'package:get/get_rx/src/rx_workers/rx_workers.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_ticket_provider_mixin.dart';
 import 'package:get/get_state_manager/src/simple/get_controllers.dart';
+import 'package:hello_flutter/net/dio_util.dart';
 import 'package:hello_flutter/res/constant.dart';
-import 'package:hello_flutter/util/focus_util.dart';
 
 class LoginController extends GetxController with GetSingleTickerProviderStateMixin {
   //  复选框状态
@@ -67,5 +67,11 @@ class LoginController extends GetxController with GetSingleTickerProviderStateMi
       clickable = false;
     }
     loginEnable.value = clickable;
+  }
+
+  void login() {
+    final String name = phoneController.text;
+    final String password = passwordController.text;
+    DioUtil.instance.dio.request('path');
   }
 }

@@ -5,7 +5,7 @@ import 'package:hello_flutter/res/constant.dart';
 
 /// 输出 Log 工具类
 class Logger {
-  static const String tag = 'Hello-LOG';
+  static const String tag = 'App日志';
 
   static void init() {
     LogUtil.init(isDebug: !AppConstant.inProduction);

@@ -8,86 +8,21 @@ import 'package:hello_flutter/util/other_util.dart';
 import 'package:sp_util/sp_util.dart';
 import 'package:sprintf/sprintf.dart';
 
-import 'dio_utils.dart';
 import 'error_handle.dart';
 
 class AuthInterceptor extends Interceptor {
   @override
   void onRequest(RequestOptions options, RequestInterceptorHandler handler) {
     final String accessToken = SpUtil.getString(AppConstant.accessToken).nullSafe;
+    options.headers['Content-Type'] = 'application/json';
     if (accessToken.isNotEmpty) {
-      options.headers['Authorization'] = 'token $accessToken';
+      options.headers['Authorization'] = '$accessToken ';
     }
     if (!DeviceUtil.isWeb) {
-      // https://developer.github.com/v3/#user-agent-required
+      //  https://developer.github.com/v3/#user-agent-required
       options.headers['User-Agent'] = 'Mozilla/5.0';
     }
     super.onRequest(options, handler);
-  }
-}
-
-class TokenInterceptor extends Interceptor {
-  Dio? _tokenDio;
-
-  Future<String?> getToken() async {
-    final Map<String, String> params = <String, String>{};
-    params['refresh_token'] = SpUtil.getString(AppConstant.refreshToken).nullSafe;
-    try {
-      _tokenDio ??= Dio();
-      _tokenDio!.options = DioUtils.instance.dio.options;
-      final Response response = await _tokenDio!.post<dynamic>('lgn/refreshToken', data: params);
-      if (response.statusCode == ExceptionHandle.success) {
-        return (json.decode(response.data.toString()) as Map<String, dynamic>)['access_token']
-            as String;
-      }
-    } catch (e) {
-      Logger.e('刷新 Token 失败！');
-    }
-    return null;
-  }
-
-  @override
-  Future<void> onResponse(Response response, ResponseInterceptorHandler handler) async {
-    // 401 代表 token 过期
-    if (response.statusCode == ExceptionHandle.unauthorized) {
-      Logger.d('-----------自动刷新 Token------------');
-      final Dio dio = DioUtils.instance.dio;
-      dio.lock();
-      // 获取新的 accessToken
-      final String? accessToken = await getToken();
-      Logger.e('-----------NewToken: $accessToken ------------');
-      SpUtil.putString(AppConstant.accessToken, accessToken.nullSafe);
-      dio.unlock();
-
-      if (accessToken != null) {
-        // 重新请求失败接口
-        final RequestOptions request = response.requestOptions;
-        request.headers['Authorization'] = 'Bearer $accessToken';
-
-        final Options options = Options(
-          headers: request.headers,
-          method: request.method,
-        );
-
-        try {
-          Logger.e('----------- 重新请求接口 ------------');
-
-          /// 避免重复执行拦截器，使用 tokenDio
-          final Response response = await _tokenDio!.request<dynamic>(
-            request.path,
-            data: request.data,
-            queryParameters: request.queryParameters,
-            cancelToken: request.cancelToken,
-            options: options,
-            onReceiveProgress: request.onReceiveProgress,
-          );
-          return handler.next(response);
-        } on DioError catch (e) {
-          return handler.reject(e);
-        }
-      }
-    }
-    super.onResponse(response, handler);
   }
 }
 

@@ -1,10 +1,7 @@
-import 'package:flustars/flustars.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get_rx/src/rx_types/rx_types.dart';
 import 'package:get/get_state_manager/src/simple/get_controllers.dart';
-import 'package:hello_flutter/res/colors.dart';
-import 'package:hello_flutter/res/constant.dart';
 
 class DefaultHeaderController extends GetxController {
   //  选择的头像 index

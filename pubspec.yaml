@@ -6,16 +6,16 @@ publish_to: 'none'
 version: 1.0.0+1
 
 environment:
-  sdk: ">=2.12.0 <3.0.0"
+  sdk: ">=2.15.0 <3.0.0"
 
 dependencies:
   flutter:
     sdk: flutter
 
   # 日期、条件选择器
-  flutter_pickers: ^2.1.3
+  flutter_pickers: ^2.1.6
   # 去除网页 URL 中的 “#” (hash) https://flutter.cn/docs/development/ui/navigation/url-strategies
-  url_strategy: 0.2.0
+  url_strategy: ^0.2.0
   # Localization https://github.com/dart-lang/intl
   intl: ^0.17.0
   # oktoast 插件 https://github.com/OpenFlutter/flutter_oktoast
@@ -29,13 +29,13 @@ dependencies:
   # Flutter 轮播图 https://github.com/lianyagang/flutter_swiper_null_safety
   flutter_swiper_null_safety: ^1.0.2  # flutter_swiper很久不维护，可以使用空安全版本：flutter_swiper_null_safety
   # 启动 URL 的插件（支持 Web） https://github.com/flutter/plugins/tree/master/packages/url_launcher
-  url_launcher: 6.0.12
+  url_launcher: ^6.0.17
   # 图片选择器,系统相机拍照（支持 Web） https://github.com/flutter/plugins/tree/master/packages/image_picker
-  image_picker: 0.8.4+2
+  image_picker: ^0.8.4+2
   # 侧滑删除 https://github.com/letsar/flutter_slidable
   flutter_slidable: ^1.1.0
   # WebView 插件 https://github.com/flutter/plugins/tree/master/packages/webview_flutter
-  webview_flutter: 2.3.0
+  webview_flutter: ^3.0.0
   # 处理键盘事件 https://github.com/diegoveloper/flutter_keyboard_actions
   keyboard_actions: ^3.4.4
   # 列表悬浮头 https://github.com/fluttercommunity/flutter_sticky_headers
@@ -55,7 +55,7 @@ dependencies:
   # 获取当前设备信息 https://github.com/fluttercommunity/plus_plugins/tree/main/packages/device_info_plus
   device_info_plus: 3.1.1
   # 改变桌面端窗口大小(MacOS/Linux/Windows) https://github.com/mix1009/desktop_window
-  desktop_window: 0.4.0
+  desktop_window: ^0.4.0
   # 刮刮卡 https://github.com/vintage/scratcher
   scratcher: ^2.1.0
   # 动画效果 https://github.com/xvrh/lottie-flutter
@@ -74,7 +74,7 @@ dependencies:
   flutter_lints: ^1.0.0
   # GetX 是 Flutter 上的一个轻量且强大的解决方案：高性能的状态管理、智能的依赖注入和便捷的路由管理。
   # https://github.com/jonataslaw/getx/blob/master/README.zh-cn.md
-  get: ^4.5.1
+  get: ^4.6.1
 
 # 依赖覆盖
 dependency_overrides:

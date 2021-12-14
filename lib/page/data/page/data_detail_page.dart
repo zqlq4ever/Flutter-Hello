@@ -1,8 +1,5 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
-import 'package:get/get_navigation/src/extension_navigation.dart';
 import 'package:hello_flutter/page/data/controller/data_detail_controller.dart';
 import 'package:hello_flutter/page/data/page/data_chart_page.dart';
 import 'package:hello_flutter/page/data/page/data_single_page.dart';

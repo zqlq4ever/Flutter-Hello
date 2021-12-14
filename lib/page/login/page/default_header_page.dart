@@ -1,9 +1,5 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
-import 'package:get/get_instance/src/extension_instance.dart';
-import 'package:get/get_state_manager/src/simple/get_view.dart';
 import 'package:hello_flutter/page/login/controller/default_header_controller.dart';
 import 'package:hello_flutter/res/colors.dart';
 import 'package:hello_flutter/res/gaps.dart';

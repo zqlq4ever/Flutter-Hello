@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:dio/dio.dart';
+import 'package:hello_flutter/util/log_util.dart';
 
 class ExceptionHandle {
   static const int success = 200;
@@ -33,7 +34,7 @@ class ExceptionHandle {
   };
 
   static NetError handleException(dynamic error) {
-    print(error);
+    Logger.d(error);
     if (error is DioError) {
       if (error.type.errorCode == 0) {
         return _handleException(error.error);

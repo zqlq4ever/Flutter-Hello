@@ -1,10 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'package:get/get_rx/src/rx_types/rx_types.dart';
-import 'package:get/get_rx/src/rx_workers/rx_workers.dart';
-import 'package:get/get_state_manager/src/rx_flutter/rx_ticket_provider_mixin.dart';
-import 'package:get/get_state_manager/src/simple/get_controllers.dart';
 
 class RegisterController extends GetxController with GetSingleTickerProviderStateMixin {
   //  复选框状态

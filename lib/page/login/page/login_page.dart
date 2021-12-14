@@ -1,10 +1,7 @@
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'package:get/get_state_manager/src/simple/get_view.dart';
 import 'package:hello_flutter/page/home/page/home_page.dart';
 import 'package:hello_flutter/page/login/controller/login_controller.dart';
 import 'package:hello_flutter/page/login/page/forget_password_page.dart';
@@ -15,6 +12,7 @@ import 'package:hello_flutter/res/constant.dart';
 import 'package:hello_flutter/res/gaps.dart';
 import 'package:hello_flutter/util/device_util.dart';
 import 'package:hello_flutter/util/focus_util.dart';
+import 'package:hello_flutter/util/log_util.dart';
 import 'package:hello_flutter/util/other_util.dart';
 import 'package:hello_flutter/widgets/load_image.dart';
 import 'package:hello_flutter/widgets/my_app_bar.dart';
@@ -53,7 +51,8 @@ class LoginPage extends GetView<LoginController> {
     SpUtil.putBool(AppConstant.hasLogin, true);
   }
 
-  get _buildBody => <Widget>[
+  get _buildBody =>
+      <Widget>[
         Gaps.vGap16,
         _logo(),
         Gaps.vGap40,
@@ -68,13 +67,15 @@ class LoginPage extends GetView<LoginController> {
         _register(),
       ];
 
-  _protocol() => Container(
+  _protocol() =>
+      Container(
         alignment: Alignment.bottomCenter,
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Obx(() => Checkbox(
+            Obx(() =>
+                Checkbox(
                   value: controller.checkboxSelected.value,
                   onChanged: (state) {
                     controller.setCheck();
@@ -103,16 +104,20 @@ class LoginPage extends GetView<LoginController> {
         ),
       );
 
-  _password() => Row(
+  _password() =>
+      Row(
         children: [
           Expanded(child: _inputPassword()),
           _forgetPassword(),
         ],
       );
 
-  tabBar() => Center(
+  tabBar() =>
+      Center(
         child: TabBar(
-          onTap: (tab) {},
+          onTap: (tab) {
+            Logger.d('点击了 $tab');
+          },
           labelStyle: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
           unselectedLabelStyle: const TextStyle(fontSize: 16),
           isScrollable: true,
@@ -129,7 +134,8 @@ class LoginPage extends GetView<LoginController> {
         ),
       );
 
-  _logo() => const Center(
+  _logo() =>
+      const Center(
         child: LoadAssetImage(
           'ic_logo',
           width: 80,
@@ -137,7 +143,8 @@ class LoginPage extends GetView<LoginController> {
         ),
       );
 
-  _register() => Center(
+  _register() =>
+      Center(
         child: InkWell(
           child: const Padding(
             padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
@@ -156,7 +163,8 @@ class LoginPage extends GetView<LoginController> {
         ),
       );
 
-  _forgetPassword() => InkWell(
+  _forgetPassword() =>
+      InkWell(
         child: const Padding(
           padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
           child: Text(
@@ -170,9 +178,11 @@ class LoginPage extends GetView<LoginController> {
         },
       );
 
-  _loginButton() => Container(
+  _loginButton() =>
+      Container(
         padding: const EdgeInsets.symmetric(horizontal: 40.0),
-        child: Obx(() => MyButton(
+        child: Obx(() =>
+            MyButton(
               key: const Key('login'),
               onPressed: controller.loginEnable.value ? _login : null,
               text: '登录',
@@ -180,7 +190,8 @@ class LoginPage extends GetView<LoginController> {
             )),
       );
 
-  _inputPassword() => Container(
+  _inputPassword() =>
+      Container(
         padding: const EdgeInsets.symmetric(horizontal: 40.0),
         child: TextField(
           controller: controller.passwordController,
@@ -198,7 +209,8 @@ class LoginPage extends GetView<LoginController> {
         ),
       );
 
-  _inputPhone() => Container(
+  _inputPhone() =>
+      Container(
         padding: const EdgeInsets.symmetric(horizontal: 40.0),
         child: TextField(
           controller: controller.phoneController,
@@ -220,7 +232,7 @@ class LoginPage extends GetView<LoginController> {
   void _launchWebURL(String title, String url) {
     if (DeviceUtil.isMobile) {
       Get.to(
-        () => const WebViewPage(),
+            () => const WebViewPage(),
         arguments: {
           "title": title,
           "url": url,

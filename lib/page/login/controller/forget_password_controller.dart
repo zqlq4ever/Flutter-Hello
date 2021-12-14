@@ -1,20 +1,9 @@
-import 'dart:io';
 
-import 'package:flustars/flustars.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
-import 'package:get/get_navigation/src/extension_navigation.dart';
-import 'package:get/get_rx/src/rx_types/rx_types.dart';
-import 'package:get/get_state_manager/src/simple/get_controllers.dart';
-import 'package:hello_flutter/page/home/page/home_page.dart';
 import 'package:hello_flutter/page/login/page/login_page.dart';
-import 'package:hello_flutter/res/constant.dart';
-import 'package:hello_flutter/util/device_util.dart';
-import 'package:hello_flutter/util/log_util.dart';
 import 'package:hello_flutter/util/toast_util.dart';
-import 'package:image_picker/image_picker.dart';
 
 class ForgetpasswordController extends GetxController {
   final TextEditingController phoneController = TextEditingController(text: "");

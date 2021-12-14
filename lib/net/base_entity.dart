@@ -1,8 +1,17 @@
 import 'package:hello_flutter/res/constant.dart';
 
-import 'json/base/json_convert_content.dart';
+import 'json_convert_content.dart';
 
 class BaseEntity<T> {
+  ///  返回码
+  int? code;
+
+  ///  数据
+  T? data;
+
+  ///  附带信息
+  late String message;
+
   BaseEntity(this.code, this.message, this.data);
 
   BaseEntity.fromJson(Map<String, dynamic> json) {
@@ -12,10 +21,6 @@ class BaseEntity<T> {
       data = _generateOBJ<T>(json[AppConstant.data] as Object);
     }
   }
-
-  int? code;
-  late String message;
-  T? data;
 
   T _generateOBJ<O>(Object json) {
     if (T.toString() == 'String') {

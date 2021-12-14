@@ -6,9 +6,9 @@ class AppConstant {
 
   static bool isDriverTest = false;
 
+  static const String code = 'code';
   static const String data = 'data';
   static const String message = 'message';
-  static const String code = 'code';
 
   static const String phone = 'phone';
   static const String accessToken = 'accessToken';

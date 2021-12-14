@@ -8,9 +8,9 @@ import 'package:hello_flutter/util/log_util.dart';
 import 'base_entity.dart';
 import 'error_handle.dart';
 
-/// 默认dio配置
-int _connectTimeout = 15000;
-int _receiveTimeout = 15000;
+/// 默认 dio 配置
+int _connectTimeout = 5000;
+int _receiveTimeout = 5000;
 int _sendTimeout = 10000;
 String _baseUrl = '';
 List<Interceptor> _interceptors = [];
@@ -34,11 +34,10 @@ typedef NetSuccessCallback<T> = Function(T data);
 typedef NetSuccessListCallback<T> = Function(List<T> data);
 typedef NetErrorCallback = Function(int code, String msg);
 
-/// @weilu https://github.com/simplezhli
-class DioUtils {
-  factory DioUtils() => _singleton;
+class DioUtil {
+  factory DioUtil() => _singleton;
 
-  DioUtils._() {
+  DioUtil._() {
     final BaseOptions _options = BaseOptions(
       connectTimeout: _connectTimeout,
       receiveTimeout: _receiveTimeout,
@@ -51,20 +50,9 @@ class DioUtils {
         return true;
       },
       baseUrl: _baseUrl,
-//      contentType: Headers.formUrlEncodedContentType, // 适用于post form 表单提交
+      // contentType: Headers.formUrlEncodedContentType, // 适用于 post form 表单提交
     );
     _dio = Dio(_options);
-
-    /// Fiddler 抓包代理配置 https://www.jianshu.com/p/d831b1f7c45b
-//    (_dio.httpClientAdapter as DefaultHttpClientAdapter).onHttpClientCreate =
-//        (HttpClient client) {
-//      client.findProxy = (uri) {
-//        //proxy all request to localhost:8888
-//        return 'PROXY 10.41.0.132:8888';
-//      };
-//      client.badCertificateCallback =
-//          (X509Certificate cert, String host, int port) => true;
-//    };
 
     /// 添加拦截器
     void addInterceptor(Interceptor interceptor) {
@@ -74,9 +62,9 @@ class DioUtils {
     _interceptors.forEach(addInterceptor);
   }
 
-  static final DioUtils _singleton = DioUtils._();
+  static final DioUtil _singleton = DioUtil._();
 
-  static DioUtils get instance => DioUtils();
+  static DioUtil get instance => DioUtil();
 
   static late Dio _dio;
 
@@ -138,17 +126,20 @@ class DioUtils {
       queryParameters: queryParameters,
       options: options,
       cancelToken: cancelToken,
-    ).then<void>((BaseEntity<T> result) {
-      if (result.code == 0) {
-        onSuccess?.call(result.data);
-      } else {
-        _onError(result.code, result.message, onError);
-      }
-    }, onError: (dynamic e) {
-      _cancelLogPrint(e, url);
-      final NetError error = ExceptionHandle.handleException(e);
-      _onError(error.code, error.msg, onError);
-    });
+    ).then<void>(
+      (BaseEntity<T> result) {
+        if (result.code == 0) {
+          onSuccess?.call(result.data);
+        } else {
+          _onError(result.code, result.message, onError);
+        }
+      },
+      onError: (dynamic e) {
+        _cancelLogPrint(e, url);
+        final NetError error = ExceptionHandle.handleException(e);
+        _onError(error.code, error.msg, onError);
+      },
+    );
   }
 
   /// 统一处理(onSuccess 返回 T 对象，onSuccessList 返回 List<T>)
@@ -169,19 +160,22 @@ class DioUtils {
       queryParameters: queryParameters,
       options: options,
       cancelToken: cancelToken,
-    )).asBroadcastStream().listen((result) {
-      if (result.code == 0) {
-        if (onSuccess != null) {
-          onSuccess(result.data);
+    )).asBroadcastStream().listen(
+      (result) {
+        if (result.code == 0) {
+          if (onSuccess != null) {
+            onSuccess(result.data);
+          }
+        } else {
+          _onError(result.code, result.message, onError);
         }
-      } else {
-        _onError(result.code, result.message, onError);
-      }
-    }, onError: (dynamic e) {
-      _cancelLogPrint(e, url);
-      final NetError error = ExceptionHandle.handleException(e);
-      _onError(error.code, error.msg, onError);
-    });
+      },
+      onError: (dynamic e) {
+        _cancelLogPrint(e, url);
+        final NetError error = ExceptionHandle.handleException(e);
+        _onError(error.code, error.msg, onError);
+      },
+    );
   }
 
   void _cancelLogPrint(dynamic e, String url) {

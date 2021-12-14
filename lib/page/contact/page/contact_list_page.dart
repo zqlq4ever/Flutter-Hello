@@ -1,10 +1,7 @@
 import 'dart:convert';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
-import 'package:get/get_navigation/src/extension_navigation.dart';
 import 'package:hello_flutter/models/contact_history/contact_history_device_bean.dart';
 import 'package:hello_flutter/models/contact_list/contact_list_item_entity.dart';
 import 'package:hello_flutter/models/contact_list/contact_list_parent.dart';

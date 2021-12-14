@@ -1,12 +1,7 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
-import 'package:get/get_instance/src/extension_instance.dart';
-import 'package:get/get_navigation/src/extension_navigation.dart';
-import 'package:get/get_state_manager/src/simple/get_view.dart';
 import 'package:hello_flutter/page/login/controller/register_controller.dart';
 import 'package:hello_flutter/page/login/page/complete_person_info_page.dart';
 import 'package:hello_flutter/page/webview/webview_page.dart';
@@ -14,10 +9,12 @@ import 'package:hello_flutter/res/colors.dart';
 import 'package:hello_flutter/res/gaps.dart';
 import 'package:hello_flutter/util/device_util.dart';
 import 'package:hello_flutter/util/focus_util.dart';
+import 'package:hello_flutter/util/log_util.dart';
 import 'package:hello_flutter/util/other_util.dart';
 import 'package:hello_flutter/widgets/my_app_bar.dart';
 import 'package:hello_flutter/widgets/my_button.dart';
 import 'package:hello_flutter/widgets/my_scroll_view.dart';
+import 'package:hello_flutter/widgets/timer_countdown.dart';
 
 /// 登录 - 注册
 class RegisterPage extends GetView<RegisterController> {
@@ -81,10 +78,9 @@ class RegisterPage extends GetView<RegisterController> {
                     onChanged: (value) => controller.checkButtonEnable(),
                   ),
                 ),
-                const Text(
-                  "获取验证码",
-                  style: TextStyle(color: ColorConst.app_main),
-                ),
+                TimerCountDownWidget(onTimerFinish: () {
+                  Logger.d('onTimerFinish : 60 s 倒计时完毕。');
+                }),
               ],
             )),
         _protocol(),

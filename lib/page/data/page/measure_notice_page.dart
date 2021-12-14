@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hello_flutter/widgets/load_image.dart';
 import 'package:hello_flutter/widgets/my_app_bar.dart';

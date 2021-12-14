@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:hello_flutter/page/contact/page/contact_history_page.dart';
 import 'package:hello_flutter/page/data/page/data_home_page.dart';
