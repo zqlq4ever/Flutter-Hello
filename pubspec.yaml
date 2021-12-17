@@ -11,9 +11,11 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-
+  # json 解析
+  json_serializable: ^6.1.1
+  build_runner: ^2.1.5
   # 日期、条件选择器
-  flutter_pickers: ^2.1.6
+  flutter_pickers: ^2.1.7
   # 去除网页 URL 中的 “#” (hash) https://flutter.cn/docs/development/ui/navigation/url-strategies
   url_strategy: ^0.2.0
   # Localization https://github.com/dart-lang/intl
@@ -37,7 +39,7 @@ dependencies:
   # WebView 插件 https://github.com/flutter/plugins/tree/master/packages/webview_flutter
   webview_flutter: ^3.0.0
   # 处理键盘事件 https://github.com/diegoveloper/flutter_keyboard_actions
-  keyboard_actions: ^3.4.4
+  keyboard_actions: ^3.4.5
   # 列表悬浮头 https://github.com/fluttercommunity/flutter_sticky_headers
   sticky_headers: ^0.2.0
   # 城市选择列表 https://github.com/flutterchina/azlistview

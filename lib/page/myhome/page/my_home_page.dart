@@ -20,7 +20,8 @@ class MyHomePage extends StatefulWidget {
   _MyHomePageState createState() => _MyHomePageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+/// PageView 子页面 with AutomaticKeepAliveClientMixin 配合 wantKeepAlive = true ,可以保证不重建
+class _MyHomePageState extends State<MyHomePage> with AutomaticKeepAliveClientMixin {
   @override
   void initState() {
     super.initState();
@@ -30,12 +31,14 @@ class _MyHomePageState extends State<MyHomePage> {
         overlays: [SystemUiOverlay.top, SystemUiOverlay.bottom],
       );
       SystemChrome.setSystemUIOverlayStyle(
-          const SystemUiOverlayStyle(statusBarColor: Colors.transparent));
+        const SystemUiOverlayStyle(statusBarColor: Colors.transparent),
+      );
     });
   }
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return Stack(
       children: [
         const LoadAssetImage(
@@ -56,29 +59,7 @@ class _MyHomePageState extends State<MyHomePage> {
               Gaps.vGap32,
               Stack(
                 children: [
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: <Widget>[
-                      Container(
-                        padding: const EdgeInsets.only(left: 24, right: 8),
-                        child: const ClipOval(
-                          child: LoadImage(
-                            'https://img0.baidu.com/it/u=3371242447,3161305562&fm=26&fmt=auto',
-                            width: 50,
-                            height: 50,
-                            fit: BoxFit.cover,
-                          ),
-                        ),
-                      ),
-                      const Text(
-                        '我是昵称',
-                        style: TextStyle(
-                          color: ColorConst.text,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ],
-                  ),
+                  _header(),
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     mainAxisAlignment: MainAxisAlignment.end,
@@ -104,7 +85,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       ),
                       Gaps.hGap24,
                     ],
-                  )
+                  ),
                 ],
               ),
               Gaps.vGap32,
@@ -120,6 +101,31 @@ class _MyHomePageState extends State<MyHomePage> {
       ],
     );
   }
+
+  _header() => Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: <Widget>[
+          Container(
+            padding: const EdgeInsets.only(left: 24, right: 8),
+            child: const ClipOval(
+              child: LoadImage(
+                'https://img0.baidu.com/it/u=3091014035,713961532&fm=26&fmt=auto',
+                width: 50,
+                height: 50,
+                fit: BoxFit.cover,
+              ),
+            ),
+          ),
+          const Text(
+            'Flutter Yes',
+            style: TextStyle(
+              color: ColorConst.text,
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ],
+      );
 
   _deviceAsync() => FutureBuilder(
       future: DefaultAssetBundle.of(context)
@@ -213,4 +219,7 @@ class _MyHomePageState extends State<MyHomePage> {
           );
         },
       );
+
+  @override
+  bool get wantKeepAlive => true;
 }

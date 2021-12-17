@@ -11,7 +11,7 @@ class RegisterController extends GetxController with GetSingleTickerProviderStat
 
   TabController? tabController;
   final TextEditingController phoneController = TextEditingController(text: "");
-  final TextEditingController passwordController = TextEditingController(text: "");
+  final TextEditingController smsController = TextEditingController(text: "");
 
   @override
   void onInit() {
@@ -35,7 +35,7 @@ class RegisterController extends GetxController with GetSingleTickerProviderStat
   @override
   void onClose() {
     phoneController.dispose();
-    passwordController.dispose();
+    smsController.dispose();
     tabController?.dispose();
   }
 
@@ -45,12 +45,12 @@ class RegisterController extends GetxController with GetSingleTickerProviderStat
 
   void checkButtonEnable() {
     final String name = phoneController.text;
-    final String password = passwordController.text;
+    final String smsCode = smsController.text;
     bool clickable = true;
     if (name.isEmpty || name.length < 11) {
       clickable = false;
     }
-    if (password.isEmpty || password.length < 6) {
+    if (smsCode.isEmpty || smsCode.length < 6) {
       clickable = false;
     }
     if (!checkboxSelected.value) {

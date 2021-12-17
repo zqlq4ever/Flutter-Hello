@@ -19,6 +19,13 @@ class DataDetailController extends GetxController with GetSingleTickerProviderSt
     selectName.value = Get.arguments['name'];
   }
 
+  @override
+  void dispose() {
+    super.dispose();
+    pageController.dispose();
+    tabController?.dispose();
+  }
+
   void _setSelectContact(FamilyListEntity familyListEntity) {
     selectName.value = familyListEntity.contactName ?? DataHomeController.selecTips;
   }

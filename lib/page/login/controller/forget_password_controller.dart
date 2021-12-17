@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -22,6 +21,15 @@ class ForgetpasswordController extends GetxController {
       SystemChrome.setSystemUIOverlayStyle(
           const SystemUiOverlayStyle(statusBarColor: Colors.transparent));
     });
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    phoneController.dispose();
+    passwordController.dispose();
+    passwordConfirmController.dispose();
+    smsCodeController.dispose();
   }
 
   void confirm() {
@@ -52,6 +60,4 @@ class ForgetpasswordController extends GetxController {
     }
     this.clickable.value = clickable;
   }
-
-
 }

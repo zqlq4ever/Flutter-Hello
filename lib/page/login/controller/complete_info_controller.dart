@@ -37,6 +37,15 @@ class CompleteInfoController extends GetxController {
     });
   }
 
+  @override
+  void dispose() {
+    super.dispose();
+    nameController.dispose();
+    sexController.dispose();
+    dateController.dispose();
+    passwordController.dispose();
+  }
+
   void verify() {
     final String name = nameController.text;
     final String sex = sexController.text;

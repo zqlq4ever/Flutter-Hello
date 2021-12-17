@@ -8,12 +8,20 @@ import 'package:hello_flutter/widgets/my_app_bar.dart';
 import 'package:hello_flutter/widgets/no_scroll_behavior.dart';
 
 /// 首页 - 数据
-class DataHomePage extends GetView<DataHomeController> {
+class DataHomePage extends StatefulWidget {
   const DataHomePage({Key? key}) : super(key: key);
 
   @override
+  State<StatefulWidget> createState() => _DataHomePage();
+}
+
+class _DataHomePage extends State<DataHomePage> with AutomaticKeepAliveClientMixin {
+  late DataHomeController controller;
+
+  @override
   Widget build(BuildContext context) {
-    Get.put(DataHomeController());
+    super.build(context);
+    controller = Get.put(DataHomeController());
     return Scaffold(
       backgroundColor: ColorConst.bg_color,
       appBar: const MyAppBar(
@@ -96,4 +104,8 @@ class DataHomePage extends GetView<DataHomeController> {
       ),
     );
   }
+
+  @override
+  // TODO: implement wantKeepAlive
+  bool get wantKeepAlive => true;
 }

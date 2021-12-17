@@ -24,6 +24,14 @@ class UpdatePasswordController extends GetxController {
     });
   }
 
+  @override
+  void dispose() {
+    super.dispose();
+    phoneController.dispose();
+    passwordController.dispose();
+    passwordConfirmController.dispose();
+  }
+
   void confirm() {
     if (passwordController.text != passwordConfirmController.text) {
       ToastUtil.show('两次密码输入不一致');

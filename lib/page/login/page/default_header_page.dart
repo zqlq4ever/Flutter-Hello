@@ -1,3 +1,6 @@
+import 'dart:math';
+
+import 'package:flustars/flustars.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hello_flutter/page/login/controller/default_header_controller.dart';
@@ -78,6 +81,10 @@ class DefautHeaderPage extends GetView<DefaultHeaderController> {
                 //  子组件宽高长度比例
                 childAspectRatio: 1.0),
             itemBuilder: (BuildContext context, int index) {
+              //  圆形头像半径
+              double headerRadiu = (ScreenUtil.getInstance().screenWidth - 32 * 4) / 2;
+              //  选中的圆形图标半径
+              double selectRadiu = (headerRadiu - headerRadiu * sin(45));
               return Stack(
                 children: [
                   Obx(() {
@@ -100,12 +107,12 @@ class DefautHeaderPage extends GetView<DefaultHeaderController> {
                   Obx(
                     () => Visibility(
                       visible: controller.selectedIndex.value == index,
-                      child: const Positioned(
-                        right: 10,
+                      child: Positioned(
+                        right: selectRadiu / 2,
                         child: LoadAssetImage(
                           'ic_selected',
-                          width: 20,
-                          height: 20,
+                          width: selectRadiu,
+                          height: selectRadiu,
                         ),
                       ),
                     ),

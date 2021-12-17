@@ -43,7 +43,7 @@ class DioUtil {
       receiveTimeout: _receiveTimeout,
       sendTimeout: _sendTimeout,
 
-      /// dio 默认 json 解析，这里指定返回 UTF8 字符串，自己处理解析。（可也以自定义 Transformer 实现）
+      /// dio 默认 json 解析，这里指定返回 UTF-8 字符串，自己处理解析。（可也以自定义 Transformer 实现）
       responseType: ResponseType.plain,
       validateStatus: (_) {
         // 不使用 http 状态码判断状态，使用 AdapterInterceptor 来处理（适用于标准 REST 风格）

@@ -61,7 +61,7 @@ class HelloApp extends StatelessWidget {
     // 适配数据(根据自己的数据结构，可自行选择添加)
     interceptors.add(AdapterInterceptor());
     configDio(
-      baseUrl: 'https://api.github.com/',
+      baseUrl: 'https://www.baidu.com/',
       interceptors: interceptors,
     );
   }
@@ -72,11 +72,11 @@ class HelloApp extends StatelessWidget {
     return OKToast(
       child: _buildGetMaterialApp(),
       backgroundColor: Colors.black45,
-      textPadding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 10.0),
-      radius: 10,
+      textPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+      radius: 6,
       //  全局设置隐藏之前的属性,这里设置后,每次当你显示新的 toast 时,旧的就会被关闭
       dismissOtherOnShow: true,
-      position: ToastPosition.bottom,
+      position: ToastPosition.center,
     );
   }
 

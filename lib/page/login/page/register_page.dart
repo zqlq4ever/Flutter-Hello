@@ -60,29 +60,30 @@ class RegisterPage extends GetView<RegisterController> {
           ),
         ),
         Container(
-            color: Colors.white,
-            padding: const EdgeInsets.symmetric(horizontal: 40.0),
-            child: Row(
-              children: [
-                Expanded(
-                  child: TextField(
-                    controller: controller.passwordController,
-                    maxLength: 6,
-                    decoration: const InputDecoration(
-                      hintText: "请输入验证码",
-                      counterText: '',
-                      border: InputBorder.none,
-                    ),
-                    // 数字、手机号限制格式为0到9
-                    inputFormatters: [FilteringTextInputFormatter.allow(RegExp('[0-9]'))],
-                    onChanged: (value) => controller.checkButtonEnable(),
+          color: Colors.white,
+          padding: const EdgeInsets.symmetric(horizontal: 40.0),
+          child: Row(
+            children: [
+              Expanded(
+                child: TextField(
+                  controller: controller.smsController,
+                  maxLength: 6,
+                  decoration: const InputDecoration(
+                    hintText: "请输入验证码",
+                    counterText: '',
+                    border: InputBorder.none,
                   ),
+                  // 数字、手机号限制格式为0到9
+                  inputFormatters: [FilteringTextInputFormatter.allow(RegExp('[0-9]'))],
+                  onChanged: (value) => controller.checkButtonEnable(),
                 ),
-                TimerCountDownWidget(onTimerFinish: () {
-                  Logger.d('onTimerFinish : 60 s 倒计时完毕。');
-                }),
-              ],
-            )),
+              ),
+              TimerCountDownWidget(onTimerFinish: () {
+                Logger.d('onTimerFinish : 60 s 倒计时完毕。');
+              }),
+            ],
+          ),
+        ),
         _protocol(),
         Gaps.vGap32,
         Container(
@@ -112,6 +113,9 @@ class RegisterPage extends GetView<RegisterController> {
             Obx(
               () => Checkbox(
                 value: controller.checkboxSelected.value,
+                shape: const RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(3)),
+                ),
                 onChanged: (state) => controller.setCheck(),
               ),
             ),
@@ -120,10 +124,10 @@ class RegisterPage extends GetView<RegisterController> {
                 children: [
                   const TextSpan(
                     text: "同意",
-                    style: TextStyle(fontSize: 16, color: ColorConst.text_gray),
+                    style: TextStyle(fontSize: 16, color: ColorConst.text),
                   ),
                   TextSpan(
-                    text: "《XXX用户协议》",
+                    text: "《用户协议》",
                     style: const TextStyle(fontSize: 16, color: ColorConst.app_main),
                     recognizer: TapGestureRecognizer()
                       ..onTap = () {

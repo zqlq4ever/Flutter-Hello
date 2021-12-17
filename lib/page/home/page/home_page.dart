@@ -1,67 +1,45 @@
 import 'package:flutter/material.dart';
-import 'package:hello_flutter/page/contact/page/contact_history_page.dart';
-import 'package:hello_flutter/page/data/page/data_home_page.dart';
-import 'package:hello_flutter/page/myhome/page/my_home_page.dart';
+import 'package:get/get.dart';
+import 'package:hello_flutter/page/home/controller/home_controller.dart';
 import 'package:hello_flutter/res/resources.dart';
 import 'package:hello_flutter/widgets/double_tap_back_exit_app.dart';
 import 'package:hello_flutter/widgets/load_image.dart';
 
-class HomePage extends StatefulWidget {
+class HomePage extends GetView<HomeController> {
   const HomePage({Key? key}) : super(key: key);
 
   @override
-  _HomePageState createState() => _HomePageState();
-}
-
-class _HomePageState extends State<HomePage> {
-  final PageController _pageController = PageController();
-  late List<Widget> _pageList;
-  final List<String> _appBarTitles = ['我的家', '通讯', '数据'];
-  List<BottomNavigationBarItem>? _list;
-  var _currentIndex = 0;
-
-  @override
-  void initState() {
-    super.initState();
-    initData();
-  }
-
-  @override
-  void dispose() {
-    _pageController.dispose();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
+    Get.put(HomeController());
     return DoubleTapBackExitApp(
       child: Scaffold(
-        body: IndexedStack(
-          index: _currentIndex,
-          children: _pageList,
+        body: PageView(
+          controller: controller.pageController,
+          physics: const NeverScrollableScrollPhysics(),
+          onPageChanged: (int index) => controller.setCurrentIndex(index),
+          children: controller.pageList,
         ),
-        bottomNavigationBar: BottomNavigationBar(
-          items: _bottomNavigationBarItem(),
-          currentIndex: _currentIndex,
-          type: BottomNavigationBarType.fixed,
-          elevation: 5.0,
-          iconSize: 21.0,
-          selectedFontSize: 10,
-          unselectedFontSize: 10,
-          selectedItemColor: Theme.of(context).primaryColor,
-          unselectedItemColor: ColorConst.unselected_item_color,
-          onTap: (index) {
-            setState(() {
-              _currentIndex = index;
-            });
-          },
-        ),
+        bottomNavigationBar: Obx(() {
+          return BottomNavigationBar(
+            items: _bottomNavigationBarItem(),
+            currentIndex: controller.currentIndex.value,
+            type: BottomNavigationBarType.fixed,
+            elevation: 5.0,
+            iconSize: 21.0,
+            selectedFontSize: 10,
+            unselectedFontSize: 10,
+            selectedItemColor: Theme.of(context).primaryColor,
+            unselectedItemColor: ColorConst.unselected_item_color,
+            onTap: (index) => controller.pageController.jumpToPage(index),
+          );
+        }),
       ),
     );
   }
 
+  /// 底部 tab 标签
   List<BottomNavigationBarItem> _bottomNavigationBarItem() {
-    if (_list == null) {
+    if (controller.list == null) {
       const double _imageSize = 25.0;
       const _tabImages = [
         [
@@ -77,23 +55,15 @@ class _HomePageState extends State<HomePage> {
           LoadAssetImage('ic_data', width: _imageSize, color: ColorConst.app_main)
         ],
       ];
-      _list = List.generate(
+      controller.list = List.generate(
         _tabImages.length,
         (index) => BottomNavigationBarItem(
           icon: _tabImages[index][0],
           activeIcon: _tabImages[index][1],
-          label: _appBarTitles[index],
+          label: controller.appBarTitles[index],
         ),
       );
     }
-    return _list!;
-  }
-
-  void initData() {
-    _pageList = [
-      const MyHomePage(),
-      const ContactHistoryPage(),
-      const DataHomePage(),
-    ];
+    return controller.list!;
   }
 }

@@ -7,6 +7,7 @@ import 'package:get/get_state_manager/src/rx_flutter/rx_ticket_provider_mixin.da
 import 'package:get/get_state_manager/src/simple/get_controllers.dart';
 import 'package:hello_flutter/net/dio_util.dart';
 import 'package:hello_flutter/res/constant.dart';
+import 'package:hello_flutter/util/log_util.dart';
 
 class LoginController extends GetxController with GetSingleTickerProviderStateMixin {
   //  复选框状态
@@ -15,17 +16,21 @@ class LoginController extends GetxController with GetSingleTickerProviderStateMi
   //  登录按钮是否可点击
   final loginEnable = false.obs;
 
+  //  密码登录
+  final isLoginByPassword = true.obs;
+
   TabController? tabController;
   final TextEditingController phoneController = TextEditingController(text: "");
   final TextEditingController passwordController = TextEditingController(text: "");
+  final TextEditingController smsController = TextEditingController(text: "");
 
   @override
   void onInit() {
     super.onInit();
     tabController = TabController(length: 2, vsync: this);
 
-    // 每次`checkboxSelected`变化时调用。
-    ever(checkboxSelected, (_) => checkButtonEnable());
+    // 每次变化时调用。
+    everAll([isLoginByPassword, checkboxSelected], (_) => checkButtonEnable());
   }
 
   @override
@@ -46,6 +51,7 @@ class LoginController extends GetxController with GetSingleTickerProviderStateMi
     super.dispose();
     phoneController.dispose();
     passwordController.dispose();
+    smsController.dispose();
     tabController?.dispose();
   }
 
@@ -54,17 +60,25 @@ class LoginController extends GetxController with GetSingleTickerProviderStateMi
   }
 
   void checkButtonEnable() {
+    Logger.d('checkButtonEnable');
     final String name = phoneController.text;
     final String password = passwordController.text;
+    final String smsCode = smsController.text;
     bool clickable = true;
     if (name.isEmpty || name.length < 11) {
       clickable = false;
     }
-    if (password.isEmpty || password.length < 6) {
-      clickable = false;
-    }
     if (!checkboxSelected.value) {
       clickable = false;
+    }
+    if (isLoginByPassword.value) {
+      if (password.isEmpty || password.length < 6) {
+        clickable = false;
+      }
+    } else {
+      if (smsCode.isEmpty || smsCode.length < 6) {
+        clickable = false;
+      }
     }
     loginEnable.value = clickable;
   }
@@ -72,6 +86,7 @@ class LoginController extends GetxController with GetSingleTickerProviderStateMi
   void login() {
     final String name = phoneController.text;
     final String password = passwordController.text;
+    final String smsCode = smsController.text;
     DioUtil.instance.dio.request('path');
   }
 }

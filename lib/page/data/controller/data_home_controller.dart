@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:hello_flutter/models/contact_list/family_list_entity.dart';
 import 'package:hello_flutter/page/data/page/data_detail_page.dart';
 import 'package:hello_flutter/page/data/widget/family_list_dialog.dart';
+import 'package:hello_flutter/util/log_util.dart';
 import 'package:hello_flutter/util/toast_util.dart';
 
 class DataHomeController extends GetxController {

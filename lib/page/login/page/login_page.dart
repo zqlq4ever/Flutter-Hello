@@ -14,10 +14,12 @@ import 'package:hello_flutter/util/device_util.dart';
 import 'package:hello_flutter/util/focus_util.dart';
 import 'package:hello_flutter/util/log_util.dart';
 import 'package:hello_flutter/util/other_util.dart';
+import 'package:hello_flutter/widgets/keep_alive_wrapper.dart';
 import 'package:hello_flutter/widgets/load_image.dart';
 import 'package:hello_flutter/widgets/my_app_bar.dart';
 import 'package:hello_flutter/widgets/my_button.dart';
 import 'package:hello_flutter/widgets/my_scroll_view.dart';
+import 'package:hello_flutter/widgets/timer_countdown.dart';
 import 'package:sp_util/sp_util.dart';
 
 /// 登录
@@ -51,31 +53,87 @@ class LoginPage extends GetView<LoginController> {
     SpUtil.putBool(AppConstant.hasLogin, true);
   }
 
-  get _buildBody =>
-      <Widget>[
+  get _buildBody => <Widget>[
         Gaps.vGap16,
         _logo(),
         Gaps.vGap40,
         tabBar(),
         Gaps.vGap24,
-        _inputPhone(),
-        Gaps.vGap8,
-        _password(),
+        _tabBarView(),
         Gaps.vGap40,
         _loginButton(),
         Gaps.vGap16,
         _register(),
       ];
 
-  _protocol() =>
-      Container(
+  _tabBarView() {
+    return SizedBox(
+      height: 100,
+      child: TabBarView(
+        //构建
+        controller: controller.tabController,
+        children: [
+          //  密码登录
+          KeepAliveWrapper(
+            child: Column(
+              children: [
+                _inputPhone(),
+                _password(),
+              ],
+            ),
+          ),
+          //  验证码登录
+          KeepAliveWrapper(
+            child: Column(
+              children: [
+                _inputPhone(),
+                _smsCode(),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Container _smsCode() {
+    return Container(
+      height: 50,
+      color: Colors.white,
+      padding: const EdgeInsets.symmetric(horizontal: 40.0),
+      child: Row(
+        children: [
+          Expanded(
+            child: TextField(
+              controller: controller.smsController,
+              maxLength: 6,
+              decoration: const InputDecoration(
+                hintText: "请输入验证码",
+                counterText: '',
+                border: InputBorder.none,
+              ),
+              // 数字、手机号限制格式为0到9
+              inputFormatters: [FilteringTextInputFormatter.allow(RegExp('[0-9]'))],
+              onChanged: (value) => controller.checkButtonEnable(),
+            ),
+          ),
+          TimerCountDownWidget(onTimerFinish: () {
+            Logger.d('onTimerFinish : 60 s 倒计时完毕。');
+          }),
+        ],
+      ),
+    );
+  }
+
+  _protocol() => Align(
         alignment: Alignment.bottomCenter,
         child: Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Obx(() =>
-                Checkbox(
+            Obx(() => Checkbox(
+                  shape: const RoundedRectangleBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(3)),
+                  ),
                   value: controller.checkboxSelected.value,
                   onChanged: (state) {
                     controller.setCheck();
@@ -86,10 +144,10 @@ class LoginPage extends GetView<LoginController> {
                 children: [
                   const TextSpan(
                     text: "登录代表你已同意",
-                    style: TextStyle(fontSize: 16, color: ColorConst.text_gray),
+                    style: TextStyle(fontSize: 16, color: ColorConst.text),
                   ),
                   TextSpan(
-                    text: "《XXX用户协议》",
+                    text: "《用户协议》",
                     style: const TextStyle(fontSize: 16, color: ColorConst.app_main),
                     recognizer: TapGestureRecognizer()
                       ..onTap = () {
@@ -104,38 +162,43 @@ class LoginPage extends GetView<LoginController> {
         ),
       );
 
-  _password() =>
-      Row(
+  _password() => Row(
         children: [
           Expanded(child: _inputPassword()),
           _forgetPassword(),
         ],
       );
 
-  tabBar() =>
-      Center(
-        child: TabBar(
-          onTap: (tab) {
-            Logger.d('点击了 $tab');
-          },
-          labelStyle: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-          unselectedLabelStyle: const TextStyle(fontSize: 16),
-          isScrollable: true,
-          controller: controller.tabController,
-          labelColor: ColorConst.app_main,
-          indicatorWeight: 3,
-          indicatorPadding: const EdgeInsets.symmetric(horizontal: 10),
-          unselectedLabelColor: ColorConst.text_gray,
-          indicatorColor: ColorConst.app_main,
-          tabs: const [
-            Tab(text: "密码登录"),
-            Tab(text: "验证码登录"),
-          ],
+  tabBar() => Theme(
+        data: ThemeData(
+          splashColor: Colors.transparent,
+          highlightColor: Colors.transparent,
+        ),
+        child: Center(
+          child: TabBar(
+            onTap: (tab) {
+              Logger.d('点击了 $tab');
+              controller.isLoginByPassword.value = tab == 0;
+            },
+            labelStyle: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+            unselectedLabelStyle: const TextStyle(fontSize: 14),
+            labelColor: ColorConst.app_main,
+            unselectedLabelColor: ColorConst.text,
+            isScrollable: true,
+            controller: controller.tabController,
+            indicatorWeight: 3,
+            indicatorPadding: const EdgeInsets.symmetric(horizontal: 10),
+            indicatorColor: ColorConst.app_main,
+            indicatorSize: TabBarIndicatorSize.label,
+            tabs: const [
+              Tab(text: "密码登录"),
+              Tab(text: "验证码登录"),
+            ],
+          ),
         ),
       );
 
-  _logo() =>
-      const Center(
+  _logo() => const Center(
         child: LoadAssetImage(
           'ic_logo',
           width: 80,
@@ -143,8 +206,7 @@ class LoginPage extends GetView<LoginController> {
         ),
       );
 
-  _register() =>
-      Center(
+  _register() => Center(
         child: InkWell(
           child: const Padding(
             padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
@@ -163,11 +225,13 @@ class LoginPage extends GetView<LoginController> {
         ),
       );
 
-  _forgetPassword() =>
-      InkWell(
-        child: const Padding(
-          padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-          child: Text(
+  _forgetPassword() => InkWell(
+        child: Container(
+          alignment: Alignment.center,
+          color: Colors.white,
+          height: 50,
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+          child: const Text(
             '忘记密码',
             style: TextStyle(fontSize: 14, color: ColorConst.text_gray),
           ),
@@ -178,11 +242,9 @@ class LoginPage extends GetView<LoginController> {
         },
       );
 
-  _loginButton() =>
-      Container(
+  _loginButton() => Container(
         padding: const EdgeInsets.symmetric(horizontal: 40.0),
-        child: Obx(() =>
-            MyButton(
+        child: Obx(() => MyButton(
               key: const Key('login'),
               onPressed: controller.loginEnable.value ? _login : null,
               text: '登录',
@@ -190,8 +252,9 @@ class LoginPage extends GetView<LoginController> {
             )),
       );
 
-  _inputPassword() =>
-      Container(
+  _inputPassword() => Container(
+        height: 50,
+        color: Colors.white,
         padding: const EdgeInsets.symmetric(horizontal: 40.0),
         child: TextField(
           controller: controller.passwordController,
@@ -209,8 +272,9 @@ class LoginPage extends GetView<LoginController> {
         ),
       );
 
-  _inputPhone() =>
-      Container(
+  _inputPhone() => Container(
+        height: 50,
+        color: Colors.white,
         padding: const EdgeInsets.symmetric(horizontal: 40.0),
         child: TextField(
           controller: controller.phoneController,
@@ -232,7 +296,7 @@ class LoginPage extends GetView<LoginController> {
   void _launchWebURL(String title, String url) {
     if (DeviceUtil.isMobile) {
       Get.to(
-            () => const WebViewPage(),
+        () => const WebViewPage(),
         arguments: {
           "title": title,
           "url": url,

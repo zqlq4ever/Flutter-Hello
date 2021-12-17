@@ -1,6 +1,5 @@
+import 'package:hello_flutter/generated/json/base/json_convert_content.dart';
 import 'package:hello_flutter/res/constant.dart';
-
-import 'json_convert_content.dart';
 
 class BaseEntity<T> {
   ///  返回码

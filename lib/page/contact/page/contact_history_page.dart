@@ -14,12 +14,20 @@ import 'package:hello_flutter/widgets/load_image.dart';
 import 'package:hello_flutter/widgets/my_app_bar.dart';
 
 /// 首页 - 通讯
-class ContactHistoryPage extends GetView<ContactHistoryController> {
+class ContactHistoryPage extends StatefulWidget {
   const ContactHistoryPage({Key? key}) : super(key: key);
 
   @override
+  State<StatefulWidget> createState() => _ContactHistoryPage();
+}
+
+class _ContactHistoryPage extends State<ContactHistoryPage> with AutomaticKeepAliveClientMixin {
+  late ContactHistoryController controller;
+
+  @override
   Widget build(BuildContext context) {
-    Get.put(ContactHistoryController());
+    super.build(context);
+    controller = Get.put(ContactHistoryController());
     return Scaffold(
         backgroundColor: ColorConst.bg_color,
         appBar: MyAppBar(
@@ -287,4 +295,7 @@ class ContactHistoryPage extends GetView<ContactHistoryController> {
         ),
         separatorBuilder: (BuildContext context, int index) => Gaps.vGap12,
       );
+
+  @override
+  bool get wantKeepAlive => true;
 }

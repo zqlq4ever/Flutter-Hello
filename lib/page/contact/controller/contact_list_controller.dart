@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -44,6 +43,7 @@ class ContactListController extends GetxController {
   @override
   void dispose() {
     super.dispose();
+    searchController.dispose();
     nodeSearch.dispose();
   }
 

@@ -4,5 +4,12 @@ import 'package:get/get.dart';
 class FeedbackController extends GetxController {
   final TextEditingController searchController = TextEditingController(text: "");
   final FocusNode nodeSearch = FocusNode();
-  final ValueNotifier<String> feedbackType = ValueNotifier<String>('硬件设备相关');
+  final ValueNotifier<String> feedbackType = ValueNotifier<String>('');
+
+  @override
+  void dispose() {
+    super.dispose();
+    searchController.dispose();
+    nodeSearch.dispose();
+  }
 }

@@ -24,6 +24,12 @@ class SettingController extends GetxController {
     initData();
   }
 
+  @override
+  void dispose() {
+    super.dispose();
+    nameController.dispose();
+  }
+
   void initData() {
     var header = SettingMenuBean('头像')..photo = ImageUtils.getImageProvider(headerUrl);
     var name = SettingMenuBean('称呼')..name = 'Flutter';
