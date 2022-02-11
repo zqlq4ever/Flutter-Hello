@@ -14,8 +14,8 @@ dependencies:
   # json 解析
   json_serializable: ^6.1.1
   build_runner: ^2.1.5
-  # 日期、条件选择器
-  flutter_pickers: ^2.1.7
+  # 日期、条件选择器  https://github.com/longer96/flutter_pickers
+  flutter_pickers: ^2.1.8
   # 去除网页 URL 中的 “#” (hash) https://flutter.cn/docs/development/ui/navigation/url-strategies
   url_strategy: ^0.2.0
   # Localization https://github.com/dart-lang/intl
@@ -25,21 +25,21 @@ dependencies:
   # Dio 网络库 https://github.com/flutterchina/dio
   dio: ^4.0.4
   # https://github.com/ReactiveX/rxdart
-  rxdart: ^0.27.2
+  rxdart: ^0.27.3
   # Flutter 常用工具类库 https://github.com/Sky24n/flustars
   flustars: ^2.0.1
   # Flutter 轮播图 https://github.com/lianyagang/flutter_swiper_null_safety
   flutter_swiper_null_safety: ^1.0.2  # flutter_swiper很久不维护，可以使用空安全版本：flutter_swiper_null_safety
   # 启动 URL 的插件（支持 Web） https://github.com/flutter/plugins/tree/master/packages/url_launcher
-  url_launcher: ^6.0.17
+  url_launcher: ^6.0.20
   # 图片选择器,系统相机拍照（支持 Web） https://github.com/flutter/plugins/tree/master/packages/image_picker
-  image_picker: ^0.8.4+2
+  image_picker: ^0.8.4+8
   # 侧滑删除 https://github.com/letsar/flutter_slidable
-  flutter_slidable: ^1.1.0
+  flutter_slidable: ^1.2.0
   # WebView 插件 https://github.com/flutter/plugins/tree/master/packages/webview_flutter
   webview_flutter: ^3.0.0
   # 处理键盘事件 https://github.com/diegoveloper/flutter_keyboard_actions
-  keyboard_actions: ^3.4.5
+  keyboard_actions: ^3.4.6
   # 列表悬浮头 https://github.com/fluttercommunity/flutter_sticky_headers
   sticky_headers: ^0.2.0
   # 城市选择列表 https://github.com/flutterchina/azlistview
@@ -49,13 +49,13 @@ dependencies:
   # 格式化 String https://github.com/Naddiseo/dart-sprintf
   sprintf: ^6.0.0
   # 扫码 https://github.com/juliuscanute/qr_code_scanner
-  qr_code_scanner: 0.6.1
+  qr_code_scanner: 1.0.0-alpha.1
   # App Shortcuts https://github.com/flutter/plugins/tree/master/packages/quick_actions
   quick_actions: 0.6.0+7
   # 振动（支持 Web） https://github.com/benjamindean/flutter_vibration
   vibration: ^1.7.4-nullsafety.0
   # 获取当前设备信息 https://github.com/fluttercommunity/plus_plugins/tree/main/packages/device_info_plus
-  device_info_plus: 3.1.1
+  device_info_plus: 3.2.1
   # 改变桌面端窗口大小(MacOS/Linux/Windows) https://github.com/mix1009/desktop_window
   desktop_window: ^0.4.0
   # 刮刮卡 https://github.com/vintage/scratcher
@@ -71,7 +71,7 @@ dependencies:
   # 图片浏览  https://github.com/bluefireteam/photo_view
   photo_view: ^0.13.0
   # 图表,柱状图 https://github.com/imaNNeoFighT/fl_chart
-  fl_chart: ^0.40.6
+  fl_chart: ^0.41.0
   # 代码扫描
   flutter_lints: ^1.0.0
   # GetX 是 Flutter 上的一个轻量且强大的解决方案：高性能的状态管理、智能的依赖注入和便捷的路由管理。
