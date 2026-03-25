@@ -1,22 +1,22 @@
 import 'dart:io';
 
-import 'package:common_utils/common_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hello_flutter/res/colors.dart';
 import 'package:hello_flutter/util/device_util.dart';
 import 'package:hello_flutter/util/image_util.dart';
+import 'package:hello_flutter/util/text_util.dart';
 import 'package:hello_flutter/util/theme_util.dart';
 import 'package:hello_flutter/util/toast_util.dart';
 import 'package:image_picker/image_picker.dart';
 
 class SelectedImage extends StatefulWidget {
   const SelectedImage({
-    Key? key,
+    super.key,
     this.url,
     this.heroTag,
     this.size = 80.0,
-  }) : super(key: key);
+  });
 
   final String? url;
   final String? heroTag;

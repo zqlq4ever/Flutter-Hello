@@ -10,7 +10,6 @@ class HomePage extends GetView<HomeController> {
 
   @override
   Widget build(BuildContext context) {
-    Get.put(HomeController());
     return DoubleTapBackExitApp(
       child: Scaffold(
         body: PageView(

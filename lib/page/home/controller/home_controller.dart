@@ -20,7 +20,7 @@ class HomeController extends GetxController {
 
   @override
   void onReady() {
-    WidgetsBinding.instance!.addPostFrameCallback((_) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
       SystemChrome.setEnabledSystemUIMode(
         SystemUiMode.manual,
         overlays: [SystemUiOverlay.top, SystemUiOverlay.bottom],
@@ -32,9 +32,9 @@ class HomeController extends GetxController {
   }
 
   @override
-  void dispose() {
-    super.dispose();
+  void onClose() {
     pageController.dispose();
+    super.onClose();
   }
 
   void setCurrentIndex(int index) {

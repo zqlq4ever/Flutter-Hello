@@ -13,32 +13,36 @@ class QrCodeScannerPage extends StatefulWidget {
 }
 
 class _QrCodeScannerPageState extends State<QrCodeScannerPage> {
-  MobileScannerController? controller;
+  late MobileScannerController controller;
   bool _hasScanned = false;
+  bool _isDisposed = false;
+
+  @override
+  void initState() {
+    super.initState();
+    controller = MobileScannerController(
+      detectionSpeed: DetectionSpeed.noDuplicates,
+      facing: CameraFacing.back,
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
-    final scanArea =
-        (MediaQuery.of(context).size.width < 400 || MediaQuery.of(context).size.height < 400)
-            ? 250.0
-            : 300.0;
-
     return Scaffold(
       body: Stack(
         children: <Widget>[
           Positioned.fill(
             child: MobileScanner(
-              controller: MobileScannerController(
-                detectionSpeed: DetectionSpeed.noDuplicates,
-                facing: CameraFacing.back,
-              ),
-              onDetect: (capture) {
-                if (_hasScanned) return;
+              controller: controller,
+              onDetect: (capture) async {
+                if (_hasScanned || _isDisposed) return;
                 final barcodes = capture.barcodes;
                 if (barcodes.isNotEmpty) {
                   _hasScanned = true;
                   final barcode = barcodes.first;
                   Logger.d(barcode.rawValue ?? '');
+                  // 先停止相机，避免解码错误
+                  await controller.stop();
                   Get.back(result: barcode.rawValue);
                 }
               },
@@ -56,7 +60,7 @@ class _QrCodeScannerPageState extends State<QrCodeScannerPage> {
                   color: Colors.white,
                 ),
                 onPressed: () {
-                  controller?.toggleTorch();
+                  controller.toggleTorch();
                 },
               ),
             ),
@@ -77,7 +81,8 @@ class _QrCodeScannerPageState extends State<QrCodeScannerPage> {
 
   @override
   void dispose() {
-    controller?.dispose();
+    _isDisposed = true;
+    controller.dispose();
     super.dispose();
   }
 }

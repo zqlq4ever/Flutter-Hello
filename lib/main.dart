@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -16,6 +18,18 @@ import 'net/dio_util.dart';
 import 'net/intercept.dart';
 
 void main() {
+  // 捕获 Flutter 框架异常
+  FlutterError.onError = (FlutterErrorDetails details) {
+    FlutterError.presentError(details);
+    Logger.e('Flutter Error: ${details.exception}');
+  };
+
+  // 捕获异步异常
+  PlatformDispatcher.instance.onError = (Object error, StackTrace stack) {
+    Logger.e('Async Error: $error\nStack: $stack');
+    return true;
+  };
+
   // 异常处理 - 使用 runZonedGuarded 包裹整个应用生命周期
   handleError(() async {
     // 确保初始化完成
@@ -37,14 +51,18 @@ void main() {
     // TODO: 启动体验不佳。状态栏、导航栏在冷启动开始的一瞬间为黑色，且无法通过隐藏、修改颜色等方式进行处理。。。
     // 相关问题跟踪：https://github.com/flutter/flutter/issues/73351
 
-    runApp(HelloApp());
+    runApp(const HelloApp());
   });
 }
 
 class HelloApp extends StatelessWidget {
-  HelloApp({Key? key}) : super(key: key) {
+  const HelloApp({Key? key}) : super(key: key);
+
+  @override
+  StatelessElement createElement() {
     Logger.init();
     initDio();
+    return super.createElement();
   }
 
   static GlobalKey<NavigatorState> navigateKey = GlobalKey();

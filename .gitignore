@@ -30,6 +30,7 @@
 .pub-cache/
 .pub/
 /build/
+.trae
 
 # Web related
 

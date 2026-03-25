@@ -6,7 +6,7 @@ import 'package:hello_flutter/util/image_util.dart';
 class LoadImage extends StatelessWidget {
   const LoadImage(
     this.image, {
-    Key? key,
+    super.key,
     this.width,
     this.height,
     this.fit = BoxFit.cover,
@@ -14,7 +14,7 @@ class LoadImage extends StatelessWidget {
     this.holderImg = '',
     this.cacheWidth,
     this.cacheHeight,
-  }) : super(key: key);
+  });
 
   final String image;
   final double? width;
@@ -29,16 +29,16 @@ class LoadImage extends StatelessWidget {
   Widget build(BuildContext context) {
     //  网络图片 + 无图
     if (image.isEmpty || image.startsWith('http')) {
-      final Widget _image = LoadAssetImage(holderImg, height: height, width: width, fit: fit);
+      final Widget placeholderImage = LoadAssetImage(holderImg, height: height, width: width, fit: fit);
       return CachedNetworkImage(
         imageUrl: image,
-        placeholder: (_, __) => _image,
-        errorWidget: (_, __, dynamic error) => _image,
+        placeholder: (_, __) => placeholderImage,
+        errorWidget: (_, __, dynamic error) => placeholderImage,
         width: width,
         height: height,
         fit: fit,
-        memCacheWidth: cacheWidth,
-        memCacheHeight: cacheHeight,
+        memCacheWidth: cacheWidth ?? 800,
+        memCacheHeight: cacheHeight ?? 800,
       );
     }
 
@@ -57,15 +57,14 @@ class LoadImage extends StatelessWidget {
 /// 加载本地资源图片
 class LoadAssetImage extends StatelessWidget {
   const LoadAssetImage(this.image,
-      {Key? key,
+      {super.key,
       this.width,
       this.height,
       this.cacheWidth,
       this.cacheHeight,
       this.fit,
       this.format = ImageFormat.png,
-      this.color})
-      : super(key: key);
+      this.color});
 
   final String image;
   final double? width;
@@ -78,6 +77,12 @@ class LoadAssetImage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if (image.isEmpty) {
+      return SizedBox(
+        height: height,
+        width: width,
+      );
+    }
     return Image.asset(
       ImageUtils.getImgPath(image, format: format),
       height: height,

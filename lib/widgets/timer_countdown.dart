@@ -7,7 +7,7 @@ import 'package:hello_flutter/res/colors.dart';
 class TimerCountDownWidget extends StatefulWidget {
   Function onTimerFinish;
 
-  TimerCountDownWidget({Key? key, required this.onTimerFinish}) : super(key: key);
+  TimerCountDownWidget({super.key, required this.onTimerFinish});
 
   @override
   State<StatefulWidget> createState() => TimerCountDownWidgetState();

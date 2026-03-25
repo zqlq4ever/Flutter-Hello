@@ -10,6 +10,13 @@ import 'package:keyboard_actions/keyboard_actions_item.dart';
 import 'package:sp_util/sp_util.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+/// 扩展 BuildContext 获取 PlatformDispatcher
+extension PlatformExtension on BuildContext {
+  PlatformDispatcher get platformDispatcher {
+    return View.of(this).platformDispatcher;
+  }
+}
+
 class Util {
   /// 打开链接
   static Future<void> launchWebURL(String url) async {
@@ -50,7 +57,7 @@ class Util {
                       onTap: () => node.unfocus(),
                       child: Padding(
                         padding: const EdgeInsets.only(right: 16.0),
-                        child: Text(getCurrLocale() == 'zh' ? '关闭' : 'Close'),
+                        child: Text(getCurrLocale(context) == 'zh' ? '关闭' : 'Close'),
                       ),
                     );
                   },
@@ -59,10 +66,10 @@ class Util {
     );
   }
 
-  static String? getCurrLocale() {
+  static String? getCurrLocale(BuildContext context) {
     final String locale = SpUtil.getString(AppConstant.locale)!;
     if (locale == '') {
-      return window.locale.languageCode;
+      return View.of(context).platformDispatcher.locale.languageCode;
     }
     return locale;
   }

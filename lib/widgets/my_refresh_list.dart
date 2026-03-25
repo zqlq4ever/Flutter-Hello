@@ -7,7 +7,7 @@ import 'package:hello_flutter/util/theme_util.dart';
 /// 封装下拉刷新与加载更多
 class RefreshListView extends StatefulWidget {
   const RefreshListView({
-    Key? key,
+    super.key,
     required this.itemCount,
     required this.itemBuilder,
     required this.onRefresh,
@@ -16,7 +16,7 @@ class RefreshListView extends StatefulWidget {
     this.pageSize = 10,
     this.padding,
     this.itemExtent,
-  }) : super(key: key);
+  });
 
   final RefreshCallback onRefresh;
   final LoadMoreCallback? loadMore;
@@ -32,7 +32,7 @@ class RefreshListView extends StatefulWidget {
   final double? itemExtent;
 
   @override
-  _RefreshListViewState createState() => _RefreshListViewState();
+  State<RefreshListView> createState() => _RefreshListViewState();
 }
 
 typedef RefreshCallback = Future<void> Function();
@@ -96,7 +96,7 @@ class _RefreshListViewState extends State<RefreshListView> {
 }
 
 class MoreWidget extends StatelessWidget {
-  const MoreWidget(this.itemCount, this.hasMore, this.pageSize, {Key? key}) : super(key: key);
+  const MoreWidget(this.itemCount, this.hasMore, this.pageSize, {super.key});
 
   final int itemCount;
   final bool hasMore;

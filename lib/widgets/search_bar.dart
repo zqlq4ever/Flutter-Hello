@@ -12,18 +12,18 @@ import 'my_button.dart';
 /// 搜索页的 AppBar
 class SearchBar extends StatefulWidget implements PreferredSizeWidget {
   const SearchBar({
-    Key? key,
+    super.key,
     this.hintText = '',
     this.backImg = 'assets/images/ic_back_black.png',
     this.onPressed,
-  }) : super(key: key);
+  });
 
   final String backImg;
   final String hintText;
   final Function(String)? onPressed;
 
   @override
-  _SearchBarState createState() => _SearchBarState();
+  State<SearchBar> createState() => _SearchBarState();
 
   @override
   Size get preferredSize => const Size.fromHeight(48.0);

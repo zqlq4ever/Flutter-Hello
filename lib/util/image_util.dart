@@ -8,6 +8,9 @@ class ImageUtils {
   }
 
   static String getImgPath(String name, {ImageFormat format = ImageFormat.png}) {
+    if (name.isEmpty) {
+      return '';
+    }
     return 'assets/images/$name.${format.value}';
   }
 

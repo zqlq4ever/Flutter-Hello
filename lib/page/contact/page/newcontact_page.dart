@@ -23,16 +23,18 @@ class NewContactPage extends GetView<NewContactlController> {
         backgroundColor: Colors.white,
         centerTitle: '新的朋友',
       ),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 8.0),
-        child: Column(
-          children: [
-            Gaps.vGap16,
-            _newContactList(true),
-            Gaps.vGap16,
-            _newContactList(false),
-            Gaps.vGap16,
-          ],
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 8.0),
+          child: Column(
+            children: [
+              Gaps.vGap16,
+              _newContactList(true),
+              Gaps.vGap16,
+              _newContactList(false),
+              Gaps.vGap16,
+            ],
+          ),
         ),
       ),
     );
@@ -41,6 +43,12 @@ class NewContactPage extends GetView<NewContactlController> {
   _newContactList(bool isNewContact) => FutureBuilder(
       future: DefaultAssetBundle.of(Get.context!).loadString('assets/data/NewContactListData.json'),
       builder: (context, data) {
+        if (data.connectionState != ConnectionState.done) {
+          return const SizedBox.shrink();
+        }
+        if (data.hasError || data.data == null) {
+          return const SizedBox.shrink();
+        }
         //  json 解析为 List
         List result = json.decode(data.data.toString());
         List<NewContactEntity> temp =

@@ -1,22 +1,21 @@
 import 'dart:math';
 
-import 'package:flustars/flustars.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hello_flutter/page/login/controller/default_header_controller.dart';
 import 'package:hello_flutter/res/colors.dart';
 import 'package:hello_flutter/res/gaps.dart';
+import 'package:hello_flutter/util/screen_util.dart';
 import 'package:hello_flutter/widgets/load_image.dart';
 import 'package:hello_flutter/widgets/my_app_bar.dart';
 import 'package:hello_flutter/widgets/no_scroll_behavior.dart';
 
 /// 登录 - 注册 - 完善个人信息 - 默认头像
 class DefautHeaderPage extends GetView<DefaultHeaderController> {
-  const DefautHeaderPage({Key? key}) : super(key: key);
+  const DefautHeaderPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    Get.put(DefaultHeaderController());
     return Scaffold(
       appBar: const MyAppBar(
         isBack: true,
@@ -49,7 +48,7 @@ class DefautHeaderPage extends GetView<DefaultHeaderController> {
                   ),
                 ),
                 child: const Text(
-                  "确定",
+                  '确定',
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 16,
@@ -82,7 +81,7 @@ class DefautHeaderPage extends GetView<DefaultHeaderController> {
                 childAspectRatio: 1.0),
             itemBuilder: (BuildContext context, int index) {
               //  圆形头像半径
-              double headerRadiu = (ScreenUtil.getInstance().screenWidth - 32 * 4) / 2;
+              double headerRadiu = (ScreenUtil.screenWidth - 32 * 4) / 2;
               //  选中的圆形图标半径
               double selectRadiu = (headerRadiu - headerRadiu * sin(45));
               return Stack(

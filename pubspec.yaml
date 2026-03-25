@@ -34,14 +34,11 @@ dependencies:
   # 响应式编程
   rxdart: ^0.28.0
 
-  # 常用工具类库
-  flustars: ^2.0.1
-
   # 本地存储
   sp_util: ^2.0.3
 
-  # 轮播图
-  flutter_swiper_null_safety: ^1.0.2
+  # 常用工具类
+  common_utils: ^2.1.0
 
   # 启动 URL
   url_launcher: ^6.3.1
@@ -114,8 +111,7 @@ dependencies:
   get: ^4.7.2
 
 # 依赖覆盖
-dependency_overrides:
-  decimal: ^1.5.0
+# dependency_overrides:
 
 flutter:
   uses-material-design: true

@@ -1,7 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:keyboard_actions/keyboard_actions.dart';
-import 'package:keyboard_actions/keyboard_actions_config.dart';
 
 /// 本项目通用的布局（SingleChildScrollView）
 /// 1.底部存在按钮
@@ -11,7 +10,7 @@ class MyScrollView extends StatelessWidget {
   /// 需要在`Scaffold`使用 `resizeToAvoidBottomInset: defaultTargetPlatform != TargetPlatform.iOS,`
   /// 除非 Android 与 iOS 平台均使用 keyboard_actions
   const MyScrollView({
-    Key? key,
+    super.key,
     required this.children,
     this.padding,
     this.physics = const BouncingScrollPhysics(),
@@ -20,7 +19,7 @@ class MyScrollView extends StatelessWidget {
     this.keyboardConfig,
     this.tapOutsideToDismiss = false,
     this.overScroll = 16.0,
-  }) : super(key: key);
+  });
 
   final List<Widget> children;
   final EdgeInsetsGeometry? padding;

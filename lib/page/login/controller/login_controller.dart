@@ -1,13 +1,10 @@
-import 'package:flustars/flustars.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:get/get_rx/src/rx_types/rx_types.dart';
-import 'package:get/get_rx/src/rx_workers/rx_workers.dart';
-import 'package:get/get_state_manager/src/rx_flutter/rx_ticket_provider_mixin.dart';
-import 'package:get/get_state_manager/src/simple/get_controllers.dart';
+import 'package:get/get.dart';
 import 'package:hello_flutter/net/dio_util.dart';
 import 'package:hello_flutter/res/constant.dart';
 import 'package:hello_flutter/util/log_util.dart';
+import 'package:sp_util/sp_util.dart';
 
 class LoginController extends GetxController with GetSingleTickerProviderStateMixin {
   //  复选框状态
@@ -35,7 +32,7 @@ class LoginController extends GetxController with GetSingleTickerProviderStateMi
 
   @override
   void onReady() {
-    WidgetsBinding.instance!.addPostFrameCallback((_) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
       SystemChrome.setEnabledSystemUIMode(
         SystemUiMode.manual,
         overlays: [SystemUiOverlay.top, SystemUiOverlay.bottom],
@@ -47,12 +44,12 @@ class LoginController extends GetxController with GetSingleTickerProviderStateMi
   }
 
   @override
-  void dispose() {
-    super.dispose();
+  void onClose() {
     phoneController.dispose();
     passwordController.dispose();
     smsController.dispose();
     tabController?.dispose();
+    super.onClose();
   }
 
   void setCheck() {

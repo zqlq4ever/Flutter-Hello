@@ -1,16 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:hello_flutter/res/gaps.dart';
 import 'package:hello_flutter/res/resources.dart';
 
 class SelectedItem extends StatelessWidget {
   const SelectedItem(
-      {Key? key,
+      {super.key,
       this.onTap,
       required this.title,
       this.content = '',
       this.textAlign = TextAlign.start,
-      this.style})
-      : super(key: key);
+      this.style});
 
   final GestureTapCallback? onTap;
   final String title;

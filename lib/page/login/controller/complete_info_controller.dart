@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:flustars/flustars.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -10,6 +9,7 @@ import 'package:hello_flutter/util/device_util.dart';
 import 'package:hello_flutter/util/image_util.dart';
 import 'package:hello_flutter/util/toast_util.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:sp_util/sp_util.dart';
 
 class CompleteInfoController extends GetxController {
   final TextEditingController nameController = TextEditingController(text: "");
@@ -27,7 +27,7 @@ class CompleteInfoController extends GetxController {
 
   @override
   void onReady() {
-    WidgetsBinding.instance!.addPostFrameCallback((_) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
       SystemChrome.setEnabledSystemUIMode(
         SystemUiMode.manual,
         overlays: [SystemUiOverlay.top, SystemUiOverlay.bottom],

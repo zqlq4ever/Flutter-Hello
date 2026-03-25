@@ -1,10 +1,10 @@
-import 'package:flustars/flustars.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hello_flutter/page/login/page/login_page.dart';
 import 'package:hello_flutter/res/colors.dart';
 import 'package:hello_flutter/res/constant.dart';
+import 'package:sp_util/sp_util.dart';
 
 Widget showLogoutDialog(BuildContext context) {
   return Material(

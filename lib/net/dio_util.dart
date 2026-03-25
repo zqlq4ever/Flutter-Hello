@@ -38,7 +38,7 @@ class DioUtil {
   factory DioUtil() => _singleton;
 
   DioUtil._() {
-    final BaseOptions _options = BaseOptions(
+    final BaseOptions options = BaseOptions(
       connectTimeout: Duration(milliseconds: _connectTimeout),
       receiveTimeout: Duration(milliseconds: _receiveTimeout),
       sendTimeout: Duration(milliseconds: _sendTimeout),
@@ -50,9 +50,10 @@ class DioUtil {
         return true;
       },
       baseUrl: _baseUrl,
+      persistentConnection: true,
       // contentType: Headers.formUrlEncodedContentType, // 适用于 post form 表单提交
     );
-    _dio = Dio(_options);
+    _dio = Dio(options);
 
     /// 添加拦截器
     void addInterceptor(Interceptor interceptor) {
@@ -90,9 +91,9 @@ class DioUtil {
       final String data = response.data.toString();
 
       /// 集成测试无法使用 isolate https://github.com/flutter/flutter/issues/24703
-      /// 使用 compute 条件：数据大于 10KB（粗略使用10 * 1024）且当前不是集成测试（后面可能会根据 Web 环境进行调整）
+      /// 使用 compute 条件：数据大于 50KB 且当前不是集成测试
       /// 主要目的减少不必要的性能开销
-      final bool isCompute = !AppConstant.isDriverTest && data.length > 10 * 1024;
+      final bool isCompute = !AppConstant.isDriverTest && data.length > 50 * 1024;
       debugPrint('isCompute:$isCompute');
       final Map<String, dynamic> _map =
           isCompute ? await compute(parseData, data) : parseData(data);

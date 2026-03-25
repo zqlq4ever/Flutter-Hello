@@ -1,4 +1,3 @@
-import 'package:flustars/flustars.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -6,13 +5,14 @@ import 'package:hello_flutter/page/login/controller/forget_password_controller.d
 import 'package:hello_flutter/res/colors.dart';
 import 'package:hello_flutter/res/gaps.dart';
 import 'package:hello_flutter/util/other_util.dart';
+import 'package:hello_flutter/util/screen_util.dart';
 import 'package:hello_flutter/widgets/my_app_bar.dart';
 import 'package:hello_flutter/widgets/my_button.dart';
 import 'package:hello_flutter/widgets/my_scroll_view.dart';
 
 /// 登录 - 忘记密码
 class ForgetPasswordPage extends GetView<ForgetpasswordController> {
-  const ForgetPasswordPage({Key? key}) : super(key: key);
+  const ForgetPasswordPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -23,8 +23,8 @@ class ForgetPasswordPage extends GetView<ForgetpasswordController> {
         centerTitle: '忘记密码',
       ),
       body: Container(
-        width: ScreenUtil.getInstance().screenWidth, // 屏幕宽度
-        height: ScreenUtil.getInstance().screenHeight, // 屏幕高度
+        width: ScreenUtil.screenWidth, // 屏幕宽度
+        height: ScreenUtil.screenHeight, // 屏幕高度
         color: ColorConst.bg_color,
         child: MyScrollView(
           keyboardConfig: Util.getKeyboardActionsConfig(context, []),

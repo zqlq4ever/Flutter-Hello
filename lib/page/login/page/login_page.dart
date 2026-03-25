@@ -2,6 +2,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:hello_flutter/page/home/controller/home_controller.dart';
 import 'package:hello_flutter/page/home/page/home_page.dart';
 import 'package:hello_flutter/page/login/controller/login_controller.dart';
 import 'package:hello_flutter/page/login/page/forget_password_page.dart';
@@ -49,6 +50,7 @@ class LoginPage extends GetView<LoginController> {
 
   void _login() {
     Get.offAll(() => const HomePage());
+    Get.put(HomeController());
     SpUtil.putString(AppConstant.phone, controller.phoneController.text);
     SpUtil.putBool(AppConstant.hasLogin, true);
   }

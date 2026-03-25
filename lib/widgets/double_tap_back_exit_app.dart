@@ -5,10 +5,10 @@ import 'package:hello_flutter/util/toast_util.dart';
 /// 双击返回退出
 class DoubleTapBackExitApp extends StatefulWidget {
   const DoubleTapBackExitApp({
-    Key? key,
+    super.key,
     required this.child,
     this.duration = const Duration(milliseconds: 3000),
-  }) : super(key: key);
+  });
 
   final Widget child;
 
@@ -16,7 +16,7 @@ class DoubleTapBackExitApp extends StatefulWidget {
   final Duration duration;
 
   @override
-  _DoubleTapBackExitAppState createState() => _DoubleTapBackExitAppState();
+  State<DoubleTapBackExitApp> createState() => _DoubleTapBackExitAppState();
 }
 
 class _DoubleTapBackExitAppState extends State<DoubleTapBackExitApp> {
@@ -24,8 +24,15 @@ class _DoubleTapBackExitAppState extends State<DoubleTapBackExitApp> {
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: _isExit,
+    return PopScope(
+      canPop: false,
+      onPopInvoked: (bool didPop) async {
+        if (didPop) return;
+        final bool shouldPop = await _isExit();
+        if (shouldPop && mounted) {
+          await SystemNavigator.pop();
+        }
+      },
       child: widget.child,
     );
   }
@@ -34,12 +41,9 @@ class _DoubleTapBackExitAppState extends State<DoubleTapBackExitApp> {
     if (_lastTime == null || DateTime.now().difference(_lastTime!) > widget.duration) {
       _lastTime = DateTime.now();
       ToastUtil.show('再次点击退出应用');
-      return Future.value(false);
+      return false;
     }
     ToastUtil.cancelToast();
-
-    /// 不推荐使用 `dart:io` 的 exit(0)
-    await SystemNavigator.pop();
-    return Future.value(true);
+    return true;
   }
 }

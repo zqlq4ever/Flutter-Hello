@@ -1,9 +1,7 @@
 // Copyright 2016 The Chromium Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 
 /// The part of a material design [AppBar] that expands and collapses.
 ///
@@ -26,13 +24,13 @@ class MyFlexibleSpaceBar extends StatefulWidget {
   ///
   /// Most commonly used in the [AppBar.flexibleSpace] field.
   const MyFlexibleSpaceBar({
-    Key? key,
+    super.key,
     this.title,
     this.background,
     this.centerTitle,
     this.titlePadding,
     this.collapseMode = CollapseMode.parallax,
-  }) : super(key: key);
+  });
 
   /// The primary contents of the flexible space bar when expanded.
   ///
@@ -101,7 +99,7 @@ class MyFlexibleSpaceBar extends StatefulWidget {
   }
 
   @override
-  _FlexibleSpaceBarState createState() => _FlexibleSpaceBarState();
+  State<MyFlexibleSpaceBar> createState() => _FlexibleSpaceBarState();
 }
 
 class _FlexibleSpaceBarState extends State<MyFlexibleSpaceBar> {
@@ -149,7 +147,7 @@ class _FlexibleSpaceBarState extends State<MyFlexibleSpaceBar> {
   @override
   void initState() {
     //监听Widget是否绘制完毕
-    WidgetsBinding.instance!.addPostFrameCallback((_) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
       final RenderBox? renderBoxRed = _key.currentContext!.findRenderObject() as RenderBox?;
       _offset = renderBoxRed!.size.width / 2;
     });
@@ -210,7 +208,7 @@ class _FlexibleSpaceBarState extends State<MyFlexibleSpaceBar> {
       if (opacity > 0.0) {
         TextStyle titleStyle = theme.primaryTextTheme.titleLarge!;
         titleStyle = titleStyle.copyWith(
-            color: titleStyle.color!.withOpacity(opacity),
+            color: titleStyle.color!.withValues(alpha: opacity),
             fontWeight: t != 0 ? FontWeight.normal : FontWeight.bold);
         final bool effectiveCenterTitle = _getEffectiveCenterTitle(theme);
         final EdgeInsetsGeometry padding = widget.titlePadding ??

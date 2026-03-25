@@ -8,7 +8,7 @@ import 'package:hello_flutter/util/theme_util.dart';
 /// 自定义 AppBar
 class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
   const MyAppBar(
-      {Key? key,
+      {super.key,
       this.backgroundColor,
       this.title = '',
       this.centerTitle = '',
@@ -17,8 +17,7 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
       this.backImg = 'assets/images/ic_back_black.png',
       this.backImgColor,
       this.onRightPressed,
-      this.isBack = true})
-      : super(key: key);
+      this.isBack = true});
 
   final Color? backgroundColor;
   final String title;
@@ -33,10 +32,10 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     //  背景色
-    final Color _backgroundColor = backgroundColor ?? context.backgroundColor;
+    final Color backgroundColorValue = backgroundColor ?? context.backgroundColor;
 
-    final SystemUiOverlayStyle _overlayStyle =
-        ThemeData.estimateBrightnessForColor(_backgroundColor) == Brightness.dark
+    final SystemUiOverlayStyle overlayStyle =
+        ThemeData.estimateBrightnessForColor(backgroundColorValue) == Brightness.dark
             ? SystemUiOverlayStyle.light
             : SystemUiOverlayStyle.dark;
 
@@ -72,24 +71,24 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
               child: TextButton(
                 key: const Key('rightText'),
                 onPressed: onRightPressed,
+                style: ButtonStyle(
+                  backgroundColor: WidgetStateProperty.resolveWith((states) {
+                    //  设置按下时的背景颜色
+                    if (states.contains(WidgetState.pressed)) {
+                      return ColorConst.bg_gray;
+                    }
+                    //  默认不使用背景颜色
+                    return null;
+                  }),
+                  overlayColor: WidgetStateProperty.all(Colors.transparent),
+                  padding: WidgetStateProperty.all(const EdgeInsets.symmetric(horizontal: 16)),
+                ),
                 child: Text(
                   rightText,
                   style: TextStyle(
                     fontSize: Dimens.font_sp14,
                     color: actionColor ?? (context.isDark ? ColorConst.dark_text : ColorConst.text),
                   ),
-                ),
-                style: ButtonStyle(
-                  backgroundColor: MaterialStateProperty.resolveWith((states) {
-                    //  设置按下时的背景颜色
-                    if (states.contains(MaterialState.pressed)) {
-                      return ColorConst.bg_gray;
-                    }
-                    //  默认不使用背景颜色
-                    return null;
-                  }),
-                  overlayColor: MaterialStateProperty.all(Colors.transparent),
-                  padding: MaterialStateProperty.all(const EdgeInsets.symmetric(horizontal: 16)),
                 ),
               ),
             ),
@@ -102,6 +101,7 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
       child: Container(
         alignment: centerTitle.isEmpty ? Alignment.centerLeft : Alignment.center,
         width: double.infinity,
+        margin: const EdgeInsets.symmetric(horizontal: 48.0),
         child: Text(
           title.isEmpty ? centerTitle : title,
           style: const TextStyle(
@@ -109,14 +109,13 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
             fontSize: Dimens.font_sp18,
           ),
         ),
-        margin: const EdgeInsets.symmetric(horizontal: 48.0),
       ),
     );
 
     return AnnotatedRegion<SystemUiOverlayStyle>(
-      value: _overlayStyle,
+      value: overlayStyle,
       child: Material(
-        color: _backgroundColor,
+        color: backgroundColorValue,
         child: SafeArea(
           child: Stack(
             alignment: Alignment.centerLeft,

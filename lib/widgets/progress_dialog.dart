@@ -5,9 +5,9 @@ import 'package:hello_flutter/res/gaps.dart';
 /// 加载中的弹框
 class ProgressDialog extends Dialog {
   const ProgressDialog({
-    Key? key,
+    super.key,
     this.hintText = '',
-  }) : super(key: key);
+  });
 
   final String hintText;
 

@@ -1,4 +1,3 @@
-import 'package:flustars/flustars.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -7,13 +6,14 @@ import 'package:hello_flutter/page/login/page/forget_password_page.dart';
 import 'package:hello_flutter/res/colors.dart';
 import 'package:hello_flutter/res/gaps.dart';
 import 'package:hello_flutter/util/other_util.dart';
+import 'package:hello_flutter/util/screen_util.dart';
 import 'package:hello_flutter/widgets/my_app_bar.dart';
 import 'package:hello_flutter/widgets/my_button.dart';
 import 'package:hello_flutter/widgets/my_scroll_view.dart';
 
 /// 修改密码
 class UpdatePasswordPage extends GetView<UpdatePasswordController> {
-  const UpdatePasswordPage({Key? key}) : super(key: key);
+  const UpdatePasswordPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -24,8 +24,8 @@ class UpdatePasswordPage extends GetView<UpdatePasswordController> {
         centerTitle: '修改密码',
       ),
       body: Container(
-        width: ScreenUtil.getInstance().screenWidth,
-        height: ScreenUtil.getInstance().screenHeight,
+        width: ScreenUtil.screenWidth,
+        height: ScreenUtil.screenHeight,
         color: ColorConst.bg_color,
         child: MyScrollView(
           keyboardConfig: Util.getKeyboardActionsConfig(context, []),
