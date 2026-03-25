@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_custom_dialog/flutter_custom_dialog.dart';
 import 'package:flutter_pickers/pickers.dart';
 import 'package:flutter_pickers/style/default_style.dart';
 import 'package:flutter_pickers/time_picker/model/date_mode.dart';
@@ -27,7 +26,6 @@ class CompletePersonInfoPage extends GetView<CompleteInfoController> {
   @override
   Widget build(BuildContext context) {
     Get.put(CompleteInfoController());
-    YYDialog.init(context);
     return Scaffold(
       appBar: const MyAppBar(
         backgroundColor: Colors.white,

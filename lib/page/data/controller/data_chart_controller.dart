@@ -48,18 +48,18 @@ class DataChartController extends GetxController {
   BarChartGroupData makeGroupData(int x, double y1, double y2, double y3) {
     return BarChartGroupData(barsSpace: 4, x: x, barRods: [
       BarChartRodData(
-        y: y1,
-        colors: [leftBarColor],
+        toY: y1,
+        color: leftBarColor,
         width: width,
       ),
       BarChartRodData(
-        y: y2,
-        colors: [middleBarColor],
+        toY: y2,
+        color: middleBarColor,
         width: width,
       ),
       BarChartRodData(
-        y: y3,
-        colors: [rightBarColor],
+        toY: y3,
+        color: rightBarColor,
         width: width,
       ),
     ]);

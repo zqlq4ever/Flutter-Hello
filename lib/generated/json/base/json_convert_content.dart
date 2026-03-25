@@ -76,7 +76,7 @@ class JsonConvert {
   static M _fromJsonSingle<M>(Map<String, dynamic> json) {
     final String type = M.toString();
     // if(type == (AEntity).toString()){
-    // 	return AEntity.fromJson(json) as M;
+    // 	return AEntity.fromJson(json) as M;rg.jetbrains.kotlin.android
     // }
 
     throw Exception("not fond");

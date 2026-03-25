@@ -39,9 +39,9 @@ class DioUtil {
 
   DioUtil._() {
     final BaseOptions _options = BaseOptions(
-      connectTimeout: _connectTimeout,
-      receiveTimeout: _receiveTimeout,
-      sendTimeout: _sendTimeout,
+      connectTimeout: Duration(milliseconds: _connectTimeout),
+      receiveTimeout: Duration(milliseconds: _receiveTimeout),
+      sendTimeout: Duration(milliseconds: _sendTimeout),
 
       /// dio 默认 json 解析，这里指定返回 UTF-8 字符串，自己处理解析。（可也以自定义 Transformer 实现）
       responseType: ResponseType.plain,

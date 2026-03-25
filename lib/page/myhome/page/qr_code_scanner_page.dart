@@ -1,11 +1,9 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hello_flutter/res/colors.dart';
 import 'package:hello_flutter/util/log_util.dart';
 import 'package:hello_flutter/widgets/my_app_bar.dart';
-import 'package:qr_code_scanner/qr_code_scanner.dart';
+import 'package:mobile_scanner/mobile_scanner.dart';
 
 class QrCodeScannerPage extends StatefulWidget {
   const QrCodeScannerPage({Key? key}) : super(key: key);
@@ -15,20 +13,8 @@ class QrCodeScannerPage extends StatefulWidget {
 }
 
 class _QrCodeScannerPageState extends State<QrCodeScannerPage> {
-  final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
-  QRViewController? controller;
-
-  /// 为了让热重新加载工作，如果平台是 android，我们需要暂停摄像头；
-  /// 如果平台是 iOS，我们需要恢复摄像头。
-  @override
-  void reassemble() {
-    super.reassemble();
-    if (Platform.isAndroid) {
-      controller?.pauseCamera();
-    } else if (Platform.isIOS) {
-      controller?.resumeCamera();
-    }
-  }
+  MobileScannerController? controller;
+  bool _hasScanned = false;
 
   @override
   Widget build(BuildContext context) {
@@ -40,22 +26,24 @@ class _QrCodeScannerPageState extends State<QrCodeScannerPage> {
     return Scaffold(
       body: Stack(
         children: <Widget>[
-          //  扫描主体
           Positioned.fill(
-            child: QRView(
-              key: qrKey,
-              onQRViewCreated: _onQRViewCreated,
-              overlay: QrScannerOverlayShape(
-                borderColor: ColorConst.app_main,
-                borderRadius: 0,
-                borderLength: 20,
-                borderWidth: 5,
-                cutOutSize: scanArea,
+            child: MobileScanner(
+              controller: MobileScannerController(
+                detectionSpeed: DetectionSpeed.noDuplicates,
+                facing: CameraFacing.back,
               ),
+              onDetect: (capture) {
+                if (_hasScanned) return;
+                final barcodes = capture.barcodes;
+                if (barcodes.isNotEmpty) {
+                  _hasScanned = true;
+                  final barcode = barcodes.first;
+                  Logger.d(barcode.rawValue ?? '');
+                  Get.back(result: barcode.rawValue);
+                }
+              },
             ),
           ),
-
-          //  闪光灯
           Positioned(
             bottom: 100,
             left: 0,
@@ -68,13 +56,11 @@ class _QrCodeScannerPageState extends State<QrCodeScannerPage> {
                   color: Colors.white,
                 ),
                 onPressed: () {
-                  controller?.toggleFlash();
+                  controller?.toggleTorch();
                 },
               ),
             ),
           ),
-
-          //  返回按钮
           const Positioned(
             top: 0,
             left: 0,
@@ -87,16 +73,6 @@ class _QrCodeScannerPageState extends State<QrCodeScannerPage> {
         ],
       ),
     );
-  }
-
-  void _onQRViewCreated(QRViewController controller) {
-    this.controller = controller;
-    controller.scannedDataStream.listen((scanData) {
-      /// 避免扫描结果多次回调
-      controller.dispose();
-      Logger.d(scanData.code);
-      Get.back(result: scanData.code);
-    });
   }
 
   @override

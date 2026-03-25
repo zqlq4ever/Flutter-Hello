@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hello_flutter/page/webview/webview_controller.dart';
@@ -12,24 +10,19 @@ class WebViewPage extends GetView<WebController> {
   @override
   Widget build(BuildContext context) {
     Get.put(WebController());
-    return FutureBuilder<WebViewController>(
-        future: controller.webviewController.future,
-        builder: (context, snapshot) {
-          return WillPopScope(
-            onWillPop: () async {
-              if (snapshot.hasData) {
-                final bool canGoBack = await snapshot.data!.canGoBack();
-                if (canGoBack) {
-                  //  网页可以返回时，优先返回上一页
-                  await snapshot.data!.goBack();
-                  return Future.value(false);
-                }
-              }
-              return Future.value(true);
-            },
-            child: _page(),
-          );
-        });
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, result) async {
+        if (didPop) return;
+        final bool canGoBack = await controller.webViewController.canGoBack();
+        if (canGoBack) {
+          await controller.webViewController.goBack();
+        } else {
+          Get.back();
+        }
+      },
+      child: _page(),
+    );
   }
 
   Scaffold _page() {
@@ -39,17 +32,7 @@ class WebViewPage extends GetView<WebController> {
       ),
       body: Stack(
         children: [
-          WebView(
-            initialUrl: Get.arguments['url'],
-            javascriptMode: JavascriptMode.unrestricted,
-            allowsInlineMediaPlayback: true,
-            onWebViewCreated: (WebViewController webViewController) {
-              controller.webviewController.complete(webViewController);
-            },
-            onProgress: (int progress) {
-              controller.progress.value = progress;
-            },
-          ),
+          WebViewWidget(controller: controller.webViewController),
           Obx(() {
             return Visibility(
               visible: controller.progress.value != 100,
