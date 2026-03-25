@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:get/get.dart';
 import 'package:hello_flutter/page/splash/splash_page.dart';
 import 'package:hello_flutter/res/constant.dart';
@@ -14,28 +15,30 @@ import 'package:url_strategy/url_strategy.dart';
 import 'net/dio_util.dart';
 import 'net/intercept.dart';
 
-Future<void> main() async {
-  // 确保初始化完成
-  WidgetsFlutterBinding.ensureInitialized();
+void main() {
+  // 异常处理 - 使用 runZonedGuarded 包裹整个应用生命周期
+  handleError(() async {
+    // 确保初始化完成
+    WidgetsFlutterBinding.ensureInitialized();
 
-  // 去除 URL 中的 “#” (hash)，仅针对 Web。默认为 setHashUrlStrategy
-  // 注意本地部署和远程部署时`web/index.html`中的 base 标签，
-  // https://github.com/flutter/flutter/issues/69760
-  setPathUrlStrategy();
+    // 去除 URL 中的 "#" (hash)，仅针对 Web。默认为 setHashUrlStrategy
+    // 注意本地部署和远程部署时`web/index.html`中的 base 标签，
+    // https://github.com/flutter/flutter/issues/69760
+    setPathUrlStrategy();
 
-  // sp 初始化
-  await SpUtil.getInstance();
+    // sp 初始化
+    await SpUtil.getInstance();
 
-  // 异常处理
-  handleError(() => runApp(HelloApp()));
+    // 隐藏状态栏。为启动页、引导页设置。完成后修改回显示状态栏。
+    SystemChrome.setEnabledSystemUIMode(
+      SystemUiMode.manual,
+      overlays: [],
+    );
+    // TODO: 启动体验不佳。状态栏、导航栏在冷启动开始的一瞬间为黑色，且无法通过隐藏、修改颜色等方式进行处理。。。
+    // 相关问题跟踪：https://github.com/flutter/flutter/issues/73351
 
-  // 隐藏状态栏。为启动页、引导页设置。完成后修改回显示状态栏。
-  SystemChrome.setEnabledSystemUIMode(
-    SystemUiMode.manual,
-    overlays: [],
-  );
-  // TODO: 启动体验不佳。状态栏、导航栏在冷启动开始的一瞬间为黑色，且无法通过隐藏、修改颜色等方式进行处理。。。
-  // 相关问题跟踪：https://github.com/flutter/flutter/issues/73351
+    runApp(HelloApp());
+  });
 }
 
 class HelloApp extends StatelessWidget {
@@ -85,14 +88,17 @@ class HelloApp extends StatelessWidget {
         debugShowCheckedModeBanner: true,
         home: const SplashPage(),
         defaultTransition: Transition.fadeIn,
+        navigatorObservers: [FlutterSmartDialog.observer],
         builder: (context, child) {
+          // 初始化 FlutterSmartDialog
+          child = FlutterSmartDialog.init()(context, child);
           return GestureDetector(
             onTap: () => FocusUtil.unfocus(),
             // 保证文字大小不受手机系统设置影响
             // https://www.kikt.top/posts/flutter/layout/dynamic-text/
             child: MediaQuery(
               data: MediaQuery.of(context).copyWith(textScaleFactor: 1.0),
-              child: child!,
+              child: child,
             ),
           );
         },

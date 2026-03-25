@@ -1,11 +1,11 @@
 {
-  "name": "flutter_hello",
-  "short_name": "flutter_hello",
+  "name": "hello_flutter",
+  "short_name": "hello_flutter",
   "start_url": ".",
   "display": "standalone",
   "background_color": "#0175C2",
   "theme_color": "#0175C2",
-  "description": "hello flutter",
+  "description": "flutter 学习项目",
   "orientation": "portrait-primary",
   "prefer_related_applications": false,
   "icons": [
