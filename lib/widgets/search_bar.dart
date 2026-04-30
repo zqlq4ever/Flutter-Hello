@@ -14,11 +14,9 @@ class SearchBar extends StatefulWidget implements PreferredSizeWidget {
   const SearchBar({
     super.key,
     this.hintText = '',
-    this.backImg = 'assets/images/ic_back_black.png',
     this.onPressed,
   });
 
-  final String backImg;
   final String hintText;
   final Function(String)? onPressed;
 
@@ -43,7 +41,8 @@ class _SearchBarState extends State<SearchBar> {
   @override
   Widget build(BuildContext context) {
     final bool isDark = context.isDark;
-    final Color iconColor = isDark ? ColorConst.dark_text_gray : ColorConst.text_gray_c;
+    final Color iconColor =
+        isDark ? ColorConst.dark_text_gray : ColorConst.text_gray_c;
 
     final Widget back = Semantics(
       label: '返回',
@@ -59,8 +58,9 @@ class _SearchBarState extends State<SearchBar> {
           child: Padding(
             key: const Key('search_back'),
             padding: const EdgeInsets.all(12.0),
-            child: Image.asset(
-              widget.backImg,
+            child: Icon(
+              Icons.arrow_back_ios_new_rounded,
+              size: 20,
               color: isDark ? ColorConst.dark_text : ColorConst.text,
             ),
           ),
@@ -87,7 +87,8 @@ class _SearchBarState extends State<SearchBar> {
             widget.onPressed?.call(val);
           },
           decoration: InputDecoration(
-            contentPadding: const EdgeInsets.only(top: 0.0, left: -8.0, right: -16.0, bottom: 14.0),
+            contentPadding: const EdgeInsets.only(
+                top: 0.0, left: -8.0, right: -16.0, bottom: 14.0),
             border: InputBorder.none,
             icon: Padding(
               padding: const EdgeInsets.only(top: 8.0, bottom: 8.0, left: 8.0),
@@ -101,13 +102,14 @@ class _SearchBarState extends State<SearchBar> {
               child: Semantics(
                 label: '清空',
                 child: Padding(
-                  padding: const EdgeInsets.only(left: 16.0, top: 8.0, bottom: 8.0),
+                  padding:
+                      const EdgeInsets.only(left: 16.0, top: 8.0, bottom: 8.0),
                   child: LoadAssetImage('order/order_delete', color: iconColor),
                 ),
               ),
               onTap: () {
                 /// https://github.com/flutter/flutter/issues/35848
-                SchedulerBinding.instance!.addPostFrameCallback((_) {
+                SchedulerBinding.instance.addPostFrameCallback((_) {
                   _controller.text = '';
                 });
               },

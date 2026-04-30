@@ -21,7 +21,8 @@ class MyHomePage extends StatefulWidget {
 }
 
 /// PageView 子页面 with AutomaticKeepAliveClientMixin 配合 wantKeepAlive = true ,可以保证不重建
-class _MyHomePageState extends State<MyHomePage> with AutomaticKeepAliveClientMixin {
+class _MyHomePageState extends State<MyHomePage>
+    with AutomaticKeepAliveClientMixin {
   @override
   void initState() {
     super.initState();
@@ -41,11 +42,18 @@ class _MyHomePageState extends State<MyHomePage> with AutomaticKeepAliveClientMi
     super.build(context);
     return Stack(
       children: [
-        const LoadAssetImage(
-          'bg',
-          width: double.infinity,
-          height: double.infinity,
-          fit: BoxFit.fill,
+        const DecoratedBox(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [
+                Color(0xFFF6F7FB),
+                Color(0xFFEFF1F6),
+              ],
+            ),
+          ),
+          child: SizedBox.expand(),
         ),
         Scaffold(
           backgroundColor: Colors.transparent,
@@ -69,11 +77,14 @@ class _MyHomePageState extends State<MyHomePage> with AutomaticKeepAliveClientMi
                           highlightColor: Colors.transparent,
                           alignment: Alignment.centerRight,
                           onPressed: () async {
-                            String result = await Get.to(() => const QrCodeScannerPage());
-                            ToastUtil.show(result);
+                            final String? result =
+                                await Get.to(() => const QrCodeScannerPage());
+                            if (result != null && result.isNotEmpty) {
+                              ToastUtil.show(result);
+                            }
                           },
-                          icon: const ImageIcon(
-                            AssetImage('assets/images/ic_scan.png'),
+                          icon: const Icon(
+                            Icons.qr_code_scanner_rounded,
                           )),
                       Gaps.hGap18,
                       IconButton(
@@ -137,8 +148,9 @@ class _MyHomePageState extends State<MyHomePage> with AutomaticKeepAliveClientMi
         //  json 解析为 List
         List result = json.decode(snapshot.data.toString());
         //  List 元素转为具体对象
-        List<ContactHistoryDeviceBean> device =
-            result.map((element) => ContactHistoryDeviceBean.fromJson(element)).toList();
+        List<ContactHistoryDeviceBean> device = result
+            .map((element) => ContactHistoryDeviceBean.fromJson(element))
+            .toList();
 
         return _deviceListView(device);
       });
@@ -195,8 +207,11 @@ class _MyHomePageState extends State<MyHomePage> with AutomaticKeepAliveClientMi
                             width: 6,
                             height: 6,
                             decoration: BoxDecoration(
-                                color: data[index].deviceState == 0 ? Colors.green : Colors.grey,
-                                borderRadius: const BorderRadius.all(Radius.circular(3))),
+                                color: data[index].deviceState == 0
+                                    ? Colors.green
+                                    : Colors.grey,
+                                borderRadius:
+                                    const BorderRadius.all(Radius.circular(3))),
                           ),
                           Expanded(
                             child: Text(

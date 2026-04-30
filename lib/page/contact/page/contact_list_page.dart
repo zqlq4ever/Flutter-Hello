@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hello_flutter/models/contact_history/contact_history_device_bean.dart';
@@ -12,71 +10,46 @@ import 'package:hello_flutter/res/colors.dart';
 import 'package:hello_flutter/res/gaps.dart';
 import 'package:hello_flutter/widgets/load_image.dart';
 import 'package:hello_flutter/widgets/my_app_bar.dart';
-import 'package:sticky_headers/sticky_headers/widget.dart';
 
 /// 通讯录
-class ContactListPage extends GetView<ContactListController> {
+class ContactListPage extends StatefulWidget {
   const ContactListPage({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    Get.put(ContactListController());
-    return Scaffold(
-        backgroundColor: ColorConst.bg_color,
-        appBar: const MyAppBar(
-          backgroundColor: Colors.white,
-          centerTitle: '通讯录',
-        ),
-        body: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 8.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              _searchPart(),
-              _newContact(),
-              Gaps.vGap16,
-              _list(),
-            ],
-          ),
-        ));
+  State<ContactListPage> createState() => _ContactListPageState();
+}
+
+class _ContactListPageState extends State<ContactListPage> {
+  late final ContactListController controller;
+
+  @override
+  void initState() {
+    super.initState();
+    controller = Get.put(ContactListController());
   }
 
-  _list() => Expanded(
-        child: NestedScrollView(
-          body: CustomScrollView(
-            slivers: [
-              SliverList(
-                delegate: SliverChildBuilderDelegate(
-                  (_, index) => _devicePart(),
-                  childCount: 1,
-                ),
-              ),
-              SliverList(
-                delegate: SliverChildBuilderDelegate(
-                  (_, index) => _contactPart(),
-                  childCount: 1,
-                ),
-              ),
-            ],
-          ),
-          headerSliverBuilder: (
-            BuildContext context,
-            bool innerBoxIsScrolled,
-          ) {
-            return [];
-          },
-        ),
-      );
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: ColorConst.bg_color,
+      appBar: const MyAppBar(
+        backgroundColor: Colors.white,
+        centerTitle: '通讯录',
+      ),
+      body: CustomScrollView(
+        slivers: [
+          SliverToBoxAdapter(child: _searchPart()),
+          SliverToBoxAdapter(child: _newContact()),
+          const SliverToBoxAdapter(child: Gaps.vGap16),
+          SliverToBoxAdapter(child: _devicePart()),
+          SliverToBoxAdapter(child: _contactPart()),
+          const SliverToBoxAdapter(child: Gaps.vGap16),
+        ],
+      ),
+    );
+  }
 
-  _stickyChildList(List<ContactListItemEntity> data) => ListView.builder(
-      shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
-      itemCount: data.length,
-      itemBuilder: (context, index) {
-        return _contactItem(data[index]);
-      });
-
-  _newContact() => InkWell(
+  Widget _newContact() => InkWell(
         onTap: () => Get.to(() => const NewContactPage()),
         child: Container(
           height: 64,
@@ -115,7 +88,7 @@ class ContactListPage extends GetView<ContactListController> {
       );
 
   ///  搜索模块
-  _searchPart() => Container(
+  Widget _searchPart() => Container(
         margin: const EdgeInsets.all(16),
         decoration: const BoxDecoration(
           color: Colors.white,
@@ -167,22 +140,7 @@ class ContactListPage extends GetView<ContactListController> {
                   border: InputBorder.none,
                 ),
                 onChanged: (value) {
-                  controller.searchContent.value = value;
-                  //  数据筛选
-                  List<ContactListItemEntity> temp = [];
-                  if (value.isEmpty) {
-                    temp = controller.contactSourceData;
-                  } else {
-                    for (var element in controller.contactSourceData) {
-                      if (element.contactName != null &&
-                          value.isNotEmpty &&
-                          element.contactName!.contains(value)) {
-                        temp.add(element);
-                        print(element);
-                      }
-                    }
-                  }
-                  controller.groupSourceData(temp);
+                  controller.filterByName(value);
                 },
               ),
             ),
@@ -190,7 +148,7 @@ class ContactListPage extends GetView<ContactListController> {
         ),
       );
 
-  _contactPart() {
+  Widget _contactPart() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -205,72 +163,40 @@ class ContactListPage extends GetView<ContactListController> {
             ),
           ),
         ),
-        _sticky(),
+        Obx(() => controller.isLoading.value
+            ? const SizedBox.shrink()
+            : _groupList()),
         Gaps.vGap16,
       ],
     );
   }
 
-  _deviceList() => FutureBuilder(
-      future:
-          DefaultAssetBundle.of(Get.context!).loadString('assets/data/ContactDeviceListData.json'),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState != ConnectionState.done) {
-          return Container();
-        }
-        //  json 解析为 List
-        List result = json.decode(snapshot.data.toString());
-        //  List 元素转为具体对象
-        controller.deviceData =
-            result.map((element) => ContactHistoryDeviceBean.fromJson(element)).toList();
-        return ListView.builder(
-          shrinkWrap: true,
-          physics: const NeverScrollableScrollPhysics(),
-          itemCount: controller.deviceData.length,
-          itemBuilder: (context, index) => _deviceItem(controller.deviceData[index]),
-        );
-      });
-
-  _sticky() => FutureBuilder(
-        future: DefaultAssetBundle.of(Get.context!).loadString('assets/data/ContactListData.json'),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState != ConnectionState.done) {
-            return Container();
-          }
-          //  json 解析为 List
-          List result = json.decode(snapshot.data.toString());
-          //  List 元素转为具体对象
-          controller.contactSourceData =
-              result.map((element) => ContactListItemEntity.fromJson(element)).toList();
-          //  对原始数据进行分类
-          controller.groupSourceData(controller.contactSourceData);
-
-          return ValueListenableBuilder<List<ContactListParent>>(
-            valueListenable: controller.contactFilterData,
-            builder: (context, value, child) {
-              return ListView.builder(
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                itemCount: value.length,
-                itemBuilder: (context, index) => StickyHeader(
-                  header: Container(
-                    color: ColorConst.bg_color,
-                    padding: const EdgeInsets.only(left: 16, bottom: 8, top: 8),
-                    alignment: Alignment.centerLeft,
-                    child: Text(
-                      '${value[index].title}',
-                      style: const TextStyle(color: ColorConst.text),
-                    ),
-                  ),
-                  content: _stickyChildList(controller.contactFilterData.value[index].child!),
+  Widget _groupList() {
+    return ValueListenableBuilder<List<ContactListParent>>(
+      valueListenable: controller.contactFilterData,
+      builder: (context, value, child) {
+        return Column(
+          children: [
+            for (final group in value) ...[
+              Container(
+                color: ColorConst.bg_color,
+                padding: const EdgeInsets.only(left: 16, bottom: 8, top: 8),
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  '${group.title}',
+                  style: const TextStyle(color: ColorConst.text),
                 ),
-              );
-            },
-          );
-        },
-      );
+              ),
+              if (group.child != null)
+                ...group.child!.map(_contactItem).toList(),
+            ],
+          ],
+        );
+      },
+    );
+  }
 
-  _contactItem(ContactListItemEntity data) => InkWell(
+  Widget _contactItem(ContactListItemEntity data) => InkWell(
         onTap: () {
           Get.to(
             () => const ContactDetailPage(),
@@ -320,7 +246,7 @@ class ContactListPage extends GetView<ContactListController> {
         ),
       );
 
-  _devicePart() => Column(
+  Widget _devicePart() => Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const Padding(
@@ -334,18 +260,25 @@ class ContactListPage extends GetView<ContactListController> {
               ),
             ),
           ),
-          _deviceList()
+          Obx(
+            () => controller.isLoading.value
+                ? const SizedBox.shrink()
+                : Column(
+                    children: controller.deviceData.map(_deviceItem).toList(),
+                  ),
+          ),
         ],
       );
 
-  _deviceItem(ContactHistoryDeviceBean data) => InkWell(
+  Widget _deviceItem(ContactHistoryDeviceBean data) => InkWell(
         onTap: () {
           Get.to(
             () => const ContactDetailPage(),
             arguments: {
               "isDevice": true,
               "name": data.name ?? "",
-              "icon": "https://img1.baidu.com/it/u=2437536079,2390928705&fm=26&fmt=auto",
+              "icon":
+                  "https://img1.baidu.com/it/u=2437536079,2390928705&fm=26&fmt=auto",
               "phone": data.simPhone ?? "",
             },
           );

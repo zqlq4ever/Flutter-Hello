@@ -1,0 +1,14 @@
+{
+  "@@locale": "en",
+  "appTitle": "Hello Flutter",
+  "actionClose": "Close",
+  "actionSearch": "Search",
+  "actionClear": "Clear",
+  "actionBack": "Back",
+  "scannerTitle": "Scan",
+  "scannerHint": "Align the QR code within the frame",
+  "scannerTorch": "Torch",
+  "contactTabTitle": "Contacts",
+  "contactListTitle": "Contacts"
+}
+

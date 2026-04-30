@@ -1,0 +1,14 @@
+{
+  "@@locale": "zh",
+  "appTitle": "Hello Flutter",
+  "actionClose": "关闭",
+  "actionSearch": "搜索",
+  "actionClear": "清空",
+  "actionBack": "返回",
+  "scannerTitle": "扫码",
+  "scannerHint": "将二维码放入框内，自动识别",
+  "scannerTorch": "手电",
+  "contactTabTitle": "通讯",
+  "contactListTitle": "通讯录"
+}
+

@@ -4,7 +4,6 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hello_flutter/res/colors.dart';
-import 'package:rxdart/rxdart.dart';
 
 import 'device_util.dart';
 
@@ -33,13 +32,13 @@ class ThemeUtil {
     return isDark(context) ? ColorConst.dark_bg_color : Colors.grey[200];
   }
 
-  static StreamSubscription? _subscription;
+  static Timer? _timer;
 
   /// 设置 NavigationBar 样式，使得导航栏颜色与深色模式的设置相符。
   static void setSystemNavigationBar(ThemeMode mode, {BuildContext? context}) {
     /// 主题切换动画（AnimatedTheme）时间为200毫秒，延时设置导航栏颜色，这样过渡相对自然。
-    _subscription?.cancel();
-    _subscription = Stream.value(1).delay(const Duration(milliseconds: 200)).listen((_) {
+    _timer?.cancel();
+    _timer = Timer(const Duration(milliseconds: 200), () {
       bool isDarkMode = false;
       final Brightness platformBrightness = context != null
           ? View.of(context).platformDispatcher.platformBrightness
@@ -60,12 +59,13 @@ class ThemeUtil {
           ? View.of(context).platformDispatcher.platformBrightness
           : PlatformDispatcher.instance.platformBrightness;
       final bool isDarkMode = isDark ?? platformBrightness == Brightness.dark;
-      debugPrint('isDark: $isDarkMode');
       final SystemUiOverlayStyle systemUiOverlayStyle = SystemUiOverlayStyle(
         /// 透明状态栏
         statusBarColor: Colors.transparent,
-        systemNavigationBarColor: isDarkMode ? ColorConst.dark_bg_color : Colors.white,
-        systemNavigationBarIconBrightness: isDarkMode ? Brightness.light : Brightness.dark,
+        systemNavigationBarColor:
+            isDarkMode ? ColorConst.dark_bg_color : Colors.white,
+        systemNavigationBarIconBrightness:
+            isDarkMode ? Brightness.light : Brightness.dark,
       );
       SystemChrome.setSystemUIOverlayStyle(systemUiOverlayStyle);
     }

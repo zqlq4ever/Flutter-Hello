@@ -34,7 +34,7 @@ class ExceptionHandle {
   };
 
   static NetError handleException(dynamic error) {
-    Logger.d(error);
+    Logger.d('dio error: $error');
     if (error is DioError) {
       if (error.type.errorCode == 0) {
         return _handleException(error.error);

@@ -1,12 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Theme applied to the Android Window as soon as the process has started.
-         This theme determines the color of the Android Window while your
-         Flutter UI initializes, as well as behind your Flutter UI while its
-         running.
-         
-         This Theme is only used starting with V2 of Flutter's Android embedding. -->
+    <!--
+      Theme applied while Flutter initializes (pre-first-frame).
+      Keep it lightweight and deterministic to avoid black/white flash.
+    -->
+    <style name="LaunchTheme" parent="@android:style/Theme.Light.NoTitleBar">
+        <item name="android:windowBackground">@drawable/launch_background</item>
+    </style>
+
+    <!--
+      Theme applied after Flutter has rendered the first frame.
+      Also provides the background behind Flutter surfaces.
+    -->
     <style name="NormalTheme" parent="@android:style/Theme.Light.NoTitleBar">
-        <item name="android:windowBackground">?android:colorBackground</item>
+        <item name="android:windowBackground">@drawable/launch_background</item>
     </style>
 </resources>

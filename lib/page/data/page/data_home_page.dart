@@ -15,13 +15,19 @@ class DataHomePage extends StatefulWidget {
   State<StatefulWidget> createState() => _DataHomePage();
 }
 
-class _DataHomePage extends State<DataHomePage> with AutomaticKeepAliveClientMixin {
+class _DataHomePage extends State<DataHomePage>
+    with AutomaticKeepAliveClientMixin {
   late DataHomeController controller;
+
+  @override
+  void initState() {
+    super.initState();
+    controller = Get.put(DataHomeController());
+  }
 
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    controller = Get.put(DataHomeController());
     return Scaffold(
       backgroundColor: ColorConst.bg_color,
       appBar: const MyAppBar(
@@ -54,7 +60,8 @@ class _DataHomePage extends State<DataHomePage> with AutomaticKeepAliveClientMix
           children: [
             Obx(() {
               return Text(
-                controller.selectContact.value.contactName ?? DataHomeController.selecTips,
+                controller.selectContact.value.contactName ??
+                    DataHomeController.selecTips,
                 style: const TextStyle(
                   color: ColorConst.text,
                   fontSize: 14,

@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hello_flutter/models/contact_history/contact_history_device_bean.dart';
@@ -21,13 +19,19 @@ class ContactHistoryPage extends StatefulWidget {
   State<StatefulWidget> createState() => _ContactHistoryPage();
 }
 
-class _ContactHistoryPage extends State<ContactHistoryPage> with AutomaticKeepAliveClientMixin {
+class _ContactHistoryPage extends State<ContactHistoryPage>
+    with AutomaticKeepAliveClientMixin {
   late ContactHistoryController controller;
+
+  @override
+  void initState() {
+    super.initState();
+    controller = Get.put(ContactHistoryController());
+  }
 
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    controller = Get.put(ContactHistoryController());
     return Scaffold(
         backgroundColor: ColorConst.bg_color,
         appBar: MyAppBar(
@@ -37,19 +41,14 @@ class _ContactHistoryPage extends State<ContactHistoryPage> with AutomaticKeepAl
           isBack: false,
           onRightPressed: () => Get.to(() => const ContactListPage()),
         ),
-        body: Padding(
-          child: SingleChildScrollView(
-            child: Column(
-              children: [
-                Gaps.vGap16,
-                devicePart(),
-                Gaps.vGap16,
-                latestPart(),
-                Gaps.vGap8,
-              ],
-            ),
-          ),
-          padding: const EdgeInsets.symmetric(vertical: 8.0),
+        body: CustomScrollView(
+          slivers: [
+            const SliverToBoxAdapter(child: Gaps.vGap16),
+            SliverToBoxAdapter(child: devicePart()),
+            const SliverToBoxAdapter(child: Gaps.vGap16),
+            SliverToBoxAdapter(child: latestPart()),
+            const SliverToBoxAdapter(child: Gaps.vGap8),
+          ],
         ));
   }
 
@@ -74,102 +73,95 @@ class _ContactHistoryPage extends State<ContactHistoryPage> with AutomaticKeepAl
                 ),
               ),
             ),
-            _latestAsync(),
+            Obx(() => _latestList(controller.latestList)),
             Gaps.vGap16,
           ],
         ),
       );
 
-  _latestAsync() => FutureBuilder(
-      future: DefaultAssetBundle.of(Get.context!)
-          .loadString('assets/data/ContactHistoryLatestData.json'),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState != ConnectionState.done) {
-          return Container();
-        }
-        //  json 解析为 List
-        List result = json.decode(snapshot.data.toString());
-        //  List 元素转为具体对象
-        List<ContactHistoryLatestBean> latest =
-            result.map((element) => ContactHistoryLatestBean.fromJson(element)).toList();
-
-        return latestListView(latest);
-      });
-
-  latestListView(List<ContactHistoryLatestBean> data) => ListView.separated(
-        shrinkWrap: true,
-        physics: const NeverScrollableScrollPhysics(),
-        itemCount: data.length,
-        itemBuilder: (context, index) => Stack(
-          children: [
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Gaps.hGap16,
-                ClipOval(
-                  child: LoadImage(
-                    data[index].contactPhoto ??
-                        'https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fc-ssl.duitang.com%2Fuploads%2Fitem%2F202001%2F27%2F20200127073345_ixcrq.png&refer=http%3A%2F%2Fc-ssl.duitang.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1640414104&t=b2be48dcfae2dc885e9efaaac0831ac2',
-                    width: 40,
-                    height: 40,
-                    fit: BoxFit.cover,
-                  ),
-                ),
-                Gaps.hGap8,
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      data[index].contactName ?? "",
-                      style: const TextStyle(
-                        fontSize: 14,
-                        color: ColorConst.text,
-                      ),
-                    ),
-                    Text(
-                      data[index].createTime ?? "",
-                      style: const TextStyle(
-                        fontSize: 14,
-                        color: ColorConst.text_gray,
-                      ),
-                    ),
-                  ],
-                )
-              ],
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                ClipOval(
-                  child: InkWell(
-                    onTap: () => showCallMenuDialog(context, (index) {
-                      switch (index) {
-                        //  视频
-                        case 1:
-                          break;
-                        //  语音
-                        case 2:
-                          break;
-                        //  电话
-                        case 3:
-                          Util.launchTelURL(data[index].phone ?? '');
-                          break;
-                      }
-                    }),
-                    child: const LoadImage(
-                      'ic_call',
-                      width: 32,
-                      height: 32,
-                    ),
-                  ),
-                ),
-                Gaps.hGap16,
-              ],
-            ),
+  Widget _latestList(List<ContactHistoryLatestBean> data) {
+    if (controller.isLoading.value) {
+      return const SizedBox.shrink();
+    }
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      child: Column(
+        children: [
+          for (int i = 0; i < data.length; i++) ...[
+            _latestItem(data[i]),
+            if (i != data.length - 1) Gaps.vGap12,
           ],
-        ),
-        separatorBuilder: (BuildContext context, int index) => Gaps.vGap12,
+        ],
+      ),
+    );
+  }
+
+  Widget _latestItem(ContactHistoryLatestBean bean) => Stack(
+        children: [
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              ClipOval(
+                child: LoadImage(
+                  bean.contactPhoto ??
+                      'https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fc-ssl.duitang.com%2Fuploads%2Fitem%2F202001%2F27%2F20200127073345_ixcrq.png&refer=http%3A%2F%2Fc-ssl.duitang.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1640414104&t=b2be48dcfae2dc885e9efaaac0831ac2',
+                  width: 40,
+                  height: 40,
+                  fit: BoxFit.cover,
+                ),
+              ),
+              Gaps.hGap8,
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    bean.contactName ?? '',
+                    style: const TextStyle(
+                      fontSize: 14,
+                      color: ColorConst.text,
+                    ),
+                  ),
+                  Text(
+                    bean.createTime ?? '',
+                    style: const TextStyle(
+                      fontSize: 14,
+                      color: ColorConst.text_gray,
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              ClipOval(
+                child: InkWell(
+                  onTap: () => showCallMenuDialog(context, (index) {
+                    switch (index) {
+                      //  视频
+                      case 1:
+                        break;
+                      //  语音
+                      case 2:
+                        break;
+                      //  电话
+                      case 3:
+                        Util.launchTelURL(bean.phone ?? '');
+                        break;
+                    }
+                  }),
+                  child: const LoadImage(
+                    'ic_call',
+                    width: 32,
+                    height: 32,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ],
       );
 
   devicePart() => Card(
@@ -193,107 +185,98 @@ class _ContactHistoryPage extends State<ContactHistoryPage> with AutomaticKeepAl
                 ),
               ),
             ),
-            _deviceAsync(),
+            Obx(() => _deviceList(controller.deviceList)),
             Gaps.vGap16,
           ],
         ),
       );
 
-  _deviceAsync() => FutureBuilder(
-      future: DefaultAssetBundle.of(Get.context!)
-          .loadString('assets/data/ContactHistoryDeviceListData.json'),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState != ConnectionState.done) {
-          return Container();
-        }
-        //  json 解析为 List
-        List result = json.decode(snapshot.data.toString());
-        //  List 元素转为具体对象
-        List<ContactHistoryDeviceBean> device =
-            result.map((element) => ContactHistoryDeviceBean.fromJson(element)).toList();
-
-        return deviceListView(device);
-      });
-
-  deviceListView(List<ContactHistoryDeviceBean> data) => ListView.separated(
-        shrinkWrap: true,
-        //范围内进行包裹（内容多高ListView就多高）
-        physics: const NeverScrollableScrollPhysics(),
-        //禁止滚动
-        itemCount: data.length,
-        itemBuilder: (context, index) => Stack(
-          children: [
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Gaps.hGap16,
-                const ClipOval(
-                  child: LoadImage(
-                    'https://img0.baidu.com/it/u=1544923211,727191905&fm=15&fmt=auto',
-                    width: 40,
-                    height: 40,
-                    fit: BoxFit.cover,
-                  ),
-                ),
-                Gaps.hGap8,
-                Text(
-                  data[index].deviceNickname ?? "",
-                  style: const TextStyle(
-                    fontSize: 14,
-                    color: ColorConst.text,
-                  ),
-                ),
-                Visibility(
-                  visible: data[index].isDfDevice == 1,
-                  child: Container(
-                    alignment: Alignment.center,
-                    padding: const EdgeInsets.symmetric(horizontal: 6),
-                    margin: const EdgeInsets.symmetric(horizontal: 8),
-                    child: const Text(
-                      '默认',
-                      style: TextStyle(
-                        fontSize: 12,
-                        color: ColorConst.app_main,
-                      ),
-                    ),
-                    decoration: BoxDecoration(
-                      color: ColorConst.app_main_55,
-                      borderRadius: BorderRadius.circular((2.0)),
-                    ),
-                  ),
-                )
-              ],
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                ClipOval(
-                  child: InkWell(
-                    onTap: () => showCallMenuDialog(context, (index) {
-                      switch (index) {
-                        case 1:
-                          break;
-                        case 2:
-                          break;
-                        case 3:
-                          Util.launchTelURL(data[index].simPhone ?? '');
-                          break;
-                      }
-                    }),
-                    child: const LoadImage(
-                      'ic_call',
-                      width: 32,
-                      height: 32,
-                    ),
-                  ),
-                ),
-                Gaps.hGap16,
-              ],
-            ),
+  Widget _deviceList(List<ContactHistoryDeviceBean> data) {
+    if (controller.isLoading.value) {
+      return const SizedBox.shrink();
+    }
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      child: Column(
+        children: [
+          for (int i = 0; i < data.length; i++) ...[
+            _deviceItem(data[i]),
+            if (i != data.length - 1) Gaps.vGap12,
           ],
-        ),
-        separatorBuilder: (BuildContext context, int index) => Gaps.vGap12,
+        ],
+      ),
+    );
+  }
+
+  Widget _deviceItem(ContactHistoryDeviceBean bean) => Stack(
+        children: [
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              const ClipOval(
+                child: LoadImage(
+                  'https://img0.baidu.com/it/u=1544923211,727191905&fm=15&fmt=auto',
+                  width: 40,
+                  height: 40,
+                  fit: BoxFit.cover,
+                ),
+              ),
+              Gaps.hGap8,
+              Text(
+                bean.deviceNickname ?? '',
+                style: const TextStyle(
+                  fontSize: 14,
+                  color: ColorConst.text,
+                ),
+              ),
+              Visibility(
+                visible: bean.isDfDevice == 1,
+                child: Container(
+                  alignment: Alignment.center,
+                  padding: const EdgeInsets.symmetric(horizontal: 6),
+                  margin: const EdgeInsets.symmetric(horizontal: 8),
+                  decoration: BoxDecoration(
+                    color: ColorConst.app_main_55,
+                    borderRadius: BorderRadius.circular(2.0),
+                  ),
+                  child: const Text(
+                    '默认',
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: ColorConst.app_main,
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              ClipOval(
+                child: InkWell(
+                  onTap: () => showCallMenuDialog(context, (index) {
+                    switch (index) {
+                      case 1:
+                        break;
+                      case 2:
+                        break;
+                      case 3:
+                        Util.launchTelURL(bean.simPhone ?? '');
+                        break;
+                    }
+                  }),
+                  child: const LoadImage(
+                    'ic_call',
+                    width: 32,
+                    height: 32,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ],
       );
 
   @override

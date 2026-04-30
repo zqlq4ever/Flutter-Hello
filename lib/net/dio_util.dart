@@ -93,13 +93,15 @@ class DioUtil {
       /// 集成测试无法使用 isolate https://github.com/flutter/flutter/issues/24703
       /// 使用 compute 条件：数据大于 50KB 且当前不是集成测试
       /// 主要目的减少不必要的性能开销
-      final bool isCompute = !AppConstant.isDriverTest && data.length > 50 * 1024;
-      debugPrint('isCompute:$isCompute');
-      final Map<String, dynamic> _map =
+      const int computeThresholdBytes = 50 * 1024;
+      final bool isCompute =
+          !AppConstant.isDriverTest && data.length > computeThresholdBytes;
+      Logger.d('dio parse useCompute=$isCompute, size=${data.length}B');
+      final Map<String, dynamic> map =
           isCompute ? await compute(parseData, data) : parseData(data);
-      return BaseEntity<T>.fromJson(_map);
+      return BaseEntity<T>.fromJson(map);
     } catch (e) {
-      debugPrint(e.toString());
+      Logger.e('dio parse error: $e');
       return BaseEntity<T>(ExceptionHandle.parse_error, '数据解析错误！', null);
     }
   }
@@ -143,7 +145,7 @@ class DioUtil {
     );
   }
 
-  /// 统一处理(onSuccess 返回 T 对象，onSuccessList 返回 List<T>)
+  /// 统一处理（onSuccess 返回单对象，onSuccessList 返回 List 类型）
   void asyncRequestNetwork<T>(
     Method method,
     String url, {

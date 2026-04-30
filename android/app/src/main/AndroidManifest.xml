@@ -1,7 +1,6 @@
 <manifest xmlns:android = "http://schemas.android.com/apk/res/android">
     
     <uses-permission android:name = "android.permission.INTERNET" />
-    <uses-permission android:name = "android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name = "android.permission.WAKE_LOCK" />
     <uses-permission android:name = "android.permission.CAMERA" />
     
@@ -26,8 +25,8 @@
             android:exported = "true"
             android:hardwareAccelerated = "true"
             android:launchMode = "singleTop"
-            android:theme = "@style/NormalTheme"
-            android:usesCleartextTraffic = "true"
+            android:theme = "@style/LaunchTheme"
+            android:usesCleartextTraffic = "false"
             android:windowSoftInputMode = "adjustResize">
             <!-- Specifies an Android theme to apply to this Activity as soon as
                  the Android process has started. This theme is visible to the user

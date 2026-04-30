@@ -13,7 +13,8 @@ import 'error_handle.dart';
 class AuthInterceptor extends Interceptor {
   @override
   void onRequest(RequestOptions options, RequestInterceptorHandler handler) {
-    final String accessToken = SpUtil.getString(AppConstant.accessToken).nullSafe;
+    final String accessToken =
+        SpUtil.getString(AppConstant.accessToken).nullSafe;
     options.headers['Content-Type'] = 'application/json';
     if (accessToken.isNotEmpty) {
       options.headers['Authorization'] = '$accessToken ';
@@ -30,6 +31,16 @@ class LoggingInterceptor extends Interceptor {
   late DateTime _startTime;
   late DateTime _endTime;
 
+  static const int _maxLogLength = 2000;
+
+  String _truncate(Object? value) {
+    final text = value?.toString() ?? '';
+    if (text.length <= _maxLogLength) {
+      return text;
+    }
+    return '${text.substring(0, _maxLogLength)}...(truncated ${text.length - _maxLogLength} chars)';
+  }
+
   @override
   void onRequest(RequestOptions options, RequestInterceptorHandler handler) {
     _startTime = DateTime.now();
@@ -43,7 +54,7 @@ class LoggingInterceptor extends Interceptor {
     Logger.d('RequestMethod: ${options.method}');
     Logger.d('RequestHeaders:${options.headers}');
     Logger.d('RequestContentType: ${options.contentType}');
-    Logger.d('RequestData: ${options.data.toString()}');
+    Logger.d('RequestData: ${_truncate(options.data)}');
     super.onRequest(options, handler);
   }
 
@@ -57,7 +68,12 @@ class LoggingInterceptor extends Interceptor {
       Logger.e('ResponseCode: ${response.statusCode}');
     }
     // 输出结果
-    Logger.json(response.data.toString());
+    final body = response.data?.toString() ?? '';
+    if (body.length <= _maxLogLength) {
+      Logger.json(body);
+    } else {
+      Logger.d('ResponseBody: ${_truncate(body)}');
+    }
     Logger.d('----------End: $duration 毫秒----------');
     super.onResponse(response, handler);
   }
@@ -95,6 +111,7 @@ class AdapterInterceptor extends Interceptor {
   }
 
   Response adapterData(Response response) {
+    response.extra['httpStatus'] = response.statusCode;
     String result;
     String content = response.data?.toString() ?? '';
 
@@ -122,7 +139,8 @@ class AdapterInterceptor extends Interceptor {
             if (_kSlash == content.substring(0, 1)) {
               content = content.substring(1, content.length - 1);
             }
-            final Map<String, dynamic> map = json.decode(content) as Map<String, dynamic>;
+            final Map<String, dynamic> map =
+                json.decode(content) as Map<String, dynamic>;
             if (map.containsKey(_kMessage)) {
               msg = map[_kMessage] as String;
             } else if (map.containsKey(_kMsg)) {
@@ -140,8 +158,8 @@ class AdapterInterceptor extends Interceptor {
           } catch (e) {
 //            Log.d('异常信息：$e');
             // 解析异常直接按照返回原数据处理（一般为返回 500,503 HTML 页面代码）
-            result =
-                sprintf(_kFailureFormat, [response.statusCode, '服务器异常(${response.statusCode})']);
+            result = sprintf(_kFailureFormat,
+                [response.statusCode, '服务器异常(${response.statusCode})']);
           }
         }
       }

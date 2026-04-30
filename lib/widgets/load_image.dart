@@ -29,7 +29,8 @@ class LoadImage extends StatelessWidget {
   Widget build(BuildContext context) {
     //  网络图片 + 无图
     if (image.isEmpty || image.startsWith('http')) {
-      final Widget placeholderImage = LoadAssetImage(holderImg, height: height, width: width, fit: fit);
+      final Widget placeholderImage =
+          LoadAssetImage(holderImg, height: height, width: width, fit: fit);
       return CachedNetworkImage(
         imageUrl: image,
         placeholder: (_, __) => placeholderImage,
@@ -75,6 +76,28 @@ class LoadAssetImage extends StatelessWidget {
   final ImageFormat format;
   final Color? color;
 
+  IconData? _fallbackIcon(String name) {
+    switch (name) {
+      case 'ic_arrow_right':
+        return Icons.chevron_right_rounded;
+      case 'ic_call':
+        return Icons.call_rounded;
+      case 'ic_scan':
+        return Icons.qr_code_scanner_rounded;
+      case 'ic_home':
+        return Icons.home_rounded;
+      case 'ic_contact':
+        return Icons.contacts_rounded;
+      case 'ic_data':
+        return Icons.insert_chart_rounded;
+      case 'order/order_search':
+        return Icons.search_rounded;
+      case 'order/order_delete':
+        return Icons.close_rounded;
+    }
+    return null;
+  }
+
   @override
   Widget build(BuildContext context) {
     if (image.isEmpty) {
@@ -83,6 +106,21 @@ class LoadAssetImage extends StatelessWidget {
         width: width,
       );
     }
+
+    final icon = _fallbackIcon(image);
+    if (icon != null) {
+      final size = (width ?? height ?? 24).toDouble();
+      return SizedBox(
+        width: width ?? size,
+        height: height ?? size,
+        child: Icon(
+          icon,
+          size: size,
+          color: color,
+        ),
+      );
+    }
+
     return Image.asset(
       ImageUtils.getImgPath(image, format: format),
       height: height,
@@ -91,6 +129,12 @@ class LoadAssetImage extends StatelessWidget {
       cacheHeight: cacheHeight,
       fit: fit,
       color: color,
+      errorBuilder: (context, error, stackTrace) {
+        return SizedBox(
+          height: height,
+          width: width,
+        );
+      },
 
       /// 忽略图片语义
       excludeFromSemantics: true,

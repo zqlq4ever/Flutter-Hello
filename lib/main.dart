@@ -2,17 +2,19 @@ import 'dart:ui';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:get/get.dart';
+import 'package:hello_flutter/l10n/app_localizations.dart';
 import 'package:hello_flutter/page/splash/splash_page.dart';
 import 'package:hello_flutter/res/constant.dart';
+import 'package:hello_flutter/res/colors.dart';
 import 'package:hello_flutter/util/focus_util.dart';
 import 'package:hello_flutter/util/handle_error_util.dart';
 import 'package:hello_flutter/util/log_util.dart';
 import 'package:oktoast/oktoast.dart';
 import 'package:sp_util/sp_util.dart';
-import 'package:url_strategy/url_strategy.dart';
 
 import 'net/dio_util.dart';
 import 'net/intercept.dart';
@@ -35,21 +37,17 @@ void main() {
     // 确保初始化完成
     WidgetsFlutterBinding.ensureInitialized();
 
-    // 去除 URL 中的 "#" (hash)，仅针对 Web。默认为 setHashUrlStrategy
-    // 注意本地部署和远程部署时`web/index.html`中的 base 标签，
-    // https://github.com/flutter/flutter/issues/69760
-    setPathUrlStrategy();
-
     // sp 初始化
     await SpUtil.getInstance();
 
-    // 隐藏状态栏。为启动页、引导页设置。完成后修改回显示状态栏。
-    SystemChrome.setEnabledSystemUIMode(
-      SystemUiMode.manual,
-      overlays: [],
+    // 统一系统栏策略，避免 main/splash 反复切换导致闪烁。
+    await SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
+    SystemChrome.setSystemUIOverlayStyle(
+      const SystemUiOverlayStyle(
+        statusBarColor: Colors.transparent,
+        systemNavigationBarColor: ColorConst.bg_color,
+      ),
     );
-    // TODO: 启动体验不佳。状态栏、导航栏在冷启动开始的一瞬间为黑色，且无法通过隐藏、修改颜色等方式进行处理。。。
-    // 相关问题跟踪：https://github.com/flutter/flutter/issues/73351
 
     runApp(const HelloApp());
   });
@@ -105,6 +103,13 @@ class HelloApp extends StatelessWidget {
         title: 'Hello Flutter',
         debugShowCheckedModeBanner: true,
         home: const SplashPage(),
+        localizationsDelegates: const [
+          AppLocalizations.delegate,
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+          GlobalCupertinoLocalizations.delegate,
+        ],
+        supportedLocales: AppLocalizations.supportedLocales,
         defaultTransition: Transition.fadeIn,
         navigatorObservers: [FlutterSmartDialog.observer],
         builder: (context, child) {

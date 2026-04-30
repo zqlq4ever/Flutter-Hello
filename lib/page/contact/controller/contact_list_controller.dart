@@ -1,7 +1,8 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'package:get/get_state_manager/src/simple/get_controllers.dart';
 import 'package:hello_flutter/models/contact_history/contact_history_device_bean.dart';
 import 'package:hello_flutter/models/contact_list/contact_list_item_entity.dart';
 import 'package:hello_flutter/models/contact_list/contact_list_parent.dart';
@@ -23,28 +24,65 @@ class ContactListController extends GetxController {
       ValueNotifier<List<ContactListParent>>([]);
 
   //  输入框文本
-  final TextEditingController searchController = TextEditingController(text: "");
+  final TextEditingController searchController =
+      TextEditingController(text: '');
 
   //  输入框焦点
   final FocusNode nodeSearch = FocusNode();
 
+  final RxBool isLoading = true.obs;
+
   @override
-  void onReady() {
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      SystemChrome.setEnabledSystemUIMode(
-        SystemUiMode.manual,
-        overlays: [SystemUiOverlay.top, SystemUiOverlay.bottom],
-      );
-      SystemChrome.setSystemUIOverlayStyle(
-          const SystemUiOverlayStyle(statusBarColor: Colors.transparent));
-    });
+  void onInit() {
+    super.onInit();
+    _loadData();
+  }
+
+  Future<void> _loadData() async {
+    try {
+      isLoading.value = true;
+      final deviceJson =
+          await rootBundle.loadString('assets/data/ContactDeviceListData.json');
+      final contactJson =
+          await rootBundle.loadString('assets/data/ContactListData.json');
+
+      final deviceDecoded = json.decode(deviceJson) as List;
+      final contactDecoded = json.decode(contactJson) as List;
+
+      deviceData = deviceDecoded
+          .map((e) => ContactHistoryDeviceBean.fromJson(e))
+          .toList();
+      contactSourceData =
+          contactDecoded.map((e) => ContactListItemEntity.fromJson(e)).toList();
+      groupSourceData(contactSourceData);
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
+  void filterByName(String value) {
+    searchContent.value = value;
+    if (value.isEmpty) {
+      groupSourceData(contactSourceData);
+      return;
+    }
+    final temp = <ContactListItemEntity>[];
+    for (final element in contactSourceData) {
+      final name = element.contactName;
+      if (name != null && name.contains(value)) {
+        temp.add(element);
+      }
+    }
+    groupSourceData(temp);
   }
 
   @override
-  void dispose() {
-    super.dispose();
+  void onClose() {
     searchController.dispose();
     nodeSearch.dispose();
+    searchContent.dispose();
+    contactFilterData.dispose();
+    super.onClose();
   }
 
   void groupSourceData(List<ContactListItemEntity> data) {
@@ -55,7 +93,8 @@ class ContactListController extends GetxController {
       if (contact.standbyState1 == 1) {
         continue;
       }
-      String pinyin = PinyinHelper.getFirstWordPinyin(contact.contactName ?? '').substring(0, 1);
+      String pinyin = PinyinHelper.getFirstWordPinyin(contact.contactName ?? '')
+          .substring(0, 1);
       if (map.keys.contains(pinyin)) {
         List<ContactListItemEntity>? list = map[pinyin];
         if (list == null || list.isEmpty) {
